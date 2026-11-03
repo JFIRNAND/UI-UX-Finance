@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Scan Struk &amp; Input AI — KaitoFin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../styles/tokens.css" />
+  <link rel="stylesheet" href="../styles/components.css" />
+  <style>
+    /* Reuse app shell patterns */
+    .app-header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+      height: var(--header-height); background-color: var(--surface-card);
+      border-bottom: 1px solid var(--border-muted);
+      display: flex; align-items: center;
+      padding: 0 var(--space-6); gap: var(--space-4);
+    }
+    .header-brand { display: flex; align-items: center; gap: var(--space-2); text-decoration: none; }
+    .header-logo { width: 28px; height: 28px; background-color: var(--brand-accent); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; }
+    .header-logo-inner { color: #fff; font-weight: 700; font-size: 12px; font-family: var(--font-display); letter-spacing: -0.03em; }
+    .header-name { font-family: var(--font-display); font-size: var(--text-sm); font-weight: 700; color: var(--text-primary); letter-spacing: -0.02em; }
+    .header-divider { width: 1px; height: 24px; background-color: var(--border-muted); }
+    .header-spacer { flex: 1; }
+    .quota-indicator { display: inline-flex; align-items: center; gap: var(--space-1); font-size: var(--text-xs); font-weight: 500; color: var(--ai-color); background-color: var(--ai-bg); border: 1px solid var(--ai-border); border-radius: var(--radius-full); padding: 3px 10px; }
+    .header-user-btn { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, var(--brand-accent) 0%, var(--brand-secondary) 100%); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 12px; font-weight: 600; border: none; cursor: pointer; }
+
+    /* Main layout for scan page */
+    .scan-page { margin-top: var(--header-height); min-height: calc(100dvh - var(--header-height)); padding: var(--space-8) var(--space-6); background-color: var(--surface-page); }
+    .scan-inner { max-width: 860px; margin: 0 auto; }
+    .scan-page-title { font-family: var(--font-display); font-size: var(--text-2xl); font-weight: 700; color: var(--text-primary); letter-spacing: -0.025em; margin-bottom: var(--space-2); }
+    .scan-page-sub { font-size: var(--text-base); color: var(--text-secondary); line-height: var(--leading-relaxed); margin-bottom: var(--space-8); }
+
+    /* Mode selector tabs */
+    .mode-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); margin-bottom: var(--space-8); }
+    .mode-tab {
+      border: 2px solid var(--border-muted); border-radius: var(--radius-xl);
+      padding: var(--space-5); cursor: pointer; background-color: var(--surface-card);
+      transition: border-color var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out);
+      text-align: left;
+    }
+    .mode-tab:hover { border-color: var(--border-strong); box-shadow: var(--shadow-sm); }
+    .mode-tab-active { border-color: var(--brand-accent); background-color: var(--brand-accent-light); box-shadow: 0 0 0 1px var(--brand-accent); }
+    .mode-tab-icon { width: 40px; height: 40px; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; margin-bottom: var(--space-3); color: var(--text-secondary); background-color: var(--surface-inset); }
+    .mode-tab-active .mode-tab-icon { background-color: var(--brand-accent-light); color: var(--brand-accent); }
+    .mode-tab-title { font-size: var(--text-sm); font-weight: 600; color: var(--text-primary); margin-bottom: var(--space-1); }
+    .mode-tab-desc { font-size: var(--text-xs); color: var(--text-secondary); line-height: var(--leading-relaxed); }
+
+    /* ---- STATE 1: Upload Zone ---- */
+    .upload-zone {
+      border: 2px dashed var(--border-default); border-radius: var(--radius-2xl);
+      padding: var(--space-16) var(--space-8); text-align: center; cursor: pointer;
+      background-color: var(--surface-card);
+      transition: border-color var(--dur-fast) var(--ease-out), background-color var(--dur-fast) var(--ease-out);
+    }
+    .upload-zone:hover { border-color: var(--brand-accent); background-color: var(--brand-accent-light); }
+    .upload-icon { width: 56px; height: 56px; border-radius: var(--radius-xl); background-color: var(--brand-accent-light); display: flex; align-items: center; justify-content: center; margin: 0 auto var(--space-4); color: var(--brand-accent); }
+    .upload-title { font-size: var(--text-lg); font-weight: 600; color: var(--text-primary); margin-bottom: var(--space-2); }
+    .upload-hint { font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-5); }
+    .upload-formats { display: flex; gap: var(--space-2); justify-content: center; flex-wrap: wrap; }
+    .upload-format-chip { font-size: var(--text-xs); color: var(--text-muted); background-color: var(--surface-inset); border: 1px solid var(--border-muted); border-radius: var(--radius-full); padding: 2px 8px; }
+    .upload-or { font-size: var(--text-sm); color: var(--text-muted); margin: var(--space-5) 0; position: relative; }
+    .upload-or::before, .upload-or::after { content: ''; position: absolute; top: 50%; width: calc(50% - 2rem); height: 1px; background-color: var(--border-muted); }
+    .upload-or::before { left: 0; }
+    .upload-or::after { right: 0; }
+
+    /* ---- STATE 2: Preview ---- */
+    .preview-container { display: none; }
+    .preview-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-6); }
+    @media (max-width: 767px) { .preview-grid { grid-template-columns: 1fr; } }
+    .preview-image-wrap { background-color: var(--surface-card); border: 1px solid var(--border-muted); border-radius: var(--radius-xl); overflow: hidden; }
+    .preview-image-header { padding: var(--space-4) var(--space-5); border-bottom: 1px solid var(--border-muted); display: flex; align-items: center; justify-content: space-between; }
+    .preview-image-title { font-size: var(--text-sm); font-weight: 600; color: var(--text-primary); }
+    .preview-img { width: 100%; aspect-ratio: 3/4; object-fit: contain; background-color: var(--surface-page); display: flex; align-items: center; justify-content: center; font-size: 4rem; padding: var(--space-8); }
+
+    /* ---- STATE 3: AI Processing ---- */
+    .processing-container { display: none; text-align: center; padding: var(--space-16) var(--space-8); }
+    .processing-ring {
+      width: 72px; height: 72px; border-radius: 50%;
+      border: 3px solid var(--brand-accent-muted);
+      border-top-color: var(--brand-accent);
+      animation: spin 800ms linear infinite;
+      margin: 0 auto var(--space-5);
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @media (prefers-reduced-motion: reduce) { .processing-ring { animation: none; border-color: var(--brand-accent); } }
+    .processing-title { font-size: var(--text-xl); font-weight: 700; color: var(--text-primary); margin-bottom: var(--space-3); }
+    .processing-steps { display: flex; flex-direction: column; gap: var(--space-2); max-width: 300px; margin: var(--space-6) auto 0; }
+    .proc-step { display: flex; align-items: center; gap: var(--space-3); font-size: var(--text-sm); color: var(--text-secondary); text-align: left; }
+    .proc-step-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .proc-step-done { background-color: var(--income-color); }
+    .proc-step-active { background-color: var(--brand-accent); animation: pulse-dot 1s ease-in-out infinite; }
+    .proc-step-pending { background-color: var(--border-default); }
+    @keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+    @media (prefers-reduced-motion: reduce) { .proc-step-active { animation: none; } }
+    .proc-step-label-done { color: var(--text-primary); font-weight: 500; }
+    .proc-step-label-active { color: var(--brand-accent); font-weight: 500; }
+
+    /* ---- STATE 4: Extraction Result ---- */
+    .extraction-container { display: none; }
+    .extraction-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-6); }
+    @media (max-width: 767px) { .extraction-grid { grid-template-columns: 1fr; } }
+
+    .extraction-preview-wrap { background-color: var(--surface-card); border: 1px solid var(--border-muted); border-radius: var(--radius-xl); overflow: hidden; }
+    .extraction-form-wrap { display: flex; flex-direction: column; gap: var(--space-5); }
+
+    .ai-result-card { background-color: var(--surface-card); border: 1px solid var(--border-muted); border-radius: var(--radius-xl); overflow: hidden; }
+    .ai-result-header { padding: var(--space-4) var(--space-5); border-bottom: 1px solid var(--border-muted); display: flex; align-items: center; justify-content: space-between; }
+    .ai-result-title { font-size: var(--text-sm); font-weight: 600; color: var(--text-primary); }
+    .ai-confidence { display: inline-flex; align-items: center; gap: 4px; font-size: var(--text-xs); font-weight: 600; color: var(--income-color); background-color: var(--income-bg); border-radius: var(--radius-full); padding: 2px 8px; }
+    .ai-result-body { padding: var(--space-5); display: grid; gap: var(--space-4); }
+
+    .field-group { display: flex; flex-direction: column; gap: var(--space-2); }
+    .field-label { font-size: var(--text-xs); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); }
+    .field-input { font-family: var(--font-body); font-size: var(--text-sm); color: var(--text-primary); background-color: var(--surface-card); border: 1px solid var(--border-default); border-radius: var(--radius-md); padding: 0.625rem 0.875rem; width: 100%; transition: border-color var(--dur-fast) var(--ease-out); }
+    .field-input:hover { border-color: var(--border-strong); }
+    .field-input:focus { outline: none; border-color: var(--border-focus); box-shadow: 0 0 0 3px rgba(30,158,126,0.12); }
+    .field-input-amount { font-variant-numeric: tabular-nums; font-weight: 600; font-size: var(--text-base); }
+    .field-input-amount:focus { font-size: var(--text-base); }
+
+    .ai-extracted-chip { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; color: var(--ai-color); background-color: var(--ai-bg); border: 1px solid var(--ai-border); border-radius: var(--radius-full); padding: 2px 7px; margin-top: var(--space-1); }
+    .category-select { font-family: var(--font-body); font-size: var(--text-sm); color: var(--text-primary); background-color: var(--surface-card); border: 1px solid var(--border-default); border-radius: var(--radius-md); padding: 0.625rem 0.875rem; width: 100%; cursor: pointer; transition: border-color var(--dur-fast) var(--ease-out); }
+    .category-select:focus { outline: none; border-color: var(--border-focus); box-shadow: 0 0 0 3px rgba(30,158,126,0.12); }
+    .type-toggle { display: flex; gap: var(--space-3); }
+    .type-btn { flex: 1; padding: 0.625rem; border-radius: var(--radius-md); border: 2px solid var(--border-muted); background-color: var(--surface-card); cursor: pointer; font-size: var(--text-sm); font-weight: 500; color: var(--text-secondary); text-align: center; transition: all var(--dur-fast) var(--ease-out); }
+    .type-btn-expense { }
+    .type-btn-income { }
+    .type-btn-active-expense { border-color: var(--expense-color); background-color: var(--expense-bg); color: var(--expense-color); }
+    .type-btn-active-income { border-color: var(--income-color); background-color: var(--income-bg); color: var(--income-color); }
+
+    /* Confirmation actions */
+    .confirm-actions { display: flex; gap: var(--space-3); }
+    .confirm-actions .btn { flex: 1; justify-content: center; }
+
+    /* ---- STATE 5: Success ---- */
+    .success-container { display: none; text-align: center; padding: var(--space-16) var(--space-8); }
+    .success-icon { width: 72px; height: 72px; border-radius: 50%; background-color: var(--income-bg); display: flex; align-items: center; justify-content: center; margin: 0 auto var(--space-5); color: var(--income-color); }
+    .success-title { font-family: var(--font-display); font-size: var(--text-xl); font-weight: 700; color: var(--text-primary); margin-bottom: var(--space-3); }
+    .success-amount { font-size: var(--text-3xl); font-weight: 800; font-variant-numeric: tabular-nums; color: var(--expense-color); letter-spacing: -0.03em; margin-bottom: var(--space-3); }
+    .success-meta { font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-8); }
+    .success-actions { display: flex; gap: var(--space-3); justify-content: center; flex-wrap: wrap; }
+
+    /* ---- NLP Section ---- */
+    .nlp-section { display: none; }
+    .nlp-section-active { display: block; }
+    .scan-section { display: block; }
+    .scan-section-hidden { display: none; }
+
+    .nlp-input-card { background-color: var(--surface-card); border: 1px solid var(--border-muted); border-radius: var(--radius-xl); padding: var(--space-6); }
+    .nlp-big-input { width: 100%; font-family: var(--font-body); font-size: var(--text-lg); color: var(--text-primary); background-color: var(--surface-page); border: 2px solid var(--border-default); border-radius: var(--radius-xl); padding: var(--space-5); min-height: 100px; resize: none; transition: border-color var(--dur-fast) var(--ease-out); }
+    .nlp-big-input::placeholder { color: var(--text-muted); font-size: var(--text-base); }
+    .nlp-big-input:focus { outline: none; border-color: var(--border-focus); box-shadow: 0 0 0 3px rgba(30,158,126,0.1); }
+    .nlp-examples { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-3); margin-top: var(--space-5); }
+    @media (max-width: 600px) { .nlp-examples { grid-template-columns: 1fr; } }
+    .nlp-example-card { padding: var(--space-4); background-color: var(--surface-page); border: 1px solid var(--border-muted); border-radius: var(--radius-lg); cursor: pointer; transition: all var(--dur-fast) var(--ease-out); }
+    .nlp-example-card:hover { border-color: var(--brand-accent); background-color: var(--brand-accent-light); }
+    .nlp-example-input { font-size: var(--text-sm); font-weight: 500; color: var(--text-primary); margin-bottom: 4px; font-style: italic; }
+    .nlp-example-result { font-size: var(--text-xs); color: var(--text-muted); }
+
+    /* Quota warning */
+    .quota-warning { background-color: var(--warning-bg); border: 1px solid var(--warning-border); border-radius: var(--radius-lg); padding: var(--space-4) var(--space-5); display: flex; align-items: flex-start; gap: var(--space-3); margin-bottom: var(--space-6); }
+    .quota-warning-icon { width: 20px; height: 20px; color: var(--warning-color); flex-shrink: 0; margin-top: 1px; }
+    .quota-warning-text { font-size: var(--text-sm); color: var(--warning-color); line-height: var(--leading-relaxed); }
+    .quota-warning-text strong { font-weight: 600; }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="app-header" role="banner">
+    <a href="../../index.html" class="header-brand" aria-label="KaitoFin — Kembali ke beranda">
+      <div class="header-logo" aria-hidden="true"><span class="header-logo-inner">K</span></div>
+      <span class="header-name">KaitoFin</span>
+    </a>
+    <div class="header-divider" aria-hidden="true"></div>
+    <nav aria-label="Halaman saat ini">
+      <a href="dashboard.html" style="font-size:var(--text-sm);color:var(--text-secondary);text-decoration:none">Dashboard</a>
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true" style="display:inline;margin:0 6px;color:var(--text-muted)"><path d="M4.5 3l3 3-3 3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span style="font-size:var(--text-sm);color:var(--text-primary)" aria-current="page">Scan &amp; Input</span>
+    </nav>
+    <div class="header-spacer"></div>
+    <div class="quota-indicator" aria-label="Kuota AI tersisa: 8 dari 10">8 / 10 AI</div>
+    <button class="header-user-btn" aria-label="Akun: Dava Rafael">DR</button>
+  </header>
+
+  <main class="scan-page" id="main-content">
+    <div class="scan-inner">
+
+      <h1 class="scan-page-title">Catat Transaksi Baru</h1>
+      <p class="scan-page-sub">Gunakan dua cara: foto struk belanja atau ketik dengan bahasa natural.</p>
+
+      <!-- Quota warning (show when quota low) -->
+      <div class="quota-warning" role="alert" style="display:none" id="quota-warning">
+        <svg class="quota-warning-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 3a7 7 0 1 1 0 14A7 7 0 0 1 10 3z" stroke="currentColor" stroke-width="1.5"/><path d="M10 7v4M10 13v.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <div class="quota-warning-text"><strong>Kuota AI hampir habis.</strong> Kamu masih punya 2 penggunaan tersisa. <a href="upgrade.html" style="color:var(--warning-color);font-weight:600">Upgrade ke PRO</a> untuk kuota lebih banyak.</div>
+      </div>
+
+      <!-- Mode Selector -->
+      <div class="mode-tabs" role="tablist" aria-label="Pilih metode input">
+        <button class="mode-tab mode-tab-active" role="tab" aria-selected="true" id="tab-scan" aria-controls="panel-scan" onclick="switchMode('scan')">
+          <div class="mode-tab-icon" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="2" y="4" width="16" height="12" rx="2" stroke="currentColor" stroke-width="1.5"/><circle cx="10" cy="10" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M5 4V2M15 4V2M3 8h2M15 8h2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+          </div>
+          <div class="mode-tab-title">Scan Struk</div>
+          <div class="mode-tab-desc">Upload foto struk, AI ekstrak otomatis nominal dan kategori</div>
+        </button>
+        <button class="mode-tab" role="tab" aria-selected="false" id="tab-nlp" aria-controls="panel-nlp" onclick="switchMode('nlp')">
+          <div class="mode-tab-icon" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 6h12M4 10h8M4 14h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div class="mode-tab-title">Input Cepat</div>
+          <div class="mode-tab-desc">Ketik santai seperti "Beli nasi padang 25rb", AI yang urai</div>
+        </button>
+      </div>
+
+      <!-- =========================================================
+         PANEL: SCAN STRUK
+         ========================================================= -->
+      <div id="panel-scan" role="tabpanel" aria-labelledby="tab-scan">
+
+        <!-- STATE 1: Upload -->
+        <div id="state-upload">
+          <div class="upload-zone" onclick="showState('preview')" role="button" tabindex="0" aria-label="Klik atau seret foto struk ke sini">
+            <div class="upload-icon" aria-hidden="true">
+              <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M14 18V8M10 12l4-4 4 4" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 20h18" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>
+            </div>
+            <div class="upload-title">Seret foto struk ke sini</div>
+            <div class="upload-hint">atau klik untuk pilih file dari galeri</div>
+            <div class="upload-formats">
+              <span class="upload-format-chip">JPG</span>
+              <span class="upload-format-chip">PNG</span>
+              <span class="upload-format-chip">WEBP</span>
+              <span class="upload-format-chip">Maks 10MB</span>
+            </div>
+          </div>
+          <div class="upload-or" aria-hidden="true">atau</div>
+          <div style="text-align:center">
+            <button class="btn btn-secondary" onclick="showState('preview')">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><rect x="1" y="2" width="12" height="10" rx="1.5" stroke="currentColor" stroke-width="1.3"/><circle cx="7" cy="7" r="2" stroke="currentColor" stroke-width="1.3"/></svg>
+              Ambil Foto dengan Kamera
+            </button>
+          </div>
+        </div>
+
+        <!-- STATE 2: Preview before processing -->
+        <div id="state-preview" style="display:none">
+          <div class="preview-grid">
+            <div class="preview-image-wrap">
+              <div class="preview-image-header">
+                <span style="font-size:var(--text-sm);font-weight:600;color:var(--text-primary)">Pratinjau Struk</span>
+                <button class="btn btn-ghost btn-sm" onclick="showState('upload')">Ganti Foto</button>
+              </div>
+              <div class="preview-img" aria-label="Foto struk yang diupload">
+                <!-- Simulated receipt -->
+                <div style="background:var(--surface-page);border:1px solid var(--border-muted);border-radius:var(--radius-lg);padding:var(--space-4);font-size:11px;font-family:monospace;text-align:left;width:100%;max-width:200px;color:var(--text-body);line-height:1.6">
+                  <div style="text-align:center;font-weight:700;margin-bottom:8px">INDOMARET<br/>Jl. Sudirman No. 42</div>
+                  <hr style="border-color:var(--border-muted);margin:6px 0"/>
+                  <div style="display:flex;justify-content:space-between"><span>Indomie Goreng x2</span><span>10.000</span></div>
+                  <div style="display:flex;justify-content:space-between"><span>Aqua 600ml</span><span>5.000</span></div>
+                  <div style="display:flex;justify-content:space-between"><span>Chitato 80g</span><span>15.000</span></div>
+                  <div style="display:flex;justify-content:space-between"><span>Teh Pucuk 350ml</span><span>5.500</span></div>
+                  <div style="display:flex;justify-content:space-between"><span>Susu Ultra 250ml</span><span>8.000</span></div>
+                  <hr style="border-color:var(--border-muted);margin:6px 0"/>
+                  <div style="display:flex;justify-content:space-between;font-weight:700"><span>TOTAL</span><span>Rp 43.500</span></div>
+                  <div style="margin-top:6px;color:var(--text-muted)">02/11/2026 14:23</div>
+                </div>
+              </div>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:var(--space-4)">
+              <div style="background:var(--surface-card);border:1px solid var(--border-muted);border-radius:var(--radius-xl);padding:var(--space-5)">
+                <div style="font-size:var(--text-sm);font-weight:600;color:var(--text-primary);margin-bottom:var(--space-3)">Siap Diproses</div>
+                <div style="font-size:var(--text-sm);color:var(--text-secondary);line-height:var(--leading-relaxed);margin-bottom:var(--space-4)">AI akan mengidentifikasi nominal, nama toko, tanggal, dan kategori transaksi dari foto ini.</div>
+                <div style="display:flex;align-items:center;gap:var(--space-2);margin-bottom:var(--space-4)">
+                  <div class="ai-badge-small" style="display:inline-flex">
+                    <svg width="8" height="8" viewBox="0 0 8 8" fill="none" aria-hidden="true"><circle cx="4" cy="4" r="3" stroke="currentColor" stroke-width="1"/></svg>
+                    Gemini AI
+                  </div>
+                  <span style="font-size:var(--text-xs);color:var(--text-muted)">akan memproses gambar ini</span>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:var(--space-3)">
+                  <button class="btn btn-primary" onclick="showState('processing')" style="justify-content:center">
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.3"/><path d="M5 7l2 2 3-3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Proses dengan AI
+                    <span style="font-size:10px;color:rgba(255,255,255,0.7)">−1 kuota</span>
+                  </button>
+                  <button class="btn btn-ghost" onclick="showState('upload')" style="justify-content:center">Batal, Ganti Foto</button>
+                </div>
+              </div>
+
+              <div style="background:var(--ai-bg);border:1px solid var(--ai-border);border-radius:var(--radius-lg);padding:var(--space-4)">
+                <div style="font-size:var(--text-xs);font-weight:600;color:var(--ai-color);margin-bottom:var(--space-2)">Yang akan diekstraksi AI:</div>
+                <ul style="list-style:none;display:flex;flex-direction:column;gap:var(--space-1)">
+                  <li style="font-size:var(--text-xs);color:var(--ai-color);display:flex;gap:6px;align-items:center"><span>✓</span> Nominal total transaksi</li>
+                  <li style="font-size:var(--text-xs);color:var(--ai-color);display:flex;gap:6px;align-items:center"><span>✓</span> Nama toko / merchant</li>
+                  <li style="font-size:var(--text-xs);color:var(--ai-color);display:flex;gap:6px;align-items:center"><span>✓</span> Tanggal transaksi</li>
+                  <li style="font-size:var(--text-xs);color:var(--ai-color);display:flex;gap:6px;align-items:center"><span>✓</span> Kategori (belanja, makan, dll)</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STATE 3: AI Processing -->
+        <div id="state-processing" style="display:none">
+          <div class="processing-container" style="display:block">
+            <div class="processing-ring" role="status" aria-label="Sedang memproses dengan AI" aria-live="polite"></div>
+            <div class="processing-title">AI sedang membaca struk kamu...</div>
+            <p style="font-size:var(--text-sm);color:var(--text-secondary);max-width:40ch;margin:0 auto">Gemini AI menganalisis gambar dan mengekstrak informasi transaksi.</p>
+            <div class="processing-steps" aria-live="polite" aria-label="Langkah pemrosesan">
+              <div class="proc-step">
+                <div class="proc-step-dot proc-step-done" aria-hidden="true"></div>
+                <span class="proc-step-label-done">Gambar diterima</span>
+              </div>
+              <div class="proc-step">
+                <div class="proc-step-dot proc-step-done" aria-hidden="true"></div>
+                <span class="proc-step-label-done">OCR membaca teks</span>
+              </div>
+              <div class="proc-step">
+                <div class="proc-step-dot proc-step-active" aria-hidden="true"></div>
+                <span class="proc-step-label-active">Gemini mengidentifikasi data...</span>
+              </div>
+              <div class="proc-step">
+                <div class="proc-step-dot proc-step-pending" aria-hidden="true"></div>
+                <span style="color:var(--text-muted)">Menyiapkan form konfirmasi</span>
+              </div>
+            </div>
+            <button class="btn btn-secondary" onclick="showState('extraction')" style="margin-top:var(--space-8)">
+              Simulasi: Lihat Hasil Ekstraksi →
+            </button>
+          </div>
+        </div>
+
+        <!-- STATE 4: Extraction + Edit Form -->
+        <div id="state-extraction" style="display:none">
+          <div style="background:var(--ai-bg);border:1px solid var(--ai-border);border-radius:var(--radius-lg);padding:var(--space-4);margin-bottom:var(--space-5);display:flex;align-items:flex-start;gap:var(--space-3)" role="status" aria-live="polite">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" style="color:var(--ai-color);flex-shrink:0;margin-top:1px"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.3"/><path d="M5 8l2.5 2.5L11 5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <div style="font-size:var(--text-sm);color:var(--ai-color)"><strong>AI berhasil mengekstrak data dari struk.</strong> Periksa kembali informasi di bawah dan koreksi jika ada yang kurang tepat sebelum konfirmasi.</div>
+          </div>
+
+          <div class="extraction-grid">
+            <!-- Left: Receipt preview -->
+            <div class="extraction-preview-wrap">
+              <div style="padding:var(--space-4) var(--space-5);border-bottom:1px solid var(--border-muted);display:flex;align-items:center;justify-content:space-between">
+                <span style="font-size:var(--text-sm);font-weight:600;color:var(--text-primary)">Struk Asli</span>
+                <span class="badge badge-ai">AI Scan</span>
+              </div>
+              <div style="padding:var(--space-5);display:flex;justify-content:center">
+                <div style="background:var(--surface-page);border:1px solid var(--border-muted);border-radius:var(--radius-lg);padding:var(--space-4);font-size:11px;font-family:monospace;text-align:left;width:100%;max-width:200px;color:var(--text-body);line-height:1.6">
+                  <div style="text-align:center;font-weight:700;margin-bottom:8px">INDOMARET<br/>Jl. Sudirman No. 42</div>
+                  <hr style="border-color:var(--border-muted);margin:6px 0"/>
+                  <div style="display:flex;justify-content:space-between"><span>Indomie Goreng x2</span><span>10.000</span></div>
+                  <div style="display:flex;justify-content:space-between"><span>Aqua 600ml</span><span>5.000</span></div>
+                  <div style="display:flex;justify-content:space-between"><span>Chitato 80g</span><span>15.000</span></div>
+                  <div style="display:flex;justify-content:space-between"><span>Teh Pucuk 350ml</span><span>5.500</span></div>
+                  <div style="display:flex;justify-content:space-between"><span>Susu Ultra 250ml</span><span>8.000</span></div>
+                  <hr style="border-color:var(--border-muted);margin:6px 0"/>
+                  <div style="display:flex;justify-content:space-between;font-weight:700;background:var(--ai-bg);padding:4px;border-radius:4px"><span>TOTAL</span><span>Rp 43.500</span></div>
+                  <div style="margin-top:6px;color:var(--text-muted)">02/11/2026 14:23</div>
+                </div>
+              </div>
+              <div style="padding:var(--space-4) var(--space-5);border-top:1px solid var(--border-muted);background:var(--ai-bg)">
+                <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:var(--ai-color);margin-bottom:6px">Data terekstrak AI</div>
+                <div style="display:flex;flex-direction:column;gap:4px">
+                  <div style="font-size:11px;color:var(--ai-color);display:flex;gap:8px"><span style="color:var(--text-muted);width:60px;flex-shrink:0">Nominal</span><strong>Rp 43.500</strong></div>
+                  <div style="font-size:11px;color:var(--ai-color);display:flex;gap:8px"><span style="color:var(--text-muted);width:60px;flex-shrink:0">Toko</span><strong>Indomaret</strong></div>
+                  <div style="font-size:11px;color:var(--ai-color);display:flex;gap:8px"><span style="color:var(--text-muted);width:60px;flex-shrink:0">Tanggal</span><strong>02/11/2026</strong></div>
+                  <div style="font-size:11px;color:var(--ai-color);display:flex;gap:8px"><span style="color:var(--text-muted);width:60px;flex-shrink:0">Kategori</span><strong>Belanja</strong></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: Editable form -->
+            <div class="ai-result-card">
+              <div class="ai-result-header">
+                <span class="ai-result-title">Konfirmasi Detail Transaksi</span>
+                <span class="ai-confidence">97% yakin</span>
+              </div>
+              <div class="ai-result-body">
+
+                <div class="field-group">
+                  <label class="field-label" for="field-type">Jenis Transaksi</label>
+                  <div class="type-toggle">
+                    <button type="button" class="type-btn type-btn-active-expense" onclick="setType('expense', this)" aria-pressed="true">Pengeluaran</button>
+                    <button type="button" class="type-btn" onclick="setType('income', this)" aria-pressed="false">Pemasukan</button>
+                  </div>
+                </div>
+
+                <div class="field-group">
+                  <label class="field-label" for="field-amount">Nominal</label>
+                  <input class="field-input field-input-amount" id="field-amount" type="text" value="Rp 43.500" aria-label="Nominal transaksi" />
+                  <span class="ai-extracted-chip">
+                    <svg width="8" height="8" viewBox="0 0 8 8" fill="none" aria-hidden="true"><circle cx="4" cy="4" r="3" stroke="currentColor" stroke-width="1"/></svg>
+                    Diekstrak AI
+                  </span>
+                </div>
+
+                <div class="field-group">
+                  <label class="field-label" for="field-merchant">Nama Toko / Deskripsi</label>
+                  <input class="field-input" id="field-merchant" type="text" value="Indomaret — Jl. Sudirman No. 42" aria-label="Nama toko atau deskripsi transaksi" />
+                  <span class="ai-extracted-chip">
+                    <svg width="8" height="8" viewBox="0 0 8 8" fill="none" aria-hidden="true"><circle cx="4" cy="4" r="3" stroke="currentColor" stroke-width="1"/></svg>
+                    Diekstrak AI
+                  </span>
+                </div>
+
+                <div class="field-group">
+                  <label class="field-label" for="field-date">Tanggal</label>
+                  <input class="field-input" id="field-date" type="date" value="2026-11-02" aria-label="Tanggal transaksi" />
+                  <span class="ai-extracted-chip">
+                    <svg width="8" height="8" viewBox="0 0 8 8" fill="none" aria-hidden="true"><circle cx="4" cy="4" r="3" stroke="currentColor" stroke-width="1"/></svg>
+                    Diekstrak AI
+                  </span>
+                </div>
+
+                <div class="field-group">
+                  <label class="field-label" for="field-category">Kategori</label>
+                  <select class="category-select" id="field-category" aria-label="Kategori transaksi">
+                    <option>Belanja</option>
+                    <option>Makan &amp; Minum</option>
+                    <option>Transportasi</option>
+                    <option>Pendidikan</option>
+                    <option>Hiburan</option>
+                    <option>Kesehatan</option>
+                    <option>Utilitas</option>
+                    <option>Lainnya</option>
+                  </select>
+                  <span class="ai-extracted-chip">
+                    <svg width="8" height="8" viewBox="0 0 8 8" fill="none" aria-hidden="true"><circle cx="4" cy="4" r="3" stroke="currentColor" stroke-width="1"/></svg>
+                    Disarankan AI
+                  </span>
+                </div>
+
+                <div class="field-group">
+                  <label class="field-label" for="field-notes">Catatan (opsional)</label>
+                  <input class="field-input" id="field-notes" type="text" placeholder="Tambahkan catatan..." aria-label="Catatan tambahan" />
+                </div>
+
+                <div class="confirm-actions">
+                  <button class="btn btn-secondary" onclick="showState('upload')">
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M9 2H5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h4M11 9l2-2-2-2M7 7h6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Batal
+                  </button>
+                  <button class="btn btn-primary" onclick="showState('success')" style="flex:2;justify-content:center">
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M7 1a6 6 0 1 1 0 12A6 6 0 0 1 7 1z" stroke="currentColor" stroke-width="1.3"/><path d="M4.5 7l2 2L9.5 5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Konfirmasi &amp; Simpan
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STATE 5: Success -->
+        <div id="state-success" style="display:none">
+          <div style="text-align:center;padding:var(--space-16) var(--space-8)">
+            <div style="width:72px;height:72px;border-radius:50%;background:var(--income-bg);display:flex;align-items:center;justify-content:center;margin:0 auto var(--space-5);color:var(--income-color)" role="img" aria-label="Berhasil">
+              <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M8 16l5 5L24 11" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div style="font-family:var(--font-display);font-size:var(--text-xl);font-weight:700;color:var(--text-primary);margin-bottom:var(--space-2)" role="status" aria-live="polite">Transaksi berhasil dicatat!</div>
+            <div style="font-size:var(--text-3xl);font-weight:800;font-variant-numeric:tabular-nums;color:var(--expense-color);letter-spacing:-0.03em;margin-bottom:var(--space-3)">−Rp 43.500</div>
+            <div style="font-size:var(--text-sm);color:var(--text-secondary);margin-bottom:var(--space-8)">Indomaret · Belanja · 2 November 2026</div>
+            <div style="display:flex;gap:var(--space-3);justify-content:center;flex-wrap:wrap">
+              <button class="btn btn-secondary" onclick="showState('upload')">Scan Struk Lagi</button>
+              <a href="dashboard.html" class="btn btn-primary">Kembali ke Dashboard</a>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /panel-scan -->
+
+      <!-- =========================================================
+         PANEL: NATURAL LANGUAGE INPUT
+         ========================================================= -->
+      <div id="panel-nlp" role="tabpanel" aria-labelledby="tab-nlp" style="display:none">
+        <div class="nlp-input-card">
+          <div style="margin-bottom:var(--space-4)">
+            <label for="nlp-input" style="font-size:var(--text-sm);font-weight:600;color:var(--text-primary);display:flex;align-items:center;gap:var(--space-2);margin-bottom:var(--space-3)">
+              Deskripsikan transaksimu
+              <span class="ai-badge-small" style="display:inline-flex">
+                <svg width="8" height="8" viewBox="0 0 8 8" fill="none" aria-hidden="true"><circle cx="4" cy="4" r="3" stroke="currentColor" stroke-width="1"/></svg>
+                AI Parse
+              </span>
+            </label>
+            <textarea class="nlp-big-input" id="nlp-input" placeholder="Contoh: Beli nasi padang 25rb di warung Bu Sari&#10;atau: Bayar kos bulan November 500rb&#10;atau: Transfer freelance dari PT Maju Jaya 750000" rows="4" aria-label="Input transaksi natural language"></textarea>
+          </div>
+          <div style="display:flex;gap:var(--space-3)">
+            <button class="btn btn-primary" onclick="showNlpResult()" style="flex:1;justify-content:center">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.3"/><path d="M5 7h4M7 5v4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+              Parse dengan AI
+              <span style="font-size:10px;color:rgba(255,255,255,0.7)">−1 kuota</span>
+            </button>
+            <button class="btn btn-ghost">Hapus</button>
+          </div>
+
+          <div style="margin-top:var(--space-5)">
+            <div style="font-size:var(--text-xs);font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:var(--space-3)">Contoh input yang bisa dikenali</div>
+            <div class="nlp-examples">
+              <div class="nlp-example-card" onclick="setNlpExample('Beli nasi padang Rp25.000 di warung Bu Sari')">
+                <div class="nlp-example-input">"Beli nasi padang 25rb di Bu Sari"</div>
+                <div class="nlp-example-result">→ Pengeluaran Rp 25.000 · Makan · Bu Sari</div>
+              </div>
+              <div class="nlp-example-card" onclick="setNlpExample('Bayar kos bulan November Rp500.000')">
+                <div class="nlp-example-input">"Bayar kos November 500rb"</div>
+                <div class="nlp-example-result">→ Pengeluaran Rp 500.000 · Utilitas</div>
+              </div>
+              <div class="nlp-example-card" onclick="setNlpExample('Transfer freelance dari PT Maju Jaya Rp750.000')">
+                <div class="nlp-example-input">"Transfer freelance 750rb dari Maju Jaya"</div>
+                <div class="nlp-example-result">→ Pemasukan Rp 750.000 · Pendapatan</div>
+              </div>
+              <div class="nlp-example-card" onclick="setNlpExample('Bensin Pertamax Rp150.000 di SPBU Gatsu')">
+                <div class="nlp-example-input">"Bensin Pertamax 150rb SPBU Gatsu"</div>
+                <div class="nlp-example-result">→ Pengeluaran Rp 150.000 · Transportasi</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- NLP Result (shown after parsing) -->
+        <div id="nlp-result" style="display:none;margin-top:var(--space-5)">
+          <div style="background:var(--ai-bg);border:1px solid var(--ai-border);border-radius:var(--radius-lg);padding:var(--space-4);margin-bottom:var(--space-5);display:flex;align-items:flex-start;gap:var(--space-3)" role="status" aria-live="polite">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" style="color:var(--ai-color);flex-shrink:0;margin-top:1px"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.3"/><path d="M5 8l2.5 2.5L11 5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <div style="font-size:var(--text-sm);color:var(--ai-color)"><strong>AI berhasil mengurai transaksi.</strong> Periksa dan koreksi detail sebelum konfirmasi.</div>
+          </div>
+          <div class="ai-result-card">
+            <div class="ai-result-header">
+              <span class="ai-result-title">Konfirmasi Detail</span>
+              <span class="ai-confidence">94% yakin</span>
+            </div>
+            <div class="ai-result-body">
+              <div class="field-group">
+                <label class="field-label">Jenis</label>
+                <div class="type-toggle">
+                  <button type="button" class="type-btn type-btn-active-expense">Pengeluaran</button>
+                  <button type="button" class="type-btn">Pemasukan</button>
+                </div>
+              </div>
+              <div class="field-group">
+                <label class="field-label" for="nlp-amount">Nominal</label>
+                <input class="field-input field-input-amount" id="nlp-amount" type="text" value="Rp 25.000" />
+                <span class="ai-extracted-chip"><svg width="8" height="8" viewBox="0 0 8 8" fill="none" aria-hidden="true"><circle cx="4" cy="4" r="3" stroke="currentColor" stroke-width="1"/></svg>Dari teks</span>
+              </div>
+              <div class="field-group">
+                <label class="field-label" for="nlp-desc">Deskripsi</label>
+                <input class="field-input" id="nlp-desc" type="text" value="Nasi padang — Warung Bu Sari" />
+                <span class="ai-extracted-chip"><svg width="8" height="8" viewBox="0 0 8 8" fill="none" aria-hidden="true"><circle cx="4" cy="4" r="3" stroke="currentColor" stroke-width="1"/></svg>Dari teks</span>
+              </div>
+              <div class="field-group">
+                <label class="field-label" for="nlp-cat">Kategori</label>
+                <select class="category-select" id="nlp-cat">
+                  <option selected>Makan &amp; Minum</option>
+                  <option>Belanja</option>
+                  <option>Transportasi</option>
+                  <option>Pendidikan</option>
+                  <option>Hiburan</option>
+                  <option>Utilitas</option>
+                  <option>Lainnya</option>
+                </select>
+              </div>
+              <div class="confirm-actions">
+                <button class="btn btn-secondary" onclick="document.getElementById('nlp-result').style.display='none'">Batal</button>
+                <button class="btn btn-primary" onclick="showState('success');switchMode('scan')" style="flex:2;justify-content:center">Konfirmasi &amp; Simpan</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /panel-nlp -->
+
+    </div><!-- /scan-inner -->
+  </main>
+
+  <script>
+    function showState(state) {
+      const states = ['upload', 'preview', 'processing', 'extraction', 'success'];
+      states.forEach(s => {
+        const el = document.getElementById('state-' + s);
+        if (el) el.style.display = s === state ? 'block' : 'none';
+      });
+    }
+
+    function switchMode(mode) {
+      const scanPanel = document.getElementById('panel-scan');
+      const nlpPanel  = document.getElementById('panel-nlp');
+      const tabScan   = document.getElementById('tab-scan');
+      const tabNlp    = document.getElementById('tab-nlp');
+      if (mode === 'scan') {
+        scanPanel.style.display = 'block';
+        nlpPanel.style.display  = 'none';
+        tabScan.setAttribute('aria-selected', 'true');
+        tabScan.classList.add('mode-tab-active');
+        tabNlp.setAttribute('aria-selected', 'false');
+        tabNlp.classList.remove('mode-tab-active');
+      } else {
+        scanPanel.style.display = 'none';
+        nlpPanel.style.display  = 'block';
+        tabNlp.setAttribute('aria-selected', 'true');
+        tabNlp.classList.add('mode-tab-active');
+        tabScan.setAttribute('aria-selected', 'false');
+        tabScan.classList.remove('mode-tab-active');
+      }
+    }
+
+    function setType(type, btn) {
+      const parent = btn.closest('.type-toggle');
+      parent.querySelectorAll('.type-btn').forEach(b => {
+        b.classList.remove('type-btn-active-expense', 'type-btn-active-income');
+        b.setAttribute('aria-pressed', 'false');
+      });
+      btn.classList.add(type === 'expense' ? 'type-btn-active-expense' : 'type-btn-active-income');
+      btn.setAttribute('aria-pressed', 'true');
+    }
+
+    function showNlpResult() {
+      document.getElementById('nlp-result').style.display = 'block';
+      document.getElementById('nlp-result').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function setNlpExample(text) {
+      document.getElementById('nlp-input').value = text;
+      document.getElementById('nlp-input').focus();
+    }
+
+    // Allow Enter on upload-zone
+    document.querySelectorAll('.upload-zone').forEach(z => {
+      z.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); showState('preview'); } });
+    });
+  </script>
+
+</body>
+</html>

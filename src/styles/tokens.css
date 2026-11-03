@@ -1,0 +1,240 @@
+/* ============================================================
+   KaitoFin — Design System Tokens
+   Visual Identity: Premium Editorial Fintech
+   "Calm authority meets warm precision"
+   ============================================================ */
+
+:root {
+  /* -----------------------------------------------------------
+   * BRAND IDENTITY
+   * Deep forest charcoal + warm parchment + restrained teal
+   * ----------------------------------------------------------- */
+
+  /* Core brand hues — NOT purple, NOT indigo */
+  --brand-primary:     #1A2E2B; /* deep forest charcoal */
+  --brand-secondary:   #2D4A45; /* muted teal-forest     */
+  --brand-accent:      #1E9E7E; /* restrained teal CTA   */
+  --brand-accent-dark: #17826A; /* teal hover            */
+  --brand-accent-light:#E6F7F3; /* teal subtle           */
+  --brand-accent-muted:#B3E8DC; /* teal muted            */
+
+  /* -----------------------------------------------------------
+   * SURFACE LAYERS — elevation via lightness, NOT shadows
+   * ----------------------------------------------------------- */
+  --surface-page:     #F7F5F1; /* warm parchment        */
+  --surface-card:     #FFFFFF; /* pure white cards       */
+  --surface-elevated: #FDFCFA; /* slightly elevated      */
+  --surface-inset:    #F0EDE7; /* inset sections         */
+  --surface-dark:     #1A2E2B; /* inverse sections       */
+  --surface-dark-card:#243B36; /* dark mode cards        */
+
+  /* -----------------------------------------------------------
+   * TYPOGRAPHY COLORS
+   * ----------------------------------------------------------- */
+  --text-primary:   #12201D; /* deep forest text        */
+  --text-body:      #2C3D39; /* body reading text       */
+  --text-secondary: #4A6259; /* secondary / metadata    */
+  --text-muted:     #7A938D; /* muted / placeholder     */
+  --text-disabled:  #B0C4BE; /* disabled states         */
+  --text-on-dark:   #F0EDE7; /* text on dark surface    */
+  --text-on-dark-2: #A8C5BD; /* secondary on dark       */
+  --text-on-accent: #FFFFFF; /* text on teal CTA        */
+
+  /* -----------------------------------------------------------
+   * BORDER SYSTEM
+   * ----------------------------------------------------------- */
+  --border-default:  #D8D3CB; /* default borders         */
+  --border-muted:    #E8E4DD; /* subtle dividers         */
+  --border-focus:    #1E9E7E; /* focus ring — teal       */
+  --border-strong:   #B0AAA0; /* strong/emphasized       */
+
+  /* -----------------------------------------------------------
+   * SEMANTIC COLORS — financial meaning
+   * CRITICAL: direction ≠ judgment (up can be bad for expenses)
+   * ----------------------------------------------------------- */
+  --income-color:    #15803D; /* income / positive       */
+  --income-bg:       #F0FDF4; /* income background       */
+  --income-border:   #BBF7D0; /* income border           */
+  --expense-color:   #B91C1C; /* expense / negative      */
+  --expense-bg:      #FEF2F2; /* expense background      */
+  --expense-border:  #FECACA; /* expense border          */
+  --warning-color:   #B45309; /* warning / caution       */
+  --warning-bg:      #FFFBEB; /* warning background      */
+  --warning-border:  #FCD34D; /* warning border          */
+  --neutral-color:   #4A6259; /* neutral indicator       */
+  --neutral-bg:      #F0EDE7; /* neutral background      */
+
+  /* -----------------------------------------------------------
+   * AI / PROCESSING STATES
+   * ----------------------------------------------------------- */
+  --ai-color:        #0D7A6B; /* AI brand moment         */
+  --ai-bg:           #E6F7F3; /* AI light background     */
+  --ai-border:       #99DDD0; /* AI border               */
+  --ai-processing:   #1E9E7E; /* AI loading indicator    */
+
+  /* -----------------------------------------------------------
+   * TYPOGRAPHY SCALE — Major Third 1.25
+   * ----------------------------------------------------------- */
+  --font-display: 'Bricolage Grotesque', system-ui, sans-serif;
+  --font-body:    'IBM Plex Sans', system-ui, sans-serif;
+  --font-mono:    'IBM Plex Mono', 'JetBrains Mono', ui-monospace, monospace;
+
+  --text-xs:   0.75rem;   /* 12px */
+  --text-sm:   0.875rem;  /* 14px */
+  --text-base: 1rem;      /* 16px */
+  --text-lg:   1.25rem;   /* 20px */
+  --text-xl:   1.5625rem; /* 25px */
+  --text-2xl:  1.953rem;  /* 31px */
+  --text-3xl:  2.441rem;  /* 39px */
+  --text-4xl:  3.052rem;  /* 49px */
+
+  /* Financial number typography — always tabular */
+  --font-numeric: 'IBM Plex Sans', system-ui, sans-serif;
+  --numeric-features: "tnum" 1, "zero" 1;
+
+  /* Leading */
+  --leading-tight:   1.2;
+  --leading-snug:    1.375;
+  --leading-normal:  1.5;
+  --leading-relaxed: 1.625;
+
+  /* -----------------------------------------------------------
+   * SPACING SCALE — 4px base unit
+   * ----------------------------------------------------------- */
+  --space-1:  0.25rem;  /* 4px  */
+  --space-2:  0.5rem;   /* 8px  */
+  --space-3:  0.75rem;  /* 12px */
+  --space-4:  1rem;     /* 16px */
+  --space-5:  1.25rem;  /* 20px */
+  --space-6:  1.5rem;   /* 24px */
+  --space-8:  2rem;     /* 32px */
+  --space-10: 2.5rem;   /* 40px */
+  --space-12: 3rem;     /* 48px */
+  --space-16: 4rem;     /* 64px */
+  --space-20: 5rem;     /* 80px */
+  --space-24: 6rem;     /* 96px */
+
+  /* -----------------------------------------------------------
+   * RADIUS SCALE — differentiated, never uniform
+   * ----------------------------------------------------------- */
+  --radius-sm:   4px;   /* inputs, badges, tags    */
+  --radius-md:   8px;   /* buttons, inputs         */
+  --radius-lg:   12px;  /* cards, panels           */
+  --radius-xl:   16px;  /* modals, large cards     */
+  --radius-2xl:  24px;  /* hero elements           */
+  --radius-full: 9999px;/* pills, avatars          */
+
+  /* -----------------------------------------------------------
+   * SHADOW HIERARCHY — elevation via shadow, NOT everywhere
+   * ----------------------------------------------------------- */
+  --shadow-sm:  0 1px 2px 0 rgb(26 46 43 / 0.05);
+  --shadow-md:  0 4px 12px 0 rgb(26 46 43 / 0.08);
+  --shadow-lg:  0 8px 24px 0 rgb(26 46 43 / 0.10);
+  --shadow-xl:  0 16px 40px 0 rgb(26 46 43 / 0.12);
+  --shadow-card: 0 1px 3px 0 rgb(26 46 43 / 0.06), 0 2px 8px 0 rgb(26 46 43 / 0.04);
+
+  /* -----------------------------------------------------------
+   * TRANSITION SYSTEM
+   * ----------------------------------------------------------- */
+  --dur-fast:    150ms;
+  --dur-normal:  250ms;
+  --dur-slow:    350ms;
+  --ease-out:    cubic-bezier(0, 0, 0.2, 1);
+  --ease-in:     cubic-bezier(0.4, 0, 1, 1);
+  --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* -----------------------------------------------------------
+   * RESPONSIVE BREAKPOINTS
+   * ----------------------------------------------------------- */
+  --bp-mobile: 390px;
+  --bp-tablet: 1024px;
+  --bp-desktop: 1440px;
+
+  /* -----------------------------------------------------------
+   * LAYOUT
+   * ----------------------------------------------------------- */
+  --max-content:   1320px;
+  --max-text:      680px;
+  --sidebar-width: 256px;
+  --header-height: 56px;
+  --nav-height:    64px;
+}
+
+/* ============================================================
+   DARK MODE OVERRIDES
+   ============================================================ */
+.dark {
+  --surface-page:      #0E1C1A;
+  --surface-card:      #162420;
+  --surface-elevated:  #1E3530;
+  --surface-inset:     #0A1412;
+  --border-default:    rgba(240, 237, 231, 0.12);
+  --border-muted:      rgba(240, 237, 231, 0.06);
+  --text-primary:      #F0EDE7;
+  --text-body:         #C8D8D4;
+  --text-secondary:    #8AADA6;
+  --text-muted:        #4E6B65;
+  --brand-accent:      #2BBFA0;
+  --brand-accent-dark: #23A38A;
+  --brand-accent-light:rgba(43, 191, 160, 0.12);
+  --income-bg:         rgba(21, 128, 61, 0.12);
+  --expense-bg:        rgba(185, 28, 28, 0.12);
+}
+
+/* ============================================================
+   GLOBAL BASE STYLES
+   ============================================================ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  color: var(--text-body);
+  background-color: var(--surface-page);
+}
+
+/* Financial numbers — always tabular */
+.num {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1, "zero" 1;
+  font-family: var(--font-numeric);
+}
+
+/* Focus visible — teal ring */
+:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
+}
+
+/* Visually hidden (for screen readers) */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

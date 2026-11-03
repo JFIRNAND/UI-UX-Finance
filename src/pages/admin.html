@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Admin Panel — KaitoFin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../styles/tokens.css" />
+  <link rel="stylesheet" href="../styles/components.css" />
+  <style>
+    .admin-badge { background-color: #7C3AED; color: #fff; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; padding: 2px 8px; border-radius: var(--radius-full); }
+    .app-header { position: fixed; top: 0; left: 0; right: 0; z-index: 50; height: var(--header-height); background-color: var(--surface-card); border-bottom: 1px solid var(--border-muted); display: flex; align-items: center; padding: 0 var(--space-4); gap: var(--space-4); }
+    .header-brand { display: flex; align-items: center; gap: var(--space-2); text-decoration: none; }
+    .header-logo { width: 28px; height: 28px; background-color: var(--brand-accent); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; }
+    .header-logo-inner { color: #fff; font-weight: 700; font-size: 12px; font-family: var(--font-display); }
+    .header-name { font-family: var(--font-display); font-size: var(--text-sm); font-weight: 700; color: var(--text-primary); }
+    .header-spacer { flex: 1; }
+    .header-user-btn { width: 32px; height: 32px; border-radius: 50%; background: #7C3AED; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 12px; font-weight: 600; border: none; cursor: pointer; }
+    .sidebar { position: fixed; top: var(--header-height); left: 0; bottom: 0; width: var(--sidebar-width); background-color: var(--surface-elevated); border-right: 1px solid var(--border-muted); overflow-y: auto; z-index: 40; padding: var(--space-4) var(--space-3); }
+    .main-content { margin-left: var(--sidebar-width); margin-top: var(--header-height); padding: var(--space-6) var(--space-8); }
+    .admin-section { background-color: var(--surface-card); border: 1px solid var(--border-muted); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: var(--space-5); }
+    .admin-section-header { padding: var(--space-4) var(--space-5); border-bottom: 1px solid var(--border-muted); display: flex; align-items: center; justify-content: space-between; }
+    .admin-section-title { font-size: var(--text-sm); font-weight: 600; color: var(--text-primary); }
+    .user-row { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-3) var(--space-5); border-bottom: 1px solid var(--border-muted); }
+    .user-row:last-child { border-bottom: none; }
+    .user-avatar { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: #fff; flex-shrink: 0; }
+    .user-info { flex: 1; min-width: 0; }
+    .user-name { font-size: var(--text-sm); font-weight: 500; color: var(--text-primary); }
+    .user-email { font-size: var(--text-xs); color: var(--text-muted); }
+    .quota-cell { font-size: var(--text-sm); font-variant-numeric: tabular-nums; font-weight: 600; color: var(--text-primary); width: 80px; text-align: right; }
+    .quota-low { color: var(--expense-color); }
+    .quota-ok { color: var(--income-color); }
+    .upgrade-row { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-3) var(--space-5); border-bottom: 1px solid var(--border-muted); }
+    .upgrade-row:last-child { border-bottom: none; }
+    .upgrade-status { font-size: var(--text-xs); padding: 2px 8px; border-radius: var(--radius-full); font-weight: 500; }
+    .upgrade-status-pending { background-color: var(--warning-bg); color: var(--warning-color); }
+    .upgrade-status-verified { background-color: var(--income-bg); color: var(--income-color); }
+    .inline-form { display: flex; align-items: center; gap: var(--space-2); }
+    .quota-input { font-size: var(--text-sm); font-variant-numeric: tabular-nums; padding: 4px 8px; border: 1px solid var(--border-default); border-radius: var(--radius-sm); width: 80px; text-align: right; }
+    .quota-input:focus { outline: none; border-color: var(--brand-accent); }
+    @media (max-width: 1023px) { .sidebar { transform: translateX(-100%); } .main-content { margin-left: 0; } }
+  </style>
+</head>
+<body>
+
+  <header class="app-header" role="banner">
+    <a href="../../index.html" class="header-brand" aria-label="KaitoFin — Beranda">
+      <div class="header-logo" aria-hidden="true"><span class="header-logo-inner">K</span></div>
+      <span class="header-name">KaitoFin</span>
+    </a>
+    <span class="admin-badge">Admin</span>
+    <div class="header-spacer"></div>
+    <button class="header-user-btn" aria-label="Admin: Dava Rafael">DR</button>
+  </header>
+
+  <nav class="sidebar" aria-label="Navigasi admin">
+    <div class="nav-section-label">Admin Panel</div>
+    <ul role="list" style="list-style:none;display:flex;flex-direction:column;gap:2px">
+      <li><a href="admin.html" class="nav-item nav-item-active" aria-current="page">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="2" y="2" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="9" y="2" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="2" y="9" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="9" y="9" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.3"/></svg>
+        Overview
+      </a></li>
+      <li><a href="#users" class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="5.5" r="2.5" stroke="currentColor" stroke-width="1.3"/><path d="M3 13.5c0-2.5 2.2-4.5 5-4.5s5 2 5 4.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+        Kelola Pengguna
+      </a></li>
+      <li><a href="#upgrades" class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2l1.5 4.5H14l-4 2.9 1.5 4.6L8 11l-3.5 3 1.5-4.6L2 7.4h4.5L8 2z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
+        Permintaan Upgrade
+        <span class="badge badge-warning" style="margin-left:auto;font-size:9px;padding:1px 5px">2</span>
+      </a></li>
+    </ul>
+    <div class="nav-section-label" style="margin-top:var(--space-4)">Akses</div>
+    <ul role="list" style="list-style:none;display:flex;flex-direction:column;gap:2px">
+      <li><a href="dashboard.html" class="nav-item">
+        <svg class="nav-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h4M9 8h4M8 3v4M8 9v4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+        Keluar Admin Mode
+      </a></li>
+    </ul>
+  </nav>
+
+  <main class="main-content" id="main-content">
+
+    <div style="margin-bottom:var(--space-6)">
+      <h1 style="font-family:var(--font-display);font-size:var(--text-xl);font-weight:700;color:var(--text-primary);letter-spacing:-0.02em">Admin Panel</h1>
+      <p style="font-size:var(--text-sm);color:var(--text-muted);margin-top:2px">Kelola pengguna, kuota AI, dan verifikasi upgrade PRO.</p>
+    </div>
+
+    <!-- Admin KPI -->
+    <div style="display:grid;grid-template-columns:repeat(1,1fr);gap:var(--space-4);margin-bottom:var(--space-5)" role="region" aria-label="Statistik admin">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-4)">
+        <div style="background:var(--surface-card);border:1px solid var(--border-muted);border-radius:var(--radius-lg);padding:var(--space-5)">
+          <div style="font-size:var(--text-xs);color:var(--text-muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:var(--space-2)">Total Pengguna</div>
+          <div style="font-size:var(--text-2xl);font-weight:700;font-variant-numeric:tabular-nums;color:var(--text-primary)">12</div>
+        </div>
+        <div style="background:var(--surface-card);border:1px solid var(--border-muted);border-radius:var(--radius-lg);padding:var(--space-5)">
+          <div style="font-size:var(--text-xs);color:var(--text-muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:var(--space-2)">Pengguna PRO</div>
+          <div style="font-size:var(--text-2xl);font-weight:700;font-variant-numeric:tabular-nums;color:var(--brand-accent)">3</div>
+        </div>
+        <div style="background:var(--warning-bg);border:1px solid var(--warning-border);border-radius:var(--radius-lg);padding:var(--space-5)">
+          <div style="font-size:var(--text-xs);color:var(--warning-color);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:var(--space-2)">Upgrade Pending</div>
+          <div style="font-size:var(--text-2xl);font-weight:700;font-variant-numeric:tabular-nums;color:var(--warning-color)">2</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pending Upgrades -->
+    <div class="admin-section" id="upgrades" role="region" aria-label="Permintaan upgrade PRO">
+      <div class="admin-section-header">
+        <span class="admin-section-title">Permintaan Upgrade PRO</span>
+        <span class="badge badge-warning">2 Pending</span>
+      </div>
+      <div class="upgrade-row">
+        <div style="flex:1;min-width:0">
+          <div style="font-size:var(--text-sm);font-weight:500;color:var(--text-primary)">budi.santoso@gmail.com</div>
+          <div style="font-size:var(--text-xs);color:var(--text-muted);margin-top:2px">Dikirim: 2 Nov 2026 · Sudah konfirmasi WA</div>
+        </div>
+        <span class="upgrade-status upgrade-status-pending">Pending</span>
+        <div class="inline-form">
+          <label for="quota-budi" class="sr-only">Kuota untuk budi.santoso</label>
+          <input type="number" id="quota-budi" class="quota-input" value="50" min="1" aria-label="Alokasikan kuota AI untuk budi.santoso" />
+          <button class="btn btn-primary btn-sm" onclick="alert('Kuota berhasil dialokasikan untuk budi.santoso!')" aria-label="Setujui dan alokasikan kuota untuk budi.santoso">
+            Setuju &amp; Alokasi
+          </button>
+          <button class="btn btn-ghost btn-sm" aria-label="Tolak permintaan budi.santoso">Tolak</button>
+        </div>
+      </div>
+      <div class="upgrade-row">
+        <div style="flex:1;min-width:0">
+          <div style="font-size:var(--text-sm);font-weight:500;color:var(--text-primary)">siti.rahayu@yahoo.com</div>
+          <div style="font-size:var(--text-xs);color:var(--text-muted);margin-top:2px">Dikirim: 1 Nov 2026 · Menunggu konfirmasi WA</div>
+        </div>
+        <span class="upgrade-status upgrade-status-pending">Pending</span>
+        <div class="inline-form">
+          <label for="quota-siti" class="sr-only">Kuota untuk siti.rahayu</label>
+          <input type="number" id="quota-siti" class="quota-input" value="30" min="1" aria-label="Alokasikan kuota AI untuk siti.rahayu" />
+          <button class="btn btn-primary btn-sm" onclick="alert('Kuota berhasil dialokasikan untuk siti.rahayu!')" aria-label="Setujui dan alokasikan kuota untuk siti.rahayu">
+            Setuju &amp; Alokasi
+          </button>
+          <button class="btn btn-ghost btn-sm" aria-label="Tolak permintaan siti.rahayu">Tolak</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- User List -->
+    <div class="admin-section" id="users" role="region" aria-label="Daftar semua pengguna">
+      <div class="admin-section-header">
+        <span class="admin-section-title">Daftar Pengguna</span>
+        <a href="#" class="btn btn-ghost btn-sm">+ Tambah Pengguna</a>
+      </div>
+      <div role="table" aria-label="Tabel pengguna">
+        <div role="row" style="display:flex;align-items:center;gap:var(--space-3);padding:var(--space-2) var(--space-5);background:var(--surface-page);font-size:10px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em" aria-hidden="true">
+          <span style="flex:1">Pengguna</span>
+          <span style="width:80px;text-align:right">Kuota AI</span>
+          <span style="width:80px;text-align:right">Status</span>
+          <span style="width:100px;text-align:right">Aksi</span>
+        </div>
+
+        <div class="user-row" role="row">
+          <div class="user-avatar" style="background:linear-gradient(135deg,var(--brand-accent),var(--brand-secondary))" role="img" aria-label="Avatar DR">DR</div>
+          <div class="user-info" role="cell">
+            <div class="user-name">Dava Rafael <span class="admin-badge" style="font-size:8px;padding:1px 5px">Admin</span></div>
+            <div class="user-email">admin@kaitofinance.ai.studio</div>
+          </div>
+          <div class="quota-cell quota-ok" role="cell" aria-label="Kuota tak terbatas">∞</div>
+          <div role="cell" style="width:80px;text-align:right"><span class="badge badge-ai" style="font-size:10px">Admin</span></div>
+          <div role="cell" style="width:100px;text-align:right"><span style="font-size:var(--text-xs);color:var(--text-muted)">—</span></div>
+        </div>
+
+        <div class="user-row" role="row">
+          <div class="user-avatar" style="background:#1D4ED8" role="img" aria-label="Avatar BS">BS</div>
+          <div class="user-info" role="cell">
+            <div class="user-name">Budi Santoso</div>
+            <div class="user-email">budi.santoso@gmail.com</div>
+          </div>
+          <div class="quota-cell quota-low" role="cell" aria-label="Kuota AI: 2 tersisa">2</div>
+          <div role="cell" style="width:80px;text-align:right"><span class="badge badge-neutral" style="font-size:10px">Gratis</span></div>
+          <div role="cell" style="width:100px;text-align:right">
+            <div class="inline-form" style="justify-content:flex-end">
+              <label for="q-budi" class="sr-only">Kuota baru untuk Budi</label>
+              <input type="number" id="q-budi" class="quota-input" value="2" min="0" style="width:60px" aria-label="Kuota AI Budi Santoso" />
+              <button class="btn btn-ghost btn-sm" onclick="alert('Kuota diperbarui!')" aria-label="Simpan kuota baru">Simpan</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="user-row" role="row">
+          <div class="user-avatar" style="background:#059669" role="img" aria-label="Avatar SR">SR</div>
+          <div class="user-info" role="cell">
+            <div class="user-name">Siti Rahayu</div>
+            <div class="user-email">siti.rahayu@yahoo.com</div>
+          </div>
+          <div class="quota-cell" role="cell" aria-label="Kuota AI: 7 tersisa">7</div>
+          <div role="cell" style="width:80px;text-align:right"><span class="badge badge-neutral" style="font-size:10px">Gratis</span></div>
+          <div role="cell" style="width:100px;text-align:right">
+            <div class="inline-form" style="justify-content:flex-end">
+              <label for="q-siti" class="sr-only">Kuota baru untuk Siti</label>
+              <input type="number" id="q-siti" class="quota-input" value="7" min="0" style="width:60px" aria-label="Kuota AI Siti Rahayu" />
+              <button class="btn btn-ghost btn-sm" onclick="alert('Kuota diperbarui!')" aria-label="Simpan kuota baru">Simpan</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="user-row" role="row">
+          <div class="user-avatar" style="background:#7C3AED" role="img" aria-label="Avatar RP">RP</div>
+          <div class="user-info" role="cell">
+            <div class="user-name">Rizal Pratama</div>
+            <div class="user-email">rizal.p@business.com</div>
+          </div>
+          <div class="quota-cell quota-ok" role="cell" aria-label="Kuota AI: 45 tersisa">45</div>
+          <div role="cell" style="width:80px;text-align:right"><span class="badge badge-pro" style="font-size:10px">PRO</span></div>
+          <div role="cell" style="width:100px;text-align:right">
+            <div class="inline-form" style="justify-content:flex-end">
+              <label for="q-rizal" class="sr-only">Kuota baru untuk Rizal</label>
+              <input type="number" id="q-rizal" class="quota-input" value="45" min="0" style="width:60px" aria-label="Kuota AI Rizal Pratama" />
+              <button class="btn btn-ghost btn-sm" onclick="alert('Kuota diperbarui!')" aria-label="Simpan kuota baru">Simpan</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:var(--surface-inset);border:1px solid var(--border-muted);border-radius:var(--radius-lg);padding:var(--space-5);font-size:var(--text-sm);color:var(--text-secondary);line-height:var(--leading-relaxed)" role="note">
+      <strong style="color:var(--text-primary)">Catatan Admin:</strong> Proses upgrade PRO dilakukan manual. Setelah konfirmasi transfer dari pengguna via WhatsApp, alokasikan kuota AI di kolom di atas dan klik "Setuju &amp; Alokasi". Pengguna akan mendapat kuota yang dialokasikan di akunnya.
+    </div>
+
+  </main>
+
+</body>
+</html>
