@@ -2,689 +2,590 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover" />
   <title>Dashboard Pribadi — KaitoFin</title>
+  <meta name="description" content="Dashboard keuangan personal KaitoFin untuk mahasiswa dan freelancer" />
+  <meta name="theme-color" content="#0A1410" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../styles/tokens.css" />
-  <link rel="stylesheet" href="../styles/components.css" />
-  <style>
-    /* App Shell Layout */
-    body { display: flex; flex-direction: column; min-height: 100dvh; }
-
-    /* ---- HEADER ---- */
-    .app-header {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 50;
-      height: var(--header-height);
-      background-color: var(--surface-card);
-      border-bottom: 1px solid var(--border-muted);
-      display: flex; align-items: center;
-      padding: 0 var(--space-4) 0 var(--space-4);
-      gap: var(--space-4);
-    }
-    .header-brand { display: flex; align-items: center; gap: var(--space-2); text-decoration: none; }
-    .header-logo { width: 28px; height: 28px; background-color: var(--brand-accent); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; }
-    .header-logo-inner { color: #fff; font-weight: 700; font-size: 12px; font-family: var(--font-display); letter-spacing: -0.03em; }
-    .header-name { font-family: var(--font-display); font-size: var(--text-sm); font-weight: 700; color: var(--text-primary); letter-spacing: -0.02em; }
-    .header-divider { width: 1px; height: 24px; background-color: var(--border-muted); }
-    .header-breadcrumb { display: flex; align-items: center; gap: var(--space-2); font-size: var(--text-sm); color: var(--text-muted); }
-    .header-breadcrumb a { color: var(--text-secondary); text-decoration: none; }
-    .header-breadcrumb a:hover { color: var(--text-primary); }
-    .header-spacer { flex: 1; }
-    .header-search-trigger {
-      display: flex; align-items: center; gap: var(--space-2);
-      border: 1px solid var(--border-muted); border-radius: var(--radius-md);
-      padding: 0.375rem 0.75rem; font-size: var(--text-sm); color: var(--text-muted);
-      background-color: var(--surface-page); cursor: pointer;
-      transition: border-color var(--dur-fast) var(--ease-out);
-    }
-    .header-search-trigger:hover { border-color: var(--border-strong); }
-    .header-user-btn {
-      width: 32px; height: 32px; border-radius: 50%;
-      background: linear-gradient(135deg, var(--brand-accent) 0%, var(--brand-secondary) 100%);
-      display: flex; align-items: center; justify-content: center;
-      color: #fff; font-size: 12px; font-weight: 600; border: none; cursor: pointer;
-    }
-    .quota-indicator {
-      display: inline-flex; align-items: center; gap: var(--space-1);
-      font-size: var(--text-xs); font-weight: 500; color: var(--ai-color);
-      background-color: var(--ai-bg); border: 1px solid var(--ai-border);
-      border-radius: var(--radius-full); padding: 3px 10px;
-    }
-
-    /* ---- SIDEBAR ---- */
-    .sidebar {
-      position: fixed; top: var(--header-height); left: 0; bottom: 0;
-      width: var(--sidebar-width); background-color: var(--surface-elevated);
-      border-right: 1px solid var(--border-muted);
-      overflow-y: auto; z-index: 40;
-      padding: var(--space-4) var(--space-3);
-      display: flex; flex-direction: column;
-    }
-    .sidebar-main { flex: 1; }
-    .sidebar-footer { border-top: 1px solid var(--border-muted); padding-top: var(--space-4); margin-top: var(--space-4); }
-
-    /* Workspace Switcher */
-    .ws-switcher {
-      display: flex; gap: 3px; padding: 3px;
-      background-color: var(--surface-inset); border-radius: var(--radius-md);
-      margin-bottom: var(--space-5);
-    }
-    .ws-tab {
-      flex: 1; font-size: 11px; font-weight: 500;
-      padding: 5px 8px; border-radius: 5px; border: none;
-      cursor: pointer; transition: all var(--dur-fast) var(--ease-out);
-      color: var(--text-muted); background: transparent; text-align: center;
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    }
-    .ws-tab-active {
-      background-color: var(--surface-card);
-      color: var(--text-primary);
-      box-shadow: 0 1px 3px rgba(26,46,43,0.08);
-    }
-
-    /* ---- MAIN CONTENT ---- */
-    .main-content {
-      margin-left: var(--sidebar-width);
-      margin-top: var(--header-height);
-      padding: var(--space-6) var(--space-8);
-      min-height: calc(100dvh - var(--header-height));
-      max-width: calc(100vw - var(--sidebar-width));
-    }
-    .page-header { margin-bottom: var(--space-6); }
-    .page-title { font-family: var(--font-display); font-size: var(--text-xl); font-weight: 700; color: var(--text-primary); letter-spacing: -0.02em; }
-    .page-subtitle { font-size: var(--text-sm); color: var(--text-muted); margin-top: 2px; }
-
-    /* Balance card (hero, large) */
-    .balance-card {
-      background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%);
-      border-radius: var(--radius-xl); padding: var(--space-8);
-      color: #fff; position: relative; overflow: hidden;
-      margin-bottom: var(--space-5);
-    }
-    .balance-card::before {
-      content: ''; position: absolute; top: -40px; right: -40px;
-      width: 180px; height: 180px; border-radius: 50%;
-      background: rgba(30,158,126,0.15);
-    }
-    .balance-row { display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: var(--space-4); }
-    .balance-label { font-size: var(--text-xs); color: rgba(240,237,231,0.65); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: var(--space-2); }
-    .balance-amount { font-size: clamp(1.75rem, 3vw, 2.5rem); font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: -0.03em; line-height: 1; }
-    .balance-period { font-size: var(--text-xs); color: rgba(240,237,231,0.55); margin-top: var(--space-1); }
-    .balance-actions { display: flex; gap: var(--space-3); align-items: center; }
-    .balance-btn {
-      display: flex; align-items: center; gap: var(--space-2);
-      background-color: rgba(240,237,231,0.15); color: #fff;
-      border: 1px solid rgba(240,237,231,0.25); border-radius: var(--radius-md);
-      padding: 0.5rem 1rem; font-size: var(--text-sm); font-weight: 500;
-      cursor: pointer; text-decoration: none;
-      transition: background-color var(--dur-fast) var(--ease-out);
-    }
-    .balance-btn:hover { background-color: rgba(240,237,231,0.22); }
-    .balance-btn-primary { background-color: var(--brand-accent); border-color: var(--brand-accent); }
-    .balance-btn-primary:hover { background-color: var(--brand-accent-dark); border-color: var(--brand-accent-dark); }
-
-    /* KPI row */
-    .kpi-row { display: grid; grid-template-columns: repeat(1, 1fr); gap: var(--space-4); margin-bottom: var(--space-5); }
-    @media (min-width: 640px) { .kpi-row { grid-template-columns: repeat(2, 1fr); } }
-    @media (min-width: 1200px) { .kpi-row { grid-template-columns: repeat(4, 1fr); } }
-
-    .kpi-card { background-color: var(--surface-card); border: 1px solid var(--border-muted); border-radius: var(--radius-lg); padding: var(--space-5); }
-    .kpi-label { font-size: var(--text-xs); font-weight: 500; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: var(--space-2); }
-    .kpi-val { font-size: var(--text-xl); font-weight: 600; font-variant-numeric: tabular-nums; color: var(--text-primary); letter-spacing: -0.02em; }
-    .kpi-val-income { color: var(--income-color); }
-    .kpi-val-expense { color: var(--expense-color); }
-    .kpi-delta { display: inline-flex; align-items: center; gap: 3px; font-size: var(--text-xs); font-weight: 500; font-variant-numeric: tabular-nums; padding: 2px 6px; border-radius: var(--radius-sm); margin-top: var(--space-2); }
-    .kpi-delta-up { background-color: var(--income-bg); color: var(--income-color); }
-    .kpi-delta-down { background-color: var(--expense-bg); color: var(--expense-color); }
-    .kpi-sparkline { margin-top: var(--space-3); height: 36px; display: flex; align-items: flex-end; gap: 2px; }
-    .spark-bar { flex: 1; border-radius: 2px; background-color: var(--brand-accent); opacity: 0.5; transition: opacity var(--dur-fast) var(--ease-out); }
-    .spark-bar:hover { opacity: 1; }
-
-    /* Charts + Table row */
-    .dashboard-grid { display: grid; grid-template-columns: 1fr; gap: var(--space-5); }
-    @media (min-width: 1024px) { .dashboard-grid { grid-template-columns: 2fr 1fr; } }
-
-    /* Chart card */
-    .chart-card { background-color: var(--surface-card); border: 1px solid var(--border-muted); border-radius: var(--radius-lg); overflow: hidden; }
-    .chart-header { padding: var(--space-4) var(--space-5); border-bottom: 1px solid var(--border-muted); display: flex; align-items: center; justify-content: space-between; }
-    .chart-title { font-size: var(--text-sm); font-weight: 600; color: var(--text-primary); }
-    .chart-subtitle { font-size: var(--text-xs); color: var(--text-muted); margin-top: 2px; }
-    .period-toggle { display: flex; gap: 2px; padding: 2px; background-color: var(--surface-inset); border-radius: var(--radius-sm); }
-    .period-btn {
-      font-size: 11px; font-weight: 500; padding: 3px 8px;
-      border-radius: 4px; border: none; cursor: pointer;
-      color: var(--text-muted); background: transparent;
-      transition: all var(--dur-fast) var(--ease-out);
-    }
-    .period-btn-active { background-color: var(--surface-card); color: var(--text-primary); box-shadow: 0 1px 2px rgba(26,46,43,0.06); }
-    .chart-body { padding: var(--space-5); }
-    /* Simulated bar chart */
-    .bar-chart { display: flex; align-items: flex-end; gap: var(--space-2); height: 160px; }
-    .bar-group { display: flex; gap: 3px; align-items: flex-end; flex: 1; }
-    .bar { border-radius: 4px 4px 0 0; min-width: 8px; transition: opacity var(--dur-fast) var(--ease-out); cursor: pointer; }
-    .bar:hover { opacity: 0.8; }
-    .bar-income { background-color: var(--income-color); opacity: 0.85; }
-    .bar-expense { background-color: var(--expense-color); opacity: 0.65; }
-    .chart-labels { display: flex; justify-content: space-between; margin-top: var(--space-2); }
-    .chart-label { font-size: 10px; color: var(--text-muted); text-align: center; flex: 1; }
-    .chart-legend { display: flex; gap: var(--space-4); margin-top: var(--space-3); }
-    .legend-item { display: flex; align-items: center; gap: var(--space-2); font-size: var(--text-xs); color: var(--text-secondary); }
-    .legend-dot { width: 8px; height: 8px; border-radius: 2px; }
-
-    /* Category donut */
-    .category-card { background-color: var(--surface-card); border: 1px solid var(--border-muted); border-radius: var(--radius-lg); overflow: hidden; }
-    .cat-list { display: flex; flex-direction: column; gap: 1px; }
-    .cat-item { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-3) var(--space-5); }
-    .cat-item:hover { background-color: var(--surface-page); }
-    .cat-color { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
-    .cat-name { flex: 1; font-size: var(--text-sm); color: var(--text-primary); }
-    .cat-bar { flex: 1; height: 4px; background-color: var(--surface-inset); border-radius: var(--radius-full); overflow: hidden; }
-    .cat-bar-fill { height: 100%; border-radius: var(--radius-full); }
-    .cat-amount { font-size: var(--text-xs); font-weight: 600; font-variant-numeric: tabular-nums; color: var(--text-secondary); width: 80px; text-align: right; }
-
-    /* AI Quick Input */
-    .ai-quick { background-color: var(--surface-card); border: 1px solid var(--border-muted); border-radius: var(--radius-lg); padding: var(--space-5); margin-bottom: var(--space-5); }
-    .ai-quick-label { font-size: var(--text-sm); font-weight: 600; color: var(--text-primary); margin-bottom: var(--space-3); display: flex; align-items: center; gap: var(--space-2); }
-    .ai-badge-small { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 600; color: var(--ai-color); background-color: var(--ai-bg); border: 1px solid var(--ai-border); border-radius: var(--radius-full); padding: 2px 7px; }
-    .ai-input-wrap { position: relative; }
-    .ai-text-input {
-      width: 100%; font-family: var(--font-body); font-size: var(--text-sm);
-      color: var(--text-primary); background-color: var(--surface-page);
-      border: 1.5px solid var(--border-default); border-radius: var(--radius-lg);
-      padding: var(--space-3) 6rem var(--space-3) var(--space-4);
-      transition: border-color var(--dur-fast) var(--ease-out);
-    }
-    .ai-text-input::placeholder { color: var(--text-muted); font-style: italic; }
-    .ai-text-input:focus { outline: none; border-color: var(--border-focus); box-shadow: 0 0 0 3px rgba(30,158,126,0.1); }
-    .ai-input-btns { position: absolute; right: var(--space-2); top: 50%; transform: translateY(-50%); display: flex; gap: var(--space-1); }
-    .ai-scan-btn { display: flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 500; color: var(--text-secondary); background-color: var(--surface-inset); border: 1px solid var(--border-muted); border-radius: var(--radius-sm); padding: 5px 8px; cursor: pointer; transition: all var(--dur-fast) var(--ease-out); text-decoration: none; }
-    .ai-scan-btn:hover { border-color: var(--brand-accent); color: var(--brand-accent); }
-    .ai-send-btn { display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; background-color: var(--brand-accent); border: none; border-radius: var(--radius-sm); cursor: pointer; color: #fff; transition: background-color var(--dur-fast) var(--ease-out); }
-    .ai-send-btn:hover { background-color: var(--brand-accent-dark); }
-    .ai-examples { display: flex; gap: var(--space-2); margin-top: var(--space-3); flex-wrap: wrap; }
-    .ai-example-chip {
-      font-size: 11px; color: var(--text-secondary); background-color: var(--surface-inset);
-      border: 1px solid var(--border-muted); border-radius: var(--radius-full);
-      padding: 3px 10px; cursor: pointer;
-      transition: all var(--dur-fast) var(--ease-out);
-    }
-    .ai-example-chip:hover { border-color: var(--brand-accent); color: var(--brand-accent); }
-
-    /* Transactions table */
-    .txn-card { background-color: var(--surface-card); border: 1px solid var(--border-muted); border-radius: var(--radius-lg); overflow: hidden; margin-top: var(--space-5); }
-    .txn-table-header { padding: var(--space-4) var(--space-5); border-bottom: 1px solid var(--border-muted); display: flex; align-items: center; justify-content: space-between; }
-    .txn-table-title { font-size: var(--text-sm); font-weight: 600; color: var(--text-primary); }
-    .txn-row { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-3) var(--space-5); border-bottom: 1px solid var(--border-muted); transition: background-color var(--dur-fast) var(--ease-out); }
-    .txn-row:last-child { border-bottom: none; }
-    .txn-row:hover { background-color: var(--surface-page); }
-    .txn-icon { width: 36px; height: 36px; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
-    .txn-info { flex: 1; min-width: 0; }
-    .txn-name { font-size: var(--text-sm); font-weight: 500; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .txn-meta { font-size: var(--text-xs); color: var(--text-muted); margin-top: 1px; display: flex; gap: var(--space-2); align-items: center; }
-    .txn-amount { font-size: var(--text-sm); font-weight: 600; font-variant-numeric: tabular-nums; flex-shrink: 0; }
-    .txn-amount-income { color: var(--income-color); }
-    .txn-amount-expense { color: var(--expense-color); }
-
-    /* Budget progress section */
-    .budget-card { background-color: var(--surface-card); border: 1px solid var(--border-muted); border-radius: var(--radius-lg); overflow: hidden; }
-    .budget-item { padding: var(--space-4) var(--space-5); border-bottom: 1px solid var(--border-muted); }
-    .budget-item:last-child { border-bottom: none; }
-    .budget-item-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-2); }
-    .budget-item-name { font-size: var(--text-sm); font-weight: 500; color: var(--text-primary); }
-    .budget-item-nums { font-size: var(--text-xs); font-variant-numeric: tabular-nums; color: var(--text-muted); }
-
-    /* Responsive adjustments */
-    @media (max-width: 1023px) {
-      .sidebar { transform: translateX(-100%); transition: transform var(--dur-normal) var(--ease-out); }
-      .sidebar-open { transform: translateX(0); }
-      .main-content { margin-left: 0; max-width: 100vw; padding: var(--space-4); }
-    }
-  </style>
+  <link rel="stylesheet" href="../styles/mobile.css" />
 </head>
 <body>
+<div class="mobile-app" id="app">
+  <div class="page-scroll">
 
-  <!-- ============================================================
-     APP HEADER
-     ============================================================ -->
-  <header class="app-header" role="banner">
-    <a href="../../index.html" class="header-brand" aria-label="KaitoFin — Kembali ke beranda">
-      <div class="header-logo" aria-hidden="true"><span class="header-logo-inner">K</span></div>
-      <span class="header-name">KaitoFin</span>
-    </a>
-    <div class="header-divider" aria-hidden="true"></div>
-    <nav class="header-breadcrumb" aria-label="Halaman saat ini">
-      <a href="dashboard.html">Dashboard</a>
-      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M4.5 3l3 3-3 3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <span aria-current="page">Personal</span>
-    </nav>
-    <div class="header-spacer"></div>
-    <div class="quota-indicator" aria-label="Kuota AI tersisa: 8 dari 10">
-      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><circle cx="5" cy="5" r="4" stroke="currentColor" stroke-width="1.2"/><path d="M5 3v2.5l1.5 1.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
-      8 / 10 AI
+    <!-- ============================================================
+       STATUS BAR
+       ============================================================ -->
+    <div class="status-bar" aria-hidden="true">
+      <span class="status-time">09:41</span>
+      <div class="status-icons">
+        <!-- Signal bars -->
+        <svg width="16" height="11" viewBox="0 0 16 11" fill="none" aria-hidden="true">
+          <rect x="0" y="8" width="2.5" height="3" rx="0.6" fill="currentColor"/>
+          <rect x="3.5" y="5.5" width="2.5" height="5.5" rx="0.6" fill="currentColor"/>
+          <rect x="7" y="3" width="2.5" height="8" rx="0.6" fill="currentColor" opacity="0.55"/>
+          <rect x="10.5" y="0.5" width="2.5" height="10.5" rx="0.6" fill="currentColor" opacity="0.35"/>
+        </svg>
+        <!-- WiFi -->
+        <svg width="16" height="12" viewBox="0 0 16 12" fill="none" aria-hidden="true">
+          <path d="M8 9.5a1.2 1.2 0 1 0 0 2.5 1.2 1.2 0 0 0 0-2.5z" fill="currentColor"/>
+          <path d="M5 7c.8-.9 1.9-1.4 3-1.4s2.2.5 3 1.4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+          <path d="M2 4c1.6-1.8 3.8-2.8 6-2.8s4.4 1 6 2.8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+        </svg>
+        <!-- Battery -->
+        <svg width="22" height="11" viewBox="0 0 22 11" fill="none" aria-hidden="true">
+          <rect x="1" y="1.5" width="17" height="8" rx="1.8" stroke="currentColor" stroke-width="1.2"/>
+          <rect x="2.5" y="3" width="12" height="5" rx="1" fill="currentColor"/>
+          <path d="M19 3.8v3.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+      </div>
     </div>
-    <button class="header-user-btn" aria-label="Akun pengguna: Dava Rafael" aria-haspopup="menu">DR</button>
-  </header>
 
-  <!-- ============================================================
-     SIDEBAR
-     ============================================================ -->
-  <nav class="sidebar" id="sidebar" aria-label="Navigasi aplikasi">
-    <div class="sidebar-main">
-      <!-- Workspace Switcher -->
-      <div class="ws-switcher" role="tablist" aria-label="Pilih workspace">
-        <button role="tab" aria-selected="true" class="ws-tab ws-tab-active">Personal</button>
-        <button role="tab" aria-selected="false" class="ws-tab" onclick="window.location='dashboard-business.html'">Bisnis</button>
+    <!-- ============================================================
+       APP HEADER
+       ============================================================ -->
+    <header role="banner">
+      <div class="mobile-header">
+        <div class="mobile-header-brand">
+          <div class="mobile-logo" aria-hidden="true">K</div>
+          <div>
+            <div class="mobile-brand-name">KaitoFin</div>
+            <div style="font-size:10px;color:#3E5C55;margin-top:1px;font-weight:500">Smart AI Financial Tracker</div>
+          </div>
+        </div>
+        <div class="mobile-header-actions">
+          <!-- AI Quota pill -->
+          <div
+            role="status"
+            aria-label="Kuota AI tersisa: 8 dari 10"
+            style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#2BBFA0;background:rgba(30,158,126,0.10);border:1px solid rgba(30,158,126,0.22);border-radius:100px;padding:5px 12px;letter-spacing:-0.01em"
+          >
+            <svg width="7" height="7" viewBox="0 0 7 7" fill="#2BBFA0" aria-hidden="true"><circle cx="3.5" cy="3.5" r="3.5"/></svg>
+            8/10 AI
+          </div>
+          <!-- Notification -->
+          <button class="mobile-icon-btn" aria-label="Notifikasi (1 baru)" style="position:relative">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M10 2a6 6 0 0 1 6 6c0 4 1.5 5 1.5 5H2.5S4 12 4 8a6 6 0 0 1 6-6z" stroke="currentColor" stroke-width="1.4"/>
+              <path d="M8 16a2 2 0 0 0 4 0" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+            </svg>
+            <span aria-hidden="true" style="position:absolute;top:9px;right:9px;width:7px;height:7px;background:#FF7B7B;border-radius:50%;border:2px solid #0A1410"></span>
+          </button>
+          <!-- Avatar -->
+          <button class="mobile-avatar" aria-label="Profil Dava Rafael — ketuk untuk menu akun" aria-haspopup="menu">DR</button>
+        </div>
       </div>
 
-      <!-- Main Nav -->
-      <div class="nav-section-label">Menu Utama</div>
-      <ul role="list" style="list-style:none;display:flex;flex-direction:column;gap:2px">
-        <li>
-          <a href="dashboard.html" class="nav-item nav-item-active" aria-current="page">
-            <svg class="nav-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="2" y="2" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="9" y="2" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="2" y="9" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="9" y="9" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.3"/></svg>
-            Dashboard
-          </a>
-        </li>
-        <li>
-          <a href="transactions.html" class="nav-item">
-            <svg class="nav-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 4h10M3 8h7M3 12h5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-            Transaksi
-          </a>
-        </li>
-        <li>
-          <a href="analytics.html" class="nav-item">
-            <svg class="nav-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 12l3.5-4 3 2.5 4-6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            Analitik
-          </a>
-        </li>
-      </ul>
+      <!-- Workspace Switcher -->
+      <div class="workspace-pill" role="tablist" aria-label="Pilih workspace keuangan">
+        <button
+          role="tab"
+          aria-selected="true"
+          aria-controls="personal-section"
+          class="workspace-pill-tab workspace-pill-tab-active"
+          onclick="window.location.href='dashboard.html'"
+        >
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+            <circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.3"/>
+            <circle cx="6" cy="4.5" r="1.5" fill="currentColor"/>
+            <path d="M3 10c0-1.7 1.3-3 3-3s3 1.3 3 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+          </svg>
+          Personal
+        </button>
+        <button
+          role="tab"
+          aria-selected="false"
+          onclick="window.location.href='dashboard-business.html'"
+          class="workspace-pill-tab"
+          aria-label="Beralih ke workspace Bisnis UMKM"
+        >
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+            <rect x="1.5" y="4" width="9" height="7" rx="1.2" stroke="currentColor" stroke-width="1.3"/>
+            <path d="M4 4V3.3C4 2.6 4.6 2 5.3 2h1.4C7.4 2 8 2.6 8 3.3V4" stroke="currentColor" stroke-width="1.3"/>
+          </svg>
+          Bisnis (UMKM)
+        </button>
+      </div>
+    </header>
 
-      <div class="nav-section-label" style="margin-top:var(--space-4)">Catat Cepat</div>
-      <ul role="list" style="list-style:none;display:flex;flex-direction:column;gap:2px">
-        <li>
-          <a href="scan.html" class="nav-item">
-            <svg class="nav-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="2" y="4" width="12" height="9" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M5 4V3a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1" stroke="currentColor" stroke-width="1.3"/><path d="M5 8h.01M8 8h.01M11 8h.01" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-            Scan Struk
-          </a>
-        </li>
-        <li>
-          <a href="scan.html#nlp" class="nav-item">
-            <svg class="nav-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 5h10M3 8h7M3 11h5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-            Input Cepat
-          </a>
-        </li>
-      </ul>
-
-      <div class="nav-section-label" style="margin-top:var(--space-4)">Akun</div>
-      <ul role="list" style="list-style:none;display:flex;flex-direction:column;gap:2px">
-        <li>
-          <a href="upgrade.html" class="nav-item">
-            <svg class="nav-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2l1.5 4.5H14l-4 2.9 1.5 4.6L8 11l-3.5 3 1.5-4.6L2 7.4h4.5L8 2z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
-            Upgrade PRO
-            <span class="badge badge-pro" style="margin-left:auto;font-size:9px;padding:1px 5px">Baru</span>
-          </a>
-        </li>
-      </ul>
-    </div>
-
-    <div class="sidebar-footer">
-      <button class="nav-item" aria-label="Profil: Dava Rafael" style="width:100%">
-        <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--brand-accent),var(--brand-secondary));display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700;flex-shrink:0">DR</div>
-        <div style="min-width:0">
-          <div style="font-size:12px;font-weight:500;color:var(--text-primary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Dava Rafael</div>
-          <div style="font-size:10px;color:var(--text-muted)">Gratis · 8 kuota AI</div>
+    <!-- ============================================================
+       WORKSPACE LABEL
+       ============================================================ -->
+    <div class="workspace-label-bar" id="personal-section">
+      <div class="workspace-label-left">
+        <div class="workspace-label-badge ws-badge-personal-m" aria-label="Personal Workspace">
+          <svg width="9" height="9" viewBox="0 0 9 9" fill="none" aria-hidden="true">
+            <circle cx="4.5" cy="4.5" r="3.8" stroke="currentColor" stroke-width="1.1"/>
+            <circle cx="4.5" cy="3" r="1.2" fill="currentColor"/>
+            <path d="M2 8c0-1.4 1.1-2.5 2.5-2.5S7 6.6 7 8" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/>
+          </svg>
+          Personal Workspace
         </div>
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" style="margin-left:auto;flex-shrink:0;color:var(--text-muted)"><path d="M3.5 5L7 8.5 10.5 5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </button>
+        <h1 class="workspace-label-title">Keuangan Pribadi &amp; Mahasiswa</h1>
+        <p class="workspace-label-desc">Kelola uang saku, makan, transportasi, kos, dan tabungan tanpa campur aduk.</p>
+      </div>
+      <div class="workspace-label-right">
+        <div class="quota-display-label">Status Kuota AI</div>
+        <div class="quota-display-value">7 / 10</div>
+        <div class="quota-display-sub">Telah terpakai 3×</div>
+        <a href="upgrade.html" class="quota-upgrade-link" aria-label="Upgrade ke PRO untuk lebih banyak kuota AI">Upgrade PRO</a>
+      </div>
     </div>
-  </nav>
 
-  <!-- ============================================================
-     MAIN CONTENT
-     ============================================================ -->
-  <main class="main-content" id="main-content">
+    <!-- ============================================================
+       BALANCE HERO CARD
+       Nielsen #1: Visibility — total saldo dominates visual hierarchy
+       ============================================================ -->
+    <div class="balance-hero" role="region" aria-label="Saldo total keuangan personal">
+      <div class="balance-hero-eyebrow">
+        <span class="balance-hero-dot" aria-hidden="true"></span>
+        Total Saldo · Personal
+      </div>
+      <div class="balance-hero-amount num" aria-label="Rp 3.450.000">Rp 3.450.000</div>
+      <div class="balance-hero-period">Per 3 November 2026 · +Rp 750.000 surplus bulan ini</div>
+      <div class="balance-hero-stats" aria-hidden="true">
+        <div class="balance-mini-stat">
+          <div class="balance-mini-label">Pemasukan Nov</div>
+          <div class="balance-mini-amount balance-mini-income">+Rp 5.200.000</div>
+        </div>
+        <div class="balance-mini-stat">
+          <div class="balance-mini-label">Pengeluaran Nov</div>
+          <div class="balance-mini-amount balance-mini-expense">−Rp 1.750.000</div>
+        </div>
+      </div>
+    </div>
 
-    <!-- Page Header -->
-    <div class="page-header">
-      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--space-3)">
+    <!-- ============================================================
+       QUICK ACTIONS
+       Universal Design: Low Physical Effort, Simple & Intuitive
+       ============================================================ -->
+    <nav class="quick-actions" aria-label="Aksi cepat">
+      <a href="scan.html" class="quick-action-btn" aria-label="Scan struk belanja dengan AI">
+        <div class="quick-action-icon quick-action-icon-scan" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <rect x="2" y="4" width="16" height="12" rx="2.5" stroke="currentColor" stroke-width="1.5"/>
+            <circle cx="10" cy="10" r="3" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M6 4V3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v1" stroke="currentColor" stroke-width="1.3"/>
+          </svg>
+        </div>
+        <span class="quick-action-label">Scan<br/>Struk</span>
+      </a>
+      <a href="scan.html#nlp" class="quick-action-btn" aria-label="Input transaksi manual dengan bahasa natural">
+        <div class="quick-action-icon quick-action-icon-input" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M3 6h14M3 10h9M3 14h7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <span class="quick-action-label">Input<br/>Cepat</span>
+      </a>
+      <a href="analytics.html" class="quick-action-btn" aria-label="Lihat analitik keuangan">
+        <div class="quick-action-icon quick-action-icon-chart" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M3 15l5-6 4 3 5-8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <span class="quick-action-label">Analitik<br/>Keuangan</span>
+      </a>
+      <a href="upgrade.html" class="quick-action-btn" aria-label="Upgrade ke paket PRO">
+        <div class="quick-action-icon quick-action-icon-pro" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M10 2.5l2 6h6.5L13 12l2 6.5L10 15l-5 3.5 2-6.5L1.5 8.5H8L10 2.5z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <span class="quick-action-label">Upgrade<br/>PRO</span>
+      </a>
+    </nav>
+
+    <!-- ============================================================
+       KPI CARDS 2×2
+       Tabular numerics — critical for financial data precision
+       Nielsen #4: Consistency — same card structure throughout
+       ============================================================ -->
+    <section aria-label="Ringkasan keuangan November 2026">
+      <div class="mobile-section-header">
         <div>
-          <h1 class="page-title">Keuangan Personal</h1>
-          <p class="page-subtitle">Selamat datang, Dava. Ini ringkasan keuanganmu hari ini.</p>
+          <div class="mobile-section-title">Ringkasan Keuangan</div>
+          <div class="mobile-section-sub">November 2026</div>
         </div>
-        <a href="scan.html" class="btn btn-primary">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M7 2v10M2 7h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-          Catat Transaksi
+        <a href="analytics.html" class="mobile-section-action" aria-label="Lihat analitik lengkap">
+          Lihat semua
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" style="margin-left:2px"><path d="M5 3l4 4-4 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </a>
       </div>
-    </div>
 
-    <!-- Balance Card -->
-    <div class="balance-card" role="region" aria-label="Saldo total">
-      <div class="balance-row">
+      <div class="kpi-grid">
+        <!-- Total Pemasukan -->
+        <div class="kpi-mobile-card kpi-mobile-card-income" role="article"
+          aria-label="Total pemasukan November: Rp 3.900.000, naik 12 persen">
+          <div class="kpi-mobile-icon kpi-icon-income" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M8 12V4M4 8l4-4 4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="kpi-mobile-label">Total Pemasukan</div>
+          <div class="kpi-mobile-value kpi-value-income num">Rp 3.900.000</div>
+          <div class="kpi-mobile-meta">Gaji, Uang Saku &amp; Projek</div>
+          <span class="kpi-mobile-delta delta-pos">
+            <svg width="9" height="9" viewBox="0 0 9 9" fill="none" aria-hidden="true"><path d="M4.5 7V2M2 4.5l2.5-2.5 2.5 2.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            +12% vs Okt
+          </span>
+        </div>
+
+        <!-- Total Pengeluaran -->
+        <div class="kpi-mobile-card kpi-mobile-card-expense" role="article"
+          aria-label="Total pengeluaran November: Rp 415.000, naik 8 persen">
+          <div class="kpi-mobile-icon kpi-icon-expense" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M8 4v8M4 8l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="kpi-mobile-label">Total Pengeluaran</div>
+          <div class="kpi-mobile-value kpi-value-expense num">Rp 415.000</div>
+          <div class="kpi-mobile-meta">Biaya Kos, Makan &amp; Hiburan</div>
+          <span class="kpi-mobile-delta delta-neg">
+            <svg width="9" height="9" viewBox="0 0 9 9" fill="none" aria-hidden="true"><path d="M4.5 2v5M2 4.5l2.5 2.5 2.5-2.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            +8% vs Okt
+          </span>
+        </div>
+
+        <!-- Arus Kas Bersih -->
+        <div class="kpi-mobile-card kpi-mobile-card-flow" role="article"
+          aria-label="Arus kas bersih: Rp 3.485.000, rasio tabungan 89 persen">
+          <div class="kpi-mobile-icon kpi-icon-flow" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M2 11l4-5 4 3.5 4-7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="kpi-mobile-label">Arus Kas Bersih</div>
+          <div class="kpi-mobile-value num" style="color:#7AB8FF">Rp 3.485.000</div>
+          <div class="kpi-mobile-meta">Rasio tabungan 89%</div>
+          <span class="kpi-mobile-delta delta-neu">+Rp 750rb</span>
+        </div>
+
+        <!-- Alokasi Investasi -->
+        <div class="kpi-mobile-card kpi-mobile-card-invest" role="article"
+          aria-label="Alokasi investasi: Rp 200.000 di reksadana, saham dan tabungan emas">
+          <div class="kpi-mobile-icon kpi-icon-invest" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M8 1.5l1.8 5.5H15L10.5 10l1.8 5.5L8 12.5l-4.3 3L5.5 10 1 7h5.2L8 1.5z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="kpi-mobile-label">Alokasi Investasi</div>
+          <div class="kpi-mobile-value num">Rp 200.000</div>
+          <div class="kpi-mobile-meta">Reksadana, Saham &amp; Tabungan Emas</div>
+          <span class="kpi-mobile-delta delta-inv">Terlacak</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+       CHART: DISTRIBUSI KEUANGAN
+       Accessible: role=img + aria-label, sr-only table for AT
+       ============================================================ -->
+    <section aria-label="Visualisasi distribusi keuangan">
+      <div class="mobile-section-header">
         <div>
-          <div class="balance-label">Total Saldo · Personal</div>
-          <div class="balance-amount" aria-label="Rp 3.450.000">Rp 3.450.000</div>
-          <div class="balance-period">Per 3 November 2026</div>
-        </div>
-        <div class="balance-actions">
-          <a href="scan.html" class="balance-btn balance-btn-primary">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><rect x="1" y="3" width="12" height="8" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M4 3V2a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1" stroke="currentColor" stroke-width="1.3"/></svg>
-            Scan Struk
-          </a>
-          <a href="transactions.html" class="balance-btn">Semua Transaksi</a>
-        </div>
-      </div>
-    </div>
-
-    <!-- KPI Row -->
-    <div class="kpi-row" role="region" aria-label="Ringkasan keuangan bulan ini">
-      <div class="kpi-card" role="article" aria-label="Pemasukan bulan ini">
-        <div class="kpi-label">Pemasukan Nov</div>
-        <div class="kpi-val kpi-val-income" aria-label="Rp 5.200.000">+Rp 5.200.000</div>
-        <span class="kpi-delta kpi-delta-up" aria-label="Naik 12% dari Oktober">
-          <svg width="8" height="8" viewBox="0 0 8 8" fill="none" aria-hidden="true"><path d="M4 6V2M2 4l2-2 2 2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          +12% vs Okt
-        </span>
-        <div class="kpi-sparkline" aria-hidden="true">
-          <div class="spark-bar" style="height:40%"></div>
-          <div class="spark-bar" style="height:55%"></div>
-          <div class="spark-bar" style="height:45%"></div>
-          <div class="spark-bar" style="height:70%"></div>
-          <div class="spark-bar" style="height:60%"></div>
-          <div class="spark-bar" style="height:80%"></div>
-          <div class="spark-bar" style="height:100%;opacity:1"></div>
+          <div class="mobile-section-title">Visualisasi Distribusi</div>
+          <div class="mobile-section-sub">Analisis pola pengeluaran &amp; pemasukan</div>
         </div>
       </div>
 
-      <div class="kpi-card" role="article" aria-label="Pengeluaran bulan ini">
-        <div class="kpi-label">Pengeluaran Nov</div>
-        <div class="kpi-val kpi-val-expense" aria-label="Rp 1.750.000">−Rp 1.750.000</div>
-        <span class="kpi-delta kpi-delta-down" aria-label="Naik 8% dari Oktober">
-          <svg width="8" height="8" viewBox="0 0 8 8" fill="none" aria-hidden="true"><path d="M4 2v4M2 4l2 2 2-2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          +8% vs Okt
-        </span>
-        <div class="kpi-sparkline" aria-hidden="true">
-          <div class="spark-bar" style="height:50%;background:var(--expense-color)"></div>
-          <div class="spark-bar" style="height:35%;background:var(--expense-color)"></div>
-          <div class="spark-bar" style="height:60%;background:var(--expense-color)"></div>
-          <div class="spark-bar" style="height:45%;background:var(--expense-color)"></div>
-          <div class="spark-bar" style="height:70%;background:var(--expense-color)"></div>
-          <div class="spark-bar" style="height:55%;background:var(--expense-color)"></div>
-          <div class="spark-bar" style="height:80%;background:var(--expense-color);opacity:1"></div>
+      <div class="mobile-chart-card">
+        <div class="mobile-chart-header">
+          <div>
+            <div class="mobile-chart-title">Distribusi Pengeluaran</div>
+            <div class="mobile-chart-subtitle">November 2026</div>
+          </div>
+          <div class="mobile-period-tabs" role="tablist" aria-label="Pilih kategori tampilan">
+            <button role="tab" aria-selected="true" class="mobile-period-tab mobile-period-tab-active" aria-label="Kategori pengeluaran">Pengeluaran</button>
+            <button role="tab" aria-selected="false" class="mobile-period-tab" aria-label="Sumber pemasukan">Pemasukan</button>
+            <button role="tab" aria-selected="false" class="mobile-period-tab" aria-label="Alokasi portofolio">Portofolio</button>
+          </div>
+        </div>
+
+        <div class="mobile-chart-body">
+          <div class="donut-section"
+            role="img"
+            aria-label="Donut chart: Operasional 77% (Rp 320.000) dan Tagihan 23% (Rp 95.000)">
+            <!-- Donut SVG -->
+            <div class="donut-placeholder">
+              <svg class="donut-ring" viewBox="0 0 96 96" aria-hidden="true">
+                <!-- Track -->
+                <circle cx="48" cy="48" r="36" fill="none"
+                  stroke="rgba(255,255,255,0.06)" stroke-width="13"/>
+                <!-- Operasional 77% ≈ 174 of 226 -->
+                <circle cx="48" cy="48" r="36" fill="none"
+                  stroke="#F59E0B"
+                  stroke-width="13"
+                  stroke-dasharray="174 226"
+                  stroke-dashoffset="-4"
+                  stroke-linecap="round"
+                  transform="rotate(-90 48 48)"/>
+                <!-- Tagihan 23% ≈ 52 of 226 -->
+                <circle cx="48" cy="48" r="36" fill="none"
+                  stroke="#EF4444"
+                  stroke-width="13"
+                  stroke-dasharray="50 226"
+                  stroke-dashoffset="-182"
+                  stroke-linecap="round"
+                  transform="rotate(-90 48 48)"/>
+              </svg>
+              <div class="donut-center" aria-hidden="true">
+                <div class="donut-center-val num">Rp 415k</div>
+                <div class="donut-center-label">Total</div>
+              </div>
+            </div>
+
+            <div class="donut-legend">
+              <div class="donut-legend-section-label">Rincian Pengeluaran</div>
+
+              <div class="donut-legend-item">
+                <div class="donut-legend-dot" style="background:#F59E0B" aria-hidden="true"></div>
+                <span class="donut-legend-name">Operasional</span>
+                <span class="donut-legend-amount num">Rp 320.000</span>
+              </div>
+              <div class="donut-legend-pct" aria-hidden="true">77% dari total</div>
+
+              <div class="donut-legend-item">
+                <div class="donut-legend-dot" style="background:#EF4444" aria-hidden="true"></div>
+                <span class="donut-legend-name">Tagihan</span>
+                <span class="donut-legend-amount num">Rp 95.000</span>
+              </div>
+              <div class="donut-legend-pct" aria-hidden="true">23% dari total</div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="kpi-card" role="article" aria-label="Sisa saldo bulan ini">
-        <div class="kpi-label">Saldo Bulan Ini</div>
-        <div class="kpi-val" aria-label="Rp 3.450.000">Rp 3.450.000</div>
-        <span class="kpi-delta kpi-delta-up" aria-label="Naik Rp 750.000 dari Oktober">
-          +Rp 750.000 vs Okt
-        </span>
-      </div>
+      <!-- Screen reader table alternative -->
+      <table class="sr-only">
+        <caption>Distribusi pengeluaran November 2026</caption>
+        <thead><tr><th>Kategori</th><th>Jumlah</th><th>Persentase</th></tr></thead>
+        <tbody>
+          <tr><td>Operasional</td><td>Rp 320.000</td><td>77%</td></tr>
+          <tr><td>Tagihan</td><td>Rp 95.000</td><td>23%</td></tr>
+        </tbody>
+      </table>
+    </section>
 
-      <div class="kpi-card" role="article" aria-label="Jumlah transaksi bulan ini">
-        <div class="kpi-label">Transaksi Nov</div>
-        <div class="kpi-val">24</div>
-        <span class="kpi-delta kpi-delta-down" aria-label="Bertambah 3 dari Oktober">
-          +3 vs Okt
-        </span>
-      </div>
-    </div>
+    <!-- ============================================================
+       KAITO AI ADVISOR
+       Design Thinking Empathy: Mahasiswa → 50/30/20, freelancer → cash flow
+       Shneiderman: Reduce short-term memory load — surface insights proactively
+       ============================================================ -->
+    <section aria-label="Kaito AI Financial Advisor — analisis keuangan">
+      <div class="ai-advisor-card">
+        <div class="ai-advisor-header">
+          <div class="ai-advisor-icon" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M7 10h6M10 7v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div>
+            <div class="ai-advisor-title">Kaito AI Financial Advisor</div>
+            <div class="ai-advisor-sub">Analisis Kesehatan Finansial Mahasiswa &amp; Freelancer</div>
+          </div>
+          <div class="ai-advisor-badge">Arus Kas Sehat</div>
+        </div>
 
-    <!-- AI Quick Input -->
-    <div class="ai-quick" role="region" aria-label="Input transaksi cepat">
-      <div class="ai-quick-label">
-        Catat Transaksi Baru
-        <span class="ai-badge-small">
-          <svg width="8" height="8" viewBox="0 0 8 8" fill="none" aria-hidden="true"><circle cx="4" cy="4" r="3" stroke="currentColor" stroke-width="1"/></svg>
-          AI
-        </span>
+        <div class="ai-tips-grid" role="list" aria-label="Tips dan rekomendasi keuangan">
+          <div class="ai-tip-card" role="listitem">
+            <div class="ai-tip-label">Rasio Pengeluaran</div>
+            <div class="ai-tip-value ai-tip-value-teal num">11%</div>
+            <div class="ai-tip-desc">dari Pemasukan. Bagus! Kamu menyisihkan lebih dari 30% pendapatan.</div>
+          </div>
+          <div class="ai-tip-card" role="listitem">
+            <div class="ai-tip-label">Tips Mahasiswa</div>
+            <div style="font-size:11px;font-weight:700;color:#2BBFA0;margin-bottom:4px;display:flex;align-items:center;gap:4px">
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M1.5 5l2.5 2.5L8.5 3" stroke="#2BBFA0" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Aturan 50/30/20
+            </div>
+            <div class="ai-tip-desc">50% kebutuhan kos/makan, 30% hiburan, 20% tabungan darurat.</div>
+          </div>
+          <div class="ai-tip-card" role="listitem">
+            <div class="ai-tip-label">Rekomendasi Aksi</div>
+            <a href="upgrade.html" class="ai-tip-action" aria-label="Tingkatkan alokasi investasi">
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M1.5 5l2.5 2.5L8.5 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Tingkatkan Alokasi
+            </a>
+            <div class="ai-tip-desc">Surplus Rp 3.485.000 dapat diinvestasikan ke Reksadana Pasar Uang.</div>
+          </div>
+        </div>
       </div>
-      <div class="ai-input-wrap">
-        <input type="text" class="ai-text-input" placeholder="Ketik santai, mis: 'Beli nasi padang 25rb'" aria-label="Input transaksi natural language" />
-        <div class="ai-input-btns">
-          <a href="scan.html" class="ai-scan-btn" aria-label="Scan struk dengan kamera">
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><rect x="1" y="2" width="10" height="8" rx="1.5" stroke="currentColor" stroke-width="1.2"/><circle cx="6" cy="6" r="1.8" stroke="currentColor" stroke-width="1.2"/></svg>
-            Scan
-          </a>
-          <button class="ai-send-btn" aria-label="Kirim ke AI">
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </section>
+
+    <!-- ============================================================
+       RECENT TRANSACTIONS
+       Nielsen #6: Recognition over recall — show data, not just counts
+       ============================================================ -->
+    <section aria-label="Riwayat transaksi terbaru">
+      <div class="mobile-section-header">
+        <div>
+          <div class="mobile-section-title">Riwayat Transaksi</div>
+          <div class="mobile-section-sub">Daftar lengkap arus kas tercatat (3 transaksi)</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <button
+            style="font-size:11px;font-weight:600;color:#5A7A72;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:6px 10px;cursor:pointer;display:flex;align-items:center;gap:5px;min-height:36px"
+            aria-label="Ekspor riwayat transaksi sebagai CSV"
+          >
+            <svg width="11" height="11" viewBox="0 0 11 11" fill="none" aria-hidden="true">
+              <path d="M5.5 1v7M2.5 6l3 3 3-3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            CSV
           </button>
+          <a href="#" class="mobile-section-action" aria-label="Lihat semua transaksi">Lihat semua</a>
         </div>
       </div>
-      <div class="ai-examples" role="list" aria-label="Contoh input">
-        <button class="ai-example-chip" role="listitem">Beli nasi padang 25rb</button>
-        <button class="ai-example-chip" role="listitem">Bayar kos 500rb</button>
-        <button class="ai-example-chip" role="listitem">Transfer freelance 750rb</button>
-        <button class="ai-example-chip" role="listitem">Bensin Pertamax 150rb</button>
+
+      <!-- Filters -->
+      <div style="display:flex;gap:8px;padding:0 20px 14px;overflow-x:auto" class="hide-scrollbar" role="toolbar" aria-label="Filter transaksi">
+        <button
+          aria-pressed="true"
+          style="font-size:12px;font-weight:600;color:#EDE9E0;background:rgba(30,158,126,0.12);border:1px solid rgba(30,158,126,0.25);border-radius:10px;padding:7px 14px;cursor:pointer;white-space:nowrap;flex-shrink:0;min-height:38px;letter-spacing:-0.01em"
+        >Semua Tipe</button>
+        <button
+          aria-pressed="false"
+          style="font-size:12px;font-weight:500;color:#5A7A72;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:7px 14px;cursor:pointer;white-space:nowrap;flex-shrink:0;min-height:38px;letter-spacing:-0.01em"
+          aria-label="Filter: Personal workspace"
+        >Personal</button>
       </div>
-    </div>
 
-    <!-- Charts Row -->
-    <div class="dashboard-grid">
+      <!-- Transaction list -->
+      <div class="mobile-txn-list" role="list" aria-label="Daftar transaksi terbaru">
 
-      <!-- Income/Expense Chart -->
-      <div class="chart-card" role="region" aria-label="Grafik pemasukan vs pengeluaran">
-        <div class="chart-header">
+        <!-- Bibit Reksadana — Investment -->
+        <article class="mobile-txn-item" role="listitem">
+          <div class="mobile-txn-icon txn-icon-invest" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M3 14l4.5-5.5 4.5 3.5 4.5-8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="mobile-txn-info">
+            <div class="mobile-txn-name">Bibit Reksadana</div>
+            <div class="mobile-txn-meta">
+              <span class="mobile-txn-badge badge-cat-small">Portofolio</span>
+              <span class="mobile-txn-badge badge-ws-small">Personal</span>
+              <span class="mobile-txn-date">10 Okt 2026</span>
+            </div>
+            <div style="font-size:11px;color:#2E4C45;margin-top:3px">DCA Reksadana Pasar Uang Bibit</div>
+          </div>
           <div>
-            <div class="chart-title">Pemasukan vs Pengeluaran</div>
-            <div class="chart-subtitle">November 2026 — per minggu</div>
+            <div class="mobile-txn-amount mobile-txn-amount-invest num">+Rp 200.000</div>
+            <div class="mobile-txn-amount-label">Investasi</div>
           </div>
-          <div class="period-toggle" role="tablist" aria-label="Pilih periode">
-            <button role="tab" aria-selected="true" class="period-btn period-btn-active">7H</button>
-            <button role="tab" aria-selected="false" class="period-btn">30H</button>
-            <button role="tab" aria-selected="false" class="period-btn">90H</button>
-          </div>
-        </div>
-        <div class="chart-body">
-          <div class="bar-chart" aria-label="Grafik batang pemasukan vs pengeluaran per minggu" role="img">
-            <!-- Week bars: income + expense -->
-            <div class="bar-group">
-              <div class="bar bar-income" style="height:55%"></div>
-              <div class="bar bar-expense" style="height:28%"></div>
-            </div>
-            <div class="bar-group">
-              <div class="bar bar-income" style="height:72%"></div>
-              <div class="bar bar-expense" style="height:40%"></div>
-            </div>
-            <div class="bar-group">
-              <div class="bar bar-income" style="height:48%"></div>
-              <div class="bar bar-expense" style="height:35%"></div>
-            </div>
-            <div class="bar-group">
-              <div class="bar bar-income" style="height:90%"></div>
-              <div class="bar bar-expense" style="height:55%"></div>
-            </div>
-            <div class="bar-group">
-              <div class="bar bar-income" style="height:65%"></div>
-              <div class="bar bar-expense" style="height:30%"></div>
-            </div>
-            <div class="bar-group">
-              <div class="bar bar-income" style="height:100%"></div>
-              <div class="bar bar-expense" style="height:62%"></div>
-            </div>
-            <div class="bar-group">
-              <div class="bar bar-income" style="height:78%"></div>
-              <div class="bar bar-expense" style="height:45%"></div>
-            </div>
-          </div>
-          <div class="chart-labels" aria-hidden="true">
-            <span class="chart-label">28 Okt</span>
-            <span class="chart-label">29</span>
-            <span class="chart-label">30</span>
-            <span class="chart-label">31</span>
-            <span class="chart-label">1 Nov</span>
-            <span class="chart-label">2</span>
-            <span class="chart-label">3</span>
-          </div>
-          <div class="chart-legend" aria-hidden="true">
-            <div class="legend-item"><span class="legend-dot" style="background:var(--income-color)"></span> Pemasukan</div>
-            <div class="legend-item"><span class="legend-dot" style="background:var(--expense-color);opacity:0.65"></span> Pengeluaran</div>
-          </div>
-        </div>
-      </div>
+        </article>
 
-      <!-- Category Breakdown -->
-      <div class="category-card" role="region" aria-label="Rincian kategori pengeluaran">
-        <div class="chart-header">
+        <!-- MyTelkomsel — Expense -->
+        <article class="mobile-txn-item" role="listitem">
+          <div class="mobile-txn-icon txn-icon-expense" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M10 4v12M4 10l6 6 6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="mobile-txn-info">
+            <div class="mobile-txn-name">MyTelkomsel</div>
+            <div class="mobile-txn-meta">
+              <span class="mobile-txn-badge badge-ai-small">AI</span>
+              <span class="mobile-txn-badge badge-cat-small">Tagihan</span>
+              <span class="mobile-txn-badge badge-ws-small">Personal</span>
+              <span class="mobile-txn-date">9 Okt 2026</span>
+            </div>
+            <div style="font-size:11px;color:#2E4C45;margin-top:3px">Paket Internet Bulanan 50GB</div>
+          </div>
           <div>
-            <div class="chart-title">Kategori Pengeluaran</div>
-            <div class="chart-subtitle">November 2026</div>
+            <div class="mobile-txn-amount mobile-txn-amount-expense num">−Rp 95.000</div>
+            <div class="mobile-txn-amount-label">Pengeluaran</div>
           </div>
-        </div>
-        <div class="cat-list">
-          <div class="cat-item">
-            <div class="cat-color" style="background:#EF4444" aria-hidden="true"></div>
-            <span class="cat-name">Makan &amp; Minum</span>
-            <div class="cat-bar"><div class="cat-bar-fill" style="width:65%;background:#EF4444;opacity:0.7"></div></div>
-            <span class="cat-amount">Rp 580.000</span>
-          </div>
-          <div class="cat-item">
-            <div class="cat-color" style="background:#F59E0B" aria-hidden="true"></div>
-            <span class="cat-name">Transportasi</span>
-            <div class="cat-bar"><div class="cat-bar-fill" style="width:28%;background:#F59E0B;opacity:0.8"></div></div>
-            <span class="cat-amount">Rp 240.000</span>
-          </div>
-          <div class="cat-item">
-            <div class="cat-color" style="background:#3B82F6" aria-hidden="true"></div>
-            <span class="cat-name">Belanja Bulanan</span>
-            <div class="cat-bar"><div class="cat-bar-fill" style="width:45%;background:#3B82F6;opacity:0.7"></div></div>
-            <span class="cat-amount">Rp 390.000</span>
-          </div>
-          <div class="cat-item">
-            <div class="cat-color" style="background:#8B5CF6" aria-hidden="true"></div>
-            <span class="cat-name">Hiburan</span>
-            <div class="cat-bar"><div class="cat-bar-fill" style="width:18%;background:#8B5CF6;opacity:0.7"></div></div>
-            <span class="cat-amount">Rp 155.000</span>
-          </div>
-          <div class="cat-item">
-            <div class="cat-color" style="background:#6B7280" aria-hidden="true"></div>
-            <span class="cat-name">Lainnya</span>
-            <div class="cat-bar"><div class="cat-bar-fill" style="width:12%;background:#6B7280;opacity:0.7"></div></div>
-            <span class="cat-amount">Rp 85.000</span>
-          </div>
-        </div>
-      </div>
-    </div>
+        </article>
 
-    <!-- Budget Progress -->
-    <div class="budget-card" role="region" aria-label="Progress anggaran" style="margin-top:var(--space-5)">
-      <div class="txn-table-header">
-        <span class="txn-table-title">Anggaran Bulanan</span>
-        <a href="analytics.html" class="btn btn-ghost btn-sm">Kelola</a>
-      </div>
-      <div class="budget-item">
-        <div class="budget-item-header">
-          <span class="budget-item-name">Makan &amp; Minum</span>
-          <span class="budget-item-nums" aria-label="Rp 580.000 dari Rp 800.000">Rp 580.000 / Rp 800.000</span>
-        </div>
-        <div class="progress-track" role="progressbar" aria-valuenow="72" aria-valuemin="0" aria-valuemax="100" aria-label="72% anggaran makan terpakai">
-          <div class="progress-fill" style="width:72%"></div>
-        </div>
-      </div>
-      <div class="budget-item">
-        <div class="budget-item-header">
-          <span class="budget-item-name">Transportasi</span>
-          <span class="budget-item-nums" aria-label="Rp 240.000 dari Rp 400.000">Rp 240.000 / Rp 400.000</span>
-        </div>
-        <div class="progress-track" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" aria-label="60% anggaran transportasi terpakai">
-          <div class="progress-fill" style="width:60%"></div>
-        </div>
-      </div>
-      <div class="budget-item">
-        <div class="budget-item-header">
-          <span class="budget-item-name">Belanja Bulanan</span>
-          <span class="budget-item-nums" aria-label="Rp 390.000 dari Rp 500.000">Rp 390.000 / Rp 500.000</span>
-        </div>
-        <div class="progress-track" role="progressbar" aria-valuenow="78" aria-valuemin="0" aria-valuemax="100" aria-label="78% anggaran belanja terpakai">
-          <div class="progress-fill progress-fill-warning" style="width:78%"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Recent Transactions Table -->
-    <div class="txn-card" role="region" aria-label="Transaksi terbaru">
-      <div class="txn-table-header">
-        <span class="txn-table-title">Transaksi Terbaru</span>
-        <a href="transactions.html" class="btn btn-ghost btn-sm">Lihat semua</a>
-      </div>
-
-      <div class="txn-row">
-        <div class="txn-icon" style="background:var(--expense-bg)" aria-hidden="true">🍽️</div>
-        <div class="txn-info">
-          <div class="txn-name">Nasi Padang Bu Sari</div>
-          <div class="txn-meta">
-            <span>3 Nov 2026</span>
-            <span aria-hidden="true">·</span>
-            <span class="badge badge-neutral" style="font-size:10px;padding:1px 5px">Makan</span>
-            <span aria-hidden="true">·</span>
-            <span class="badge badge-ai" style="font-size:10px;padding:1px 5px">Natural Language</span>
+        <!-- Universitas Kampus — Income -->
+        <article class="mobile-txn-item" role="listitem">
+          <div class="mobile-txn-icon txn-icon-income" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M10 16V4M4 10l6-6 6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
           </div>
-        </div>
-        <div class="txn-amount txn-amount-expense" aria-label="Pengeluaran Rp 25.000">−Rp 25.000</div>
-      </div>
-
-      <div class="txn-row">
-        <div class="txn-icon" style="background:var(--neutral-bg)" aria-hidden="true">🛒</div>
-        <div class="txn-info">
-          <div class="txn-name">Struk Indomaret Cabang Sudirman</div>
-          <div class="txn-meta">
-            <span>2 Nov 2026</span>
-            <span aria-hidden="true">·</span>
-            <span class="badge badge-neutral" style="font-size:10px;padding:1px 5px">Belanja</span>
-            <span aria-hidden="true">·</span>
-            <span class="badge badge-ai" style="font-size:10px;padding:1px 5px">AI Scan</span>
+          <div class="mobile-txn-info">
+            <div class="mobile-txn-name">Universitas Kampus</div>
+            <div class="mobile-txn-meta">
+              <span class="mobile-txn-badge badge-cat-small">Gaji / Uang Saku</span>
+              <span class="mobile-txn-badge badge-ws-small">Personal</span>
+              <span class="mobile-txn-date">8 Okt 2026</span>
+            </div>
+            <div style="font-size:11px;color:#2E4C45;margin-top:3px">Gaji Asisten Lab &amp; Beasiswa Bulanan</div>
           </div>
-        </div>
-        <div class="txn-amount txn-amount-expense" aria-label="Pengeluaran Rp 87.500">−Rp 87.500</div>
-      </div>
-
-      <div class="txn-row">
-        <div class="txn-icon" style="background:var(--income-bg)" aria-hidden="true">💼</div>
-        <div class="txn-info">
-          <div class="txn-name">Transfer Freelance — PT Maju Jaya</div>
-          <div class="txn-meta">
-            <span>1 Nov 2026</span>
-            <span aria-hidden="true">·</span>
-            <span class="badge badge-income" style="font-size:10px;padding:1px 5px">Pendapatan</span>
+          <div>
+            <div class="mobile-txn-amount mobile-txn-amount-income num">+Rp 1.500.000</div>
+            <div class="mobile-txn-amount-label">Pemasukan</div>
           </div>
-        </div>
-        <div class="txn-amount txn-amount-income" aria-label="Pemasukan Rp 750.000">+Rp 750.000</div>
+        </article>
       </div>
+    </section>
 
-      <div class="txn-row">
-        <div class="txn-icon" style="background:var(--warning-bg)" aria-hidden="true">⛽</div>
-        <div class="txn-info">
-          <div class="txn-name">Bensin Pertamax — SPBU Gatsu</div>
-          <div class="txn-meta">
-            <span>1 Nov 2026</span>
-            <span aria-hidden="true">·</span>
-            <span class="badge badge-neutral" style="font-size:10px;padding:1px 5px">Transportasi</span>
-            <span aria-hidden="true">·</span>
-            <span class="badge badge-ai" style="font-size:10px;padding:1px 5px">Natural Language</span>
-          </div>
-        </div>
-        <div class="txn-amount txn-amount-expense" aria-label="Pengeluaran Rp 150.000">−Rp 150.000</div>
+    <div style="height:20px" aria-hidden="true"></div>
+
+  </div><!-- end .page-scroll -->
+
+  <!-- ============================================================
+     BOTTOM NAVIGATION
+     Material Design 3 + Apple HIG: 5 items, 52px targets, FAB center
+     Shneiderman: Simple error handling — always visible nav
+     ============================================================ -->
+  <nav class="bottom-nav" role="navigation" aria-label="Navigasi utama KaitoFin">
+    <a href="dashboard.html" class="bottom-nav-item bottom-nav-item-active"
+      aria-current="page" aria-label="Beranda">
+      <div class="bottom-nav-icon" aria-hidden="true">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <rect x="3" y="3" width="8" height="8" rx="2" fill="currentColor" opacity="0.35"/>
+          <rect x="13" y="3" width="8" height="8" rx="2" stroke="currentColor" stroke-width="1.5"/>
+          <rect x="3" y="13" width="8" height="8" rx="2" stroke="currentColor" stroke-width="1.5"/>
+          <rect x="13" y="13" width="8" height="8" rx="2" fill="currentColor" opacity="0.8"/>
+        </svg>
       </div>
+      <span class="bottom-nav-label">Beranda</span>
+    </a>
 
-      <div class="txn-row">
-        <div class="txn-icon" style="background:var(--neutral-bg)" aria-hidden="true">📚</div>
-        <div class="txn-info">
-          <div class="txn-name">Buku Pemrograman — Tokopedia</div>
-          <div class="txn-meta">
-            <span>31 Okt 2026</span>
-            <span aria-hidden="true">·</span>
-            <span class="badge badge-neutral" style="font-size:10px;padding:1px 5px">Pendidikan</span>
-          </div>
-        </div>
-        <div class="txn-amount txn-amount-expense" aria-label="Pengeluaran Rp 125.000">−Rp 125.000</div>
+    <a href="analytics.html" class="bottom-nav-item" aria-label="Analitik keuangan">
+      <div class="bottom-nav-icon" aria-hidden="true">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M4 18l5.5-6.5 4.5 3.5 5.5-9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
       </div>
+      <span class="bottom-nav-label">Analitik</span>
+    </a>
 
-    </div>
+    <!-- Primary FAB — Scan / Add transaction -->
+    <a href="scan.html" class="bottom-nav-fab" aria-label="Tambah transaksi baru atau scan struk">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M12 5v14M5 12h14" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
+      </svg>
+    </a>
 
-  </main>
+    <a href="#transactions" class="bottom-nav-item" aria-label="Riwayat transaksi">
+      <div class="bottom-nav-icon" aria-hidden="true">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M4 7h16M4 12h11M4 17h8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <span class="bottom-nav-label">Transaksi</span>
+    </a>
 
+    <a href="upgrade.html" class="bottom-nav-item" aria-label="Akun dan pengaturan">
+      <div class="bottom-nav-icon" aria-hidden="true">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.6"/>
+          <path d="M4 20c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <span class="bottom-nav-label">Akun</span>
+    </a>
+  </nav>
+
+</div><!-- end .mobile-app -->
 </body>
 </html>

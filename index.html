@@ -2,426 +2,519 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover" />
   <title>KaitoFin — Catat Keuangan dengan AI, Mudah &amp; Cepat</title>
-  <meta name="description" content="KaitoFin — Platform manajemen keuangan berbasis AI untuk mahasiswa, freelancer, dan UMKM. Foto struk belanja, ketik santai, AI langsung catat." />
+  <meta name="description" content="KaitoFin — Aplikasi manajemen keuangan berbasis AI untuk mahasiswa, freelancer, dan UMKM Indonesia. Foto struk belanja, ketik santai, AI langsung catat." />
+  <meta name="theme-color" content="#08120F" />
+  <!-- Open Graph for competition portfolio -->
+  <meta property="og:title" content="KaitoFin — Smart AI Financial Tracker" />
+  <meta property="og:description" content="Kelola keuangan pribadi &amp; bisnis UMKM dengan AI. Scan struk, input natural language, dual workspace." />
+  <meta property="og:type" content="website" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="src/styles/tokens.css" />
-  <link rel="stylesheet" href="src/styles/components.css" />
-  <link rel="stylesheet" href="src/styles/landing.css" />
+  <link rel="stylesheet" href="src/styles/mobile.css" />
 </head>
 <body>
+<div class="landing-mobile">
 
-  <!-- NAVBAR -->
-  <nav class="landing-nav" role="navigation" aria-label="Navigasi utama">
-    <div class="landing-nav-inner">
-      <a href="/" class="brand-mark" aria-label="KaitoFin — Beranda">
-        <div class="brand-logo" aria-hidden="true"><span class="brand-logo-inner">K</span></div>
-        <span class="brand-name">KaitoFin</span>
-      </a>
-      <ul class="nav-links" role="list">
-        <li><a href="#fitur" class="nav-link">Fitur</a></li>
-        <li><a href="#cara-kerja" class="nav-link">Cara Kerja</a></li>
-        <li><a href="#workspace" class="nav-link">Workspace</a></li>
-        <li><a href="#harga" class="nav-link">Harga</a></li>
-      </ul>
-      <div class="nav-cta-group">
-        <div class="quota-badge" aria-label="10 kuota AI gratis untuk pengguna baru">
-          <span class="quota-dot" aria-hidden="true"></span>
-          10x AI Gratis
-        </div>
-        <a href="src/pages/dashboard.html" class="btn btn-primary">Mulai Gratis</a>
-      </div>
+  <!-- ============================================================
+     NAVIGATION — Sticky, minimal, unobtrusive
+     Nielsen #7: Flexibility & efficiency — nav always accessible
+     ============================================================ -->
+  <nav class="landing-mobile-nav" role="navigation" aria-label="Navigasi utama KaitoFin">
+    <a href="/" class="mobile-header-brand" aria-label="KaitoFin — Halaman utama" style="text-decoration:none">
+      <div class="mobile-logo" style="width:34px;height:34px;font-size:14px;border-radius:11px" aria-hidden="true">K</div>
+      <span class="mobile-brand-name" style="font-size:17px">KaitoFin</span>
+    </a>
+    <div style="display:flex;align-items:center;gap:6px">
+      <nav class="landing-nav-links" aria-label="Tautan halaman">
+        <a href="#fitur" class="landing-nav-link">Fitur</a>
+        <a href="#cara-kerja" class="landing-nav-link">Cara Kerja</a>
+        <a href="#harga" class="landing-nav-link">Harga</a>
+      </nav>
+      <a href="src/pages/login.html" class="landing-cta-btn" aria-label="Mulai menggunakan KaitoFin">Mulai</a>
     </div>
   </nav>
 
-  <!-- HERO -->
-  <section class="hero" aria-labelledby="hero-heading">
-    <div class="hero-inner">
-      <div class="hero-content">
-        <div class="hero-eyebrow" aria-label="Powered by Gemini AI">
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-            <circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.2"/>
-            <path d="M6 3.5v5M3.5 6h5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
-          </svg>
-          Powered by Gemini AI
-        </div>
-        <h1 id="hero-heading" class="hero-title">
-          Catat keuangan<br/>
-          <span class="hero-title-accent">cukup foto struk</span><br/>
-          atau ketik santai
-        </h1>
-        <p class="hero-body">
-          Platform manajemen keuangan berbasis AI untuk mahasiswa, freelancer, dan UMKM. Pisahkan keuangan pribadi dan bisnis, pantau arus kas, semua dari satu tempat.
-        </p>
-        <div class="hero-actions">
-          <a href="src/pages/scan.html" class="btn btn-primary btn-lg">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            Coba Scan Struk Gratis
-          </a>
-          <a href="#cara-kerja" class="btn btn-secondary">Lihat cara kerja</a>
-        </div>
-        <div class="hero-trust">
-          <span>PostgreSQL Persistent</span>
-          <span class="hero-trust-dot" aria-hidden="true"></span>
-          <span>Gemini AI</span>
-          <span class="hero-trust-dot" aria-hidden="true"></span>
-          <span>Dual Workspace</span>
-          <span class="hero-trust-dot" aria-hidden="true"></span>
-          <span>Anti Double-Submit</span>
-        </div>
-      </div>
+  <!-- ============================================================
+     HERO SECTION
+     Nielsen #1: Visibility of system status — immediate value prop
+     Copy: specific, no hype verbs, no fake social proof
+     ============================================================ -->
+  <section class="landing-hero" aria-labelledby="hero-title">
+    <!-- AI provenance badge — functional, not decorative eyebrow -->
+    <div class="landing-hero-badge" aria-label="Didukung Gemini AI Google">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor" aria-hidden="true">
+        <circle cx="5" cy="5" r="3.5"/>
+      </svg>
+      Didukung Gemini AI Google
+    </div>
 
-      <div class="hero-visual" role="img" aria-label="Preview tampilan dashboard KaitoFin">
-        <div class="hero-dashboard-frame">
-          <div class="hero-dashboard-topbar" aria-hidden="true">
-            <div class="topbar-dot"></div>
-            <div class="topbar-dot"></div>
-            <div class="topbar-dot"></div>
-            <div class="topbar-bar"></div>
-          </div>
-          <div class="hero-dashboard-body" aria-hidden="true">
-            <div class="mini-balance">
-              <div class="mini-balance-label">Total Saldo · Personal</div>
-              <div class="mini-balance-amount">Rp 3.450.000</div>
-              <div class="mini-balance-sub">November 2026 · +Rp 750.000 bulan ini</div>
-            </div>
-            <div class="mini-stats">
-              <div class="mini-stat-card">
-                <div class="mini-stat-label">Pemasukan</div>
-                <div class="mini-stat-val mini-stat-val-income">+Rp 5.200.000</div>
-              </div>
-              <div class="mini-stat-card">
-                <div class="mini-stat-label">Pengeluaran</div>
-                <div class="mini-stat-val mini-stat-val-expense">−Rp 1.750.000</div>
-              </div>
-            </div>
-            <div class="mini-ai-input">
-              <div class="mini-ai-dot"></div>
-              <div class="mini-ai-text">"Beli nasi padang Rp25.000 warung Bu Sari"</div>
-              <div class="mini-ai-send">
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-                  <path d="M2 6h8M6 2l4 4-4 4" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </div>
-            </div>
-            <div class="mini-transactions">
-              <div class="mini-txn-header">Transaksi Terbaru</div>
-              <div class="mini-txn">
-                <div class="mini-txn-icon" style="background:var(--expense-bg)">🍽️</div>
-                <div class="mini-txn-info">
-                  <div class="mini-txn-name">Nasi Padang Bu Sari</div>
-                  <div class="mini-txn-date">Hari ini · Makan</div>
-                </div>
-                <div class="mini-txn-amount mini-txn-expense">−Rp 25.000</div>
-              </div>
-              <div class="mini-txn">
-                <div class="mini-txn-icon" style="background:var(--neutral-bg)">📄</div>
-                <div class="mini-txn-info">
-                  <div class="mini-txn-name">Struk Indomaret</div>
-                  <div class="mini-txn-date">Kemarin · AI Scan</div>
-                </div>
-                <div class="mini-txn-amount mini-txn-expense">−Rp 87.500</div>
-              </div>
-              <div class="mini-txn">
-                <div class="mini-txn-icon" style="background:var(--income-bg)">💰</div>
-                <div class="mini-txn-info">
-                  <div class="mini-txn-name">Transfer Freelance</div>
-                  <div class="mini-txn-date">2 hari lalu · Pendapatan</div>
-                </div>
-                <div class="mini-txn-amount mini-txn-income">+Rp 750.000</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+    <h1 id="hero-title" class="landing-hero-title">
+      Catat keuangan<br/>
+      <span class="landing-hero-title-accent">cukup foto struk</span><br/>
+      atau ketik santai
+    </h1>
+
+    <p class="landing-hero-body">
+      Manajemen keuangan berbasis AI untuk mahasiswa, freelancer, dan UMKM. Pisahkan keuangan pribadi dan bisnis, pantau arus kas — semua dari satu aplikasi.
+    </p>
+
+    <div class="landing-hero-cta">
+      <a href="src/pages/login.html" class="landing-btn-primary" aria-label="Mulai mengatur keuangan kamu — gratis">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+          <path d="M3.5 9h11M9.5 4.5l4.5 4.5-4.5 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Mulai Mengatur
+      </a>
+      <a href="#cara-kerja" class="landing-btn-secondary" aria-label="Lihat bagaimana KaitoFin bekerja">
+        Lihat cara kerja
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+          <path d="M5 3.5l4 3.5-4 3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+
+    <!-- Trust signals — specific, verifiable -->
+    <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-top:24px;flex-wrap:wrap">
+      <span style="font-size:11px;font-weight:500;color:#2E4C45;display:flex;align-items:center;gap:5px">
+        <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M1.5 5l2.5 2.5L8.5 3" stroke="#2BBFA0" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        PostgreSQL Persistent
+      </span>
+      <span style="width:3px;height:3px;border-radius:50%;background:#2E4C45" aria-hidden="true"></span>
+      <span style="font-size:11px;font-weight:500;color:#2E4C45;display:flex;align-items:center;gap:5px">
+        <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M1.5 5l2.5 2.5L8.5 3" stroke="#2BBFA0" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Dual Workspace
+      </span>
+      <span style="width:3px;height:3px;border-radius:50%;background:#2E4C45" aria-hidden="true"></span>
+      <span style="font-size:11px;font-weight:500;color:#2E4C45;display:flex;align-items:center;gap:5px">
+        <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M1.5 5l2.5 2.5L8.5 3" stroke="#2BBFA0" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Anti Double-Submit
+      </span>
     </div>
   </section>
 
-  <!-- FEATURE STRIP -->
-  <div class="feature-strip" aria-label="Fitur utama KaitoFin">
-    <div class="feature-strip-inner">
-      <div class="feature-strip-item">
-        <div class="feature-strip-icon" aria-hidden="true">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M5 8l2.5 2.5L11 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <span>Receipt OCR dengan Gemini AI</span>
+  <!-- ============================================================
+     PHONE MOCKUP — real product preview, not illustration
+     ============================================================ -->
+  <div class="hero-phone-mockup"
+    role="img"
+    aria-label="Preview dashboard KaitoFin: saldo Rp 3.450.000, pemasukan hijau, pengeluaran merah, daftar transaksi terbaru">
+    <div class="hero-mockup-notch" aria-hidden="true">
+      <span class="hero-mockup-time">09:41</span>
+      <!-- Battery + signal icons -->
+      <div style="display:flex;align-items:center;gap:5px;color:rgba(237,233,224,0.4)">
+        <svg width="14" height="8" viewBox="0 0 14 8" fill="none"><rect x="0.5" y="0.5" width="11" height="7" rx="1.2" stroke="currentColor" stroke-width="1"/><rect x="2" y="2" width="7" height="4" rx="0.6" fill="currentColor"/><path d="M12.5 2.5v3" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
       </div>
-      <div class="feature-strip-item">
-        <div class="feature-strip-icon" aria-hidden="true">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 4h8M4 8h6M4 12h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-        </div>
-        <span>Input Natural Language</span>
+    </div>
+    <div class="hero-mockup-inner" aria-hidden="true">
+      <!-- Balance card in mockup -->
+      <div class="mockup-balance-card">
+        <div class="mockup-balance-label">TOTAL SALDO · PERSONAL</div>
+        <div class="mockup-balance-amount">Rp 3.450.000</div>
+        <div style="font-size:10px;color:rgba(168,197,189,0.4);margin-top:3px">Nov 2026 · +Rp 750k bulan ini</div>
       </div>
-      <div class="feature-strip-item">
-        <div class="feature-strip-icon" aria-hidden="true">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="9" y="2" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="2" y="9" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="9" y="9" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.5"/></svg>
+      <!-- Mini stats -->
+      <div class="mockup-mini-stats">
+        <div class="mockup-mini-stat">
+          <div class="mockup-stat-label">Pemasukan</div>
+          <div class="mockup-stat-val mockup-stat-income">+Rp 5.200.000</div>
         </div>
-        <span>Dual Workspace Isolation</span>
+        <div class="mockup-mini-stat">
+          <div class="mockup-stat-label">Pengeluaran</div>
+          <div class="mockup-stat-val mockup-stat-expense">−Rp 1.750.000</div>
+        </div>
       </div>
-      <div class="feature-strip-item">
-        <div class="feature-strip-icon" aria-hidden="true">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2l1.5 4.5H14l-4 2.9 1.5 4.6L8 11l-3.5 3 1.5-4.6L2 6.5h4.5L8 2z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+      <!-- AI Input hint -->
+      <div style="background:rgba(30,158,126,0.08);border:1px solid rgba(30,158,126,0.16);border-radius:11px;padding:10px 13px;display:flex;align-items:center;gap:9px;margin-bottom:11px">
+        <div style="width:7px;height:7px;border-radius:50%;background:#2BBFA0;flex-shrink:0"></div>
+        <div style="font-size:11px;color:#5A7A72;font-style:italic;flex:1;letter-spacing:-0.01em">"Beli nasi padang Rp25.000 Bu Sari"</div>
+        <div style="width:24px;height:24px;background:linear-gradient(135deg,#1E9E7E,#17826A);border-radius:7px;display:flex;align-items:center;justify-content:center">
+          <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M2 5.5h7M6 2.5l3 3-3 3" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </div>
-        <span>Freemium · 10x AI Gratis</span>
+      </div>
+      <!-- Transactions in mockup -->
+      <div class="mockup-txn-list">
+        <div class="mockup-txn-item">
+          <div class="mockup-txn-icon" style="background:rgba(122,184,255,0.10);color:#7AB8FF">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 10l3-3.5 3 2.5 3.5-5.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <span class="mockup-txn-name">Bibit Reksadana</span>
+          <span class="mockup-txn-amount mockup-amount-income">+Rp 200.000</span>
+        </div>
+        <div class="mockup-txn-item">
+          <div class="mockup-txn-icon" style="background:rgba(255,123,123,0.10);color:#FF7B7B">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="2" y="3" width="10" height="8" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M4 3V2M10 3V2" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg>
+          </div>
+          <span class="mockup-txn-name">MyTelkomsel</span>
+          <span class="mockup-txn-amount mockup-amount-expense">−Rp 95.000</span>
+        </div>
+        <div class="mockup-txn-item">
+          <div class="mockup-txn-icon" style="background:rgba(82,227,154,0.10);color:#52E39A">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 10V4M3.5 7l3.5-3.5L14 7" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <span class="mockup-txn-name">Universitas Kampus</span>
+          <span class="mockup-txn-amount mockup-amount-income">+Rp 1.500.000</span>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- FEATURES SECTION -->
-  <section class="features" id="fitur" aria-labelledby="features-heading">
-    <div class="features-inner">
-      <div class="section-header">
-        <div class="section-eyebrow" aria-hidden="true">Fitur Utama</div>
-        <h2 id="features-heading" class="section-heading">Semua yang dibutuhkan<br/>untuk kelola keuangan</h2>
-        <p class="section-subheading" style="margin-top:var(--space-4)">Dirancang khusus untuk ritme kehidupan mahasiswa, freelancer, dan pemilik UMKM — tanpa kompleksitas berlebih.</p>
+  <!-- ============================================================
+     FEATURE STRIP — horizontal scroll, no marquee
+     ============================================================ -->
+  <div class="landing-feature-strip" role="list" aria-label="Fitur utama KaitoFin">
+    <div class="feature-strip-pill" role="listitem">
+      <svg class="feature-strip-icon" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+        <rect x="2" y="2" width="14" height="14" rx="2" stroke="currentColor" stroke-width="1.4"/>
+        <path d="M5.5 9l2.5 2.5L12.5 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Receipt OCR dengan AI
+    </div>
+    <div class="feature-strip-pill" role="listitem">
+      <svg class="feature-strip-icon" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+        <path d="M3 5h12M3 9h8M3 13h6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+      </svg>
+      Input Natural Language
+    </div>
+    <div class="feature-strip-pill" role="listitem">
+      <svg class="feature-strip-icon" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+        <rect x="2" y="2" width="6" height="6" rx="1.2" stroke="currentColor" stroke-width="1.4"/>
+        <rect x="10" y="2" width="6" height="6" rx="1.2" stroke="currentColor" stroke-width="1.4"/>
+        <rect x="2" y="10" width="6" height="6" rx="1.2" stroke="currentColor" stroke-width="1.4"/>
+        <rect x="10" y="10" width="6" height="6" rx="1.2" stroke="currentColor" stroke-width="1.4"/>
+      </svg>
+      Dual Workspace Isolation
+    </div>
+    <div class="feature-strip-pill" role="listitem">
+      <svg class="feature-strip-icon" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+        <path d="M9 2.5l2 6H17l-4.9 3.5 1.9 5.6L9 13.5 4.1 17.5l1.9-5.6L1 7.5h6L9 2.5z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>
+      </svg>
+      Freemium · 10× AI Gratis
+    </div>
+    <div class="feature-strip-pill" role="listitem">
+      <svg class="feature-strip-icon" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+        <path d="M9 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9z" stroke="currentColor" stroke-width="1.4"/>
+        <path d="M3 17c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+      </svg>
+      Untuk Mahasiswa &amp; UMKM
+    </div>
+  </div>
+
+  <!-- ============================================================
+     FEATURES SECTION
+     Anti-monotony: Wide dark card + 2×2 grid (different anatomy)
+     ============================================================ -->
+  <section class="landing-features-section" id="fitur" aria-labelledby="features-title">
+    <div class="landing-section-eyebrow">Fitur Utama</div>
+    <h2 id="features-title" class="landing-section-title">
+      Semua yang dibutuhkan<br/>untuk kelola keuangan
+    </h2>
+
+    <div class="feature-cards-grid">
+      <!-- Wide dark hero card — AI Receipt Scanning -->
+      <article class="feature-card-dark-m" aria-label="AI Receipt Scanning — fitur unggulan">
+        <div class="feature-icon-m" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <rect x="3" y="2" width="14" height="16" rx="2.5" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M6 7h8M6 10.5h8M6 14h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="feature-card-title-m" style="font-size:16px">AI Receipt Scanning</div>
+        <p class="feature-card-desc-m" style="font-size:13px">Foto struk belanja dari minimarket, restoran, atau apotek. Gemini AI mengidentifikasi nominal, nama toko, tanggal, dan kategori secara otomatis. Review sebelum disimpan — AI yang transparan, bukan kotak hitam.</p>
+        <div style="display:flex;gap:7px;margin-top:14px;flex-wrap:wrap">
+          <span style="font-size:11px;font-weight:700;color:#2BBFA0;background:rgba(30,158,126,0.12);border:1px solid rgba(30,158,126,0.2);border-radius:6px;padding:3px 9px;letter-spacing:0.01em">Gemini AI</span>
+          <span style="font-size:11px;font-weight:500;color:#5A7A72;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:6px;padding:3px 9px">OCR Otomatis</span>
+          <span style="font-size:11px;font-weight:500;color:#5A7A72;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:6px;padding:3px 9px">Konfirmasi Manual</span>
+        </div>
+      </article>
+
+      <!-- 2×2 grid of feature cells -->
+      <div class="feature-card-std-m">
+        <article class="feature-card-cell" aria-label="Input Natural Language">
+          <div class="feature-icon-m" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M3 6h14M3 10h9M3 14h7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="feature-card-title-m">Input Natural</div>
+          <p class="feature-card-desc-m">Ketik "Beli nasi padang 25rb", AI langsung urai dan kategorikan.</p>
+        </article>
+        <article class="feature-card-cell" aria-label="Dual Workspace Isolation">
+          <div class="feature-icon-m" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <rect x="2" y="2" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+              <rect x="11" y="2" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+              <rect x="2" y="11" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+              <rect x="11" y="11" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+            </svg>
+          </div>
+          <div class="feature-card-title-m">Dual Workspace</div>
+          <p class="feature-card-desc-m">Personal dan bisnis sepenuhnya terpisah, tidak pernah tercampur.</p>
+        </article>
       </div>
-      <div class="feature-grid">
-        <div class="feature-card feature-card-wide feature-card-dark" role="article">
-          <div class="feature-icon-wrap feature-icon-wrap-dark">
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><rect x="3" y="2" width="14" height="16" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M7 7h6M7 10h6M7 13h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+
+      <div class="feature-card-std-m">
+        <article class="feature-card-cell" aria-label="Smart Confirmation Modal">
+          <div class="feature-icon-m" style="background-color:rgba(82,227,154,0.10);color:#52E39A" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M10 2a8 8 0 1 1 0 16A8 8 0 0 1 10 2z" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M6.5 10l2.5 2.5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
           </div>
-          <div class="feature-title feature-title-dark">AI Receipt Scanning</div>
-          <p class="feature-desc feature-desc-dark">Foto struk belanja dari minimarket, restoran, atau apotek. Gemini AI mengidentifikasi nominal, nama toko, tanggal, dan kategori secara otomatis. Review dan konfirmasi sebelum disimpan — AI yang transparan, bukan kotak hitam.</p>
-          <div style="display:flex;gap:var(--space-2);margin-top:var(--space-4);flex-wrap:wrap">
-            <span class="badge badge-ai">Gemini AI</span>
-            <span class="badge badge-neutral" style="background:rgba(240,237,231,0.1);color:var(--text-on-dark-2)">OCR Otomatis</span>
-            <span class="badge badge-neutral" style="background:rgba(240,237,231,0.1);color:var(--text-on-dark-2)">Konfirmasi Manual</span>
+          <div class="feature-card-title-m">Smart Konfirmasi</div>
+          <p class="feature-card-desc-m">Setiap transaksi butuh persetujuanmu. Anti double-submit bawaan.</p>
+        </article>
+        <article class="feature-card-cell" aria-label="Laporan Keuangan Visual">
+          <div class="feature-icon-m" style="background-color:rgba(122,184,255,0.10);color:#7AB8FF" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M3 14.5l4.5-5.5 4.5 3.5L17 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
           </div>
-        </div>
-        <div class="feature-card" role="article">
-          <div class="feature-icon-wrap">
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10h12M4 6h8M4 14h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-          </div>
-          <div class="feature-title">Input Natural Language</div>
-          <p class="feature-desc">Ketik santai seperti <em style="color:var(--text-primary);font-style:normal;font-weight:500">"Beli nasi padang 25rb"</em>. Sistem AI mengurai informasi dan menyiapkan detail transaksi untuk dikonfirmasi.</p>
-        </div>
-        <div class="feature-card" role="article">
-          <div class="feature-icon-wrap">
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><rect x="2" y="2" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.5"/><rect x="11" y="2" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.5"/><rect x="2" y="11" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.5"/><rect x="11" y="11" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.5"/></svg>
-          </div>
-          <div class="feature-title">Dual Workspace</div>
-          <p class="feature-desc">Personal Workspace untuk keuangan pribadi dan Business Workspace untuk UMKM — data sepenuhnya terpisah dan tidak pernah tercampur.</p>
-        </div>
-        <div class="feature-card feature-card-highlight" role="article">
-          <div class="feature-icon-wrap">
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 3a7 7 0 1 1 0 14A7 7 0 0 1 10 3z" stroke="currentColor" stroke-width="1.5"/><path d="M7 10l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </div>
-          <div class="feature-title">Smart Confirmation</div>
-          <p class="feature-desc">Setiap transaksi melewati modal konfirmasi. Anti double-submit otomatis mencegah duplikat data. Edit detail yang salah sebelum final.</p>
-        </div>
-        <div class="feature-card" role="article">
-          <div class="feature-icon-wrap">
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3 14l4-5 4 3 4-7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </div>
-          <div class="feature-title">Laporan Keuangan</div>
-          <p class="feature-desc">Grafik pemasukan vs pengeluaran, rincian per kategori, dan ringkasan periode. Visualisasi bermakna, tidak sekadar dekoratif.</p>
-        </div>
-        <div class="feature-card" role="article">
-          <div class="feature-icon-wrap">
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2l1.8 5.4H18l-4.9 3.5 1.9 5.6L10 13l-5 3.5 1.9-5.6L2 7.4h6.2L10 2z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
-          </div>
-          <div class="feature-title">Freemium &amp; PRO</div>
-          <p class="feature-desc">10 kuota AI gratis untuk semua pengguna baru. Upgrade ke PRO via transfer manual, diverifikasi langsung oleh Admin dengan kuota kustom.</p>
-        </div>
+          <div class="feature-card-title-m">Laporan Visual</div>
+          <p class="feature-card-desc-m">Grafik pemasukan vs pengeluaran, rincian kategori per periode.</p>
+        </article>
       </div>
     </div>
   </section>
 
-  <!-- HOW IT WORKS -->
-  <section class="how-it-works" id="cara-kerja" aria-labelledby="hiw-heading">
-    <div class="hiw-inner">
-      <div class="section-eyebrow" aria-hidden="true">Cara Kerja</div>
-      <h2 id="hiw-heading" class="section-heading">Dari struk ke catatan<br/>dalam 4 langkah</h2>
-      <ol class="hiw-steps" role="list">
-        <li class="hiw-step">
-          <div class="hiw-step-num" aria-hidden="true">01</div>
-          <h3 class="hiw-step-title">Foto atau Ketik</h3>
-          <p class="hiw-step-desc">Upload foto struk belanja atau ketik transaksi dengan bahasa santai. Kedua metode didukung penuh.</p>
-        </li>
-        <li class="hiw-step">
-          <div class="hiw-step-num" aria-hidden="true">02</div>
-          <h3 class="hiw-step-title">AI Ekstraksi Data</h3>
-          <p class="hiw-step-desc">Gemini AI mengidentifikasi nominal, nama toko, tanggal, dan kategori. Proses berlangsung dalam hitungan detik.</p>
-        </li>
-        <li class="hiw-step">
-          <div class="hiw-step-num" aria-hidden="true">03</div>
-          <h3 class="hiw-step-title">Review &amp; Koreksi</h3>
-          <p class="hiw-step-desc">Lihat hasil ekstraksi AI, koreksi bila ada yang kurang tepat. Tidak ada yang disimpan sebelum kamu setuju.</p>
-        </li>
-        <li class="hiw-step">
-          <div class="hiw-step-num" aria-hidden="true">04</div>
-          <h3 class="hiw-step-title">Tersimpan &amp; Terlacak</h3>
-          <p class="hiw-step-desc">Transaksi masuk ke workspace yang tepat, muncul di laporan, dan bisa kamu pantau kapan saja.</p>
-        </li>
-      </ol>
-    </div>
+  <!-- ============================================================
+     HOW IT WORKS (different anatomy: numbered list with connector)
+     ============================================================ -->
+  <section class="how-it-works-m" id="cara-kerja" aria-labelledby="hiw-title">
+    <div class="landing-section-eyebrow">Cara Kerja</div>
+    <h2 id="hiw-title" class="landing-section-title">
+      Dari struk ke catatan<br/>dalam 4 langkah
+    </h2>
+
+    <ol class="hiw-steps-m" role="list">
+      <li class="hiw-step-m">
+        <div class="hiw-step-num-m" aria-hidden="true">01</div>
+        <div>
+          <h3 class="hiw-step-title-m">Foto atau Ketik</h3>
+          <p class="hiw-step-desc-m">Upload foto struk belanja atau ketik transaksi dengan bahasa santai. Kedua metode didukung penuh tanpa perlu format khusus.</p>
+        </div>
+      </li>
+      <li class="hiw-step-m">
+        <div class="hiw-step-num-m" aria-hidden="true">02</div>
+        <div>
+          <h3 class="hiw-step-title-m">AI Ekstraksi Data</h3>
+          <p class="hiw-step-desc-m">Gemini AI mengidentifikasi nominal, nama toko, tanggal, dan kategori. Proses berlangsung dalam hitungan detik, bukan menit.</p>
+        </div>
+      </li>
+      <li class="hiw-step-m">
+        <div class="hiw-step-num-m" aria-hidden="true">03</div>
+        <div>
+          <h3 class="hiw-step-title-m">Review &amp; Koreksi</h3>
+          <p class="hiw-step-desc-m">Lihat hasil ekstraksi AI, koreksi bila ada yang kurang tepat. Tidak ada yang disimpan sebelum kamu setuju.</p>
+        </div>
+      </li>
+      <li class="hiw-step-m">
+        <div class="hiw-step-num-m" aria-hidden="true">04</div>
+        <div>
+          <h3 class="hiw-step-title-m">Tersimpan &amp; Terlacak</h3>
+          <p class="hiw-step-desc-m">Transaksi masuk ke workspace yang tepat, muncul di laporan keuangan, dan bisa dipantau kapan saja.</p>
+        </div>
+      </li>
+    </ol>
   </section>
 
-  <!-- WORKSPACE SECTION -->
-  <section class="workspace-section" id="workspace" aria-labelledby="workspace-heading">
-    <div class="workspace-inner">
-      <div class="section-eyebrow" aria-hidden="true">Dual Workspace</div>
-      <h2 id="workspace-heading" class="section-heading">Satu platform,<br/>dua ruang keuangan</h2>
-      <p class="section-subheading" style="margin-top:var(--space-4)">Uang saku pribadi dan omset usaha tidak pernah tercampur. Ganti workspace dalam satu klik, data tetap terpisah sepenuhnya.</p>
-      <div class="workspace-grid">
-        <div class="workspace-card workspace-card-personal" role="article">
-          <div class="workspace-badge workspace-badge-personal">
-            <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><circle cx="5" cy="5" r="4" stroke="currentColor" stroke-width="1.2"/><circle cx="5" cy="3.5" r="1.2" fill="currentColor"/><path d="M2.5 8c0-1.4 1.1-2.5 2.5-2.5s2.5 1.1 2.5 2.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
-            Personal
-          </div>
-          <h3 class="workspace-title">Keuangan Pribadi</h3>
-          <p class="workspace-desc">Untuk mahasiswa, freelancer, dan individu yang ingin melacak uang saku, pengeluaran harian, dan pendapatan pribadi.</p>
-          <ul class="workspace-features" role="list">
-            <li class="workspace-feature-item">
-              <span class="workspace-check" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-              Pemasukan &amp; pengeluaran pribadi
-            </li>
-            <li class="workspace-feature-item">
-              <span class="workspace-check" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-              Riwayat transaksi personal
-            </li>
-            <li class="workspace-feature-item">
-              <span class="workspace-check" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-              Ringkasan keuangan harian &amp; bulanan
-            </li>
-            <li class="workspace-feature-item">
-              <span class="workspace-check" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-              Input AI &amp; scan struk
-            </li>
-          </ul>
-        </div>
-        <div class="workspace-card workspace-card-business" role="article">
-          <div class="workspace-badge workspace-badge-business">
-            <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><rect x="1" y="3" width="8" height="6" rx="1" stroke="currentColor" stroke-width="1.2"/><path d="M3 3V2.5C3 1.7 3.7 1 4.5 1h1C6.3 1 7 1.7 7 2.5V3" stroke="currentColor" stroke-width="1.2"/></svg>
-            UMKM &amp; Bisnis
-          </div>
-          <h3 class="workspace-title workspace-title-dark">Keuangan Usaha</h3>
-          <p class="workspace-desc workspace-desc-dark">Untuk pemilik warung, toko online, atau usaha kecil yang ingin melacak omset, pengeluaran bisnis, dan arus kas secara terpisah.</p>
-          <ul class="workspace-features" role="list">
-            <li class="workspace-feature-item workspace-feature-item-dark">
-              <span class="workspace-check workspace-check-dark" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-              Pemasukan &amp; pengeluaran bisnis
-            </li>
-            <li class="workspace-feature-item workspace-feature-item-dark">
-              <span class="workspace-check workspace-check-dark" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-              Catatan transaksi UMKM terpisah
-            </li>
-            <li class="workspace-feature-item workspace-feature-item-dark">
-              <span class="workspace-check workspace-check-dark" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-              Ringkasan arus kas bisnis
-            </li>
-            <li class="workspace-feature-item workspace-feature-item-dark">
-              <span class="workspace-check workspace-check-dark" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-              Laporan keuangan bisnis
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </section>
+  <!-- ============================================================
+     WORKSPACE COMPARISON (different anatomy: card pair)
+     ============================================================ -->
+  <section class="workspace-comparison" id="workspace" aria-labelledby="workspace-title">
+    <div class="landing-section-eyebrow">Dual Workspace</div>
+    <h2 id="workspace-title" class="landing-section-title">
+      Satu aplikasi,<br/>dua ruang keuangan
+    </h2>
 
-  <!-- PRICING SECTION -->
-  <section class="pricing-section" id="harga" aria-labelledby="pricing-heading">
-    <div class="pricing-inner">
-      <div style="text-align:center;margin-bottom:var(--space-4)">
-        <div class="section-eyebrow" aria-hidden="true" style="display:inline-block">Harga</div>
-      </div>
-      <h2 id="pricing-heading" class="section-heading" style="text-align:center">Mulai gratis,<br/>upgrade saat butuh</h2>
-      <div class="pricing-grid">
-        <div class="pricing-card" role="article">
-          <div class="pricing-plan-name">Gratis</div>
-          <div class="pricing-amount">Rp 0</div>
-          <div class="pricing-period">Selamanya · 10 kuota AI</div>
-          <hr class="pricing-divider" />
-          <ul class="pricing-features" role="list">
-            <li class="pricing-feature">
-              <span class="pricing-feature-icon" aria-hidden="true"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1.5 4l1.8 1.8L6.5 2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-              10 penggunaan AI gratis
-            </li>
-            <li class="pricing-feature">
-              <span class="pricing-feature-icon" aria-hidden="true"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1.5 4l1.8 1.8L6.5 2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-              Personal &amp; Business Workspace
-            </li>
-            <li class="pricing-feature">
-              <span class="pricing-feature-icon" aria-hidden="true"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1.5 4l1.8 1.8L6.5 2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-              Riwayat transaksi lengkap
-            </li>
-            <li class="pricing-feature">
-              <span class="pricing-feature-icon" aria-hidden="true"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1.5 4l1.8 1.8L6.5 2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-              Laporan dasar
-            </li>
-          </ul>
-          <a href="src/pages/dashboard.html" class="btn btn-secondary" style="width:100%;justify-content:center">Mulai Gratis</a>
+    <div class="workspace-cards-m">
+      <!-- Personal -->
+      <article class="workspace-card-personal-m" aria-label="Personal Workspace untuk mahasiswa dan freelancer">
+        <div class="workspace-badge-m ws-badge-personal">
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+            <circle cx="5" cy="5" r="4" stroke="currentColor" stroke-width="1.2"/>
+            <circle cx="5" cy="3.5" r="1.3" fill="currentColor"/>
+            <path d="M2.5 8c0-1.4 1.1-2.5 2.5-2.5s2.5 1.1 2.5 2.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+          </svg>
+          Personal
         </div>
-        <div class="pricing-card pricing-card-featured" role="article">
-          <div class="pricing-plan-name">PRO</div>
-          <div class="pricing-amount pricing-amount-dark">Custom</div>
-          <div class="pricing-period pricing-period-dark">Kuota kustom · Verifikasi Admin</div>
-          <hr class="pricing-divider" style="border-color:rgba(240,237,231,0.12)" />
-          <ul class="pricing-features" role="list">
-            <li class="pricing-feature pricing-feature-dark">
-              <span class="pricing-feature-icon pricing-feature-icon-dark" aria-hidden="true"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1.5 4l1.8 1.8L6.5 2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-              Kuota AI kustom dari Admin
-            </li>
-            <li class="pricing-feature pricing-feature-dark">
-              <span class="pricing-feature-icon pricing-feature-icon-dark" aria-hidden="true"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1.5 4l1.8 1.8L6.5 2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-              Upgrade via transfer manual
-            </li>
-            <li class="pricing-feature pricing-feature-dark">
-              <span class="pricing-feature-icon pricing-feature-icon-dark" aria-hidden="true"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1.5 4l1.8 1.8L6.5 2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-              Verifikasi WhatsApp Admin
-            </li>
-            <li class="pricing-feature pricing-feature-dark">
-              <span class="pricing-feature-icon pricing-feature-icon-dark" aria-hidden="true"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1.5 4l1.8 1.8L6.5 2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-              Semua fitur Gratis termasuk
-            </li>
-          </ul>
-          <a href="src/pages/upgrade.html" class="btn btn-primary" style="width:100%;justify-content:center">Upgrade ke PRO</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- CTA SECTION -->
-  <section class="cta-section" aria-labelledby="cta-heading">
-    <div class="cta-inner">
-      <h2 id="cta-heading" class="cta-title">Mulai catat keuangan<br/>lebih mudah hari ini</h2>
-      <p class="cta-body">10 kuota AI gratis menanti kamu. Tidak perlu kartu kredit, tidak perlu instalasi. Cukup daftar dan mulai foto struk pertamamu.</p>
-      <div class="cta-actions">
-        <a href="src/pages/scan.html" class="btn btn-cta-primary">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="2" y="2" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M5 8l2.5 2.5L11 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          Scan Struk Gratis
-        </a>
-        <a href="src/pages/dashboard.html" class="btn btn-cta-secondary">Lihat Dashboard</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- FOOTER -->
-  <footer class="footer" role="contentinfo">
-    <div class="footer-inner">
-      <div>
-        <a href="/" class="brand-mark" aria-label="KaitoFin — Beranda" style="text-decoration:none;display:inline-flex;align-items:center;gap:var(--space-2)">
-          <div class="brand-logo" aria-hidden="true" style="width:24px;height:24px"><span class="brand-logo-inner" style="font-size:11px">K</span></div>
-          <span class="brand-name" style="font-size:var(--text-sm)">KaitoFin</span>
-        </a>
-        <p class="footer-copyright" style="margin-top:var(--space-2)">© 2026 KaitoFin · Dibuat oleh Dava Rafael</p>
-      </div>
-      <nav aria-label="Footer navigation">
-        <ul class="footer-links" role="list">
-          <li><a href="#fitur" class="footer-link">Fitur</a></li>
-          <li><a href="#harga" class="footer-link">Harga</a></li>
-          <li><a href="src/pages/dashboard.html" class="footer-link">Dashboard</a></li>
-          <li><a href="src/pages/admin.html" class="footer-link">Admin</a></li>
+        <h3 class="workspace-title-m">Keuangan Pribadi</h3>
+        <p class="workspace-desc-m">Untuk mahasiswa, freelancer, dan individu yang ingin melacak uang saku, pengeluaran harian, dan pendapatan pribadi secara rapi dan terpisah dari bisnis.</p>
+        <ul class="workspace-features-m" role="list">
+          <li class="ws-feature-m">
+            <span class="ws-check-m" aria-hidden="true"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1.5 4l2 2L7 2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            Pemasukan &amp; pengeluaran pribadi
+          </li>
+          <li class="ws-feature-m">
+            <span class="ws-check-m" aria-hidden="true"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1.5 4l2 2L7 2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            Riwayat transaksi personal
+          </li>
+          <li class="ws-feature-m">
+            <span class="ws-check-m" aria-hidden="true"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1.5 4l2 2L7 2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            Ringkasan keuangan harian &amp; bulanan
+          </li>
+          <li class="ws-feature-m">
+            <span class="ws-check-m" aria-hidden="true"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1.5 4l2 2L7 2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            AI Input &amp; scan struk pribadi
+          </li>
+          <li class="ws-feature-m">
+            <span class="ws-check-m" aria-hidden="true"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1.5 4l2 2L7 2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            Analitik keuangan personal
+          </li>
         </ul>
-      </nav>
+      </article>
+
+      <!-- Business -->
+      <article class="workspace-card-business-m" aria-label="Business Workspace untuk UMKM">
+        <div class="workspace-badge-m ws-badge-business">
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+            <rect x="1" y="3" width="8" height="6" rx="1" stroke="currentColor" stroke-width="1.2"/>
+            <path d="M3 3V2.5C3 1.7 3.7 1 4.5 1h1C6.3 1 7 1.7 7 2.5V3" stroke="currentColor" stroke-width="1.2"/>
+          </svg>
+          UMKM &amp; Bisnis
+        </div>
+        <h3 class="workspace-title-m">Keuangan Usaha</h3>
+        <p class="workspace-desc-m">Untuk pemilik warung, toko online, atau usaha kecil yang ingin melacak omset, pengeluaran bisnis, dan arus kas secara terpisah dari keuangan pribadi.</p>
+        <ul class="workspace-features-m" role="list">
+          <li class="ws-feature-m">
+            <span class="ws-check-m ws-check-blue-m" aria-hidden="true"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1.5 4l2 2L7 2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            Omset penjualan &amp; pengeluaran operasional
+          </li>
+          <li class="ws-feature-m">
+            <span class="ws-check-m ws-check-blue-m" aria-hidden="true"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1.5 4l2 2L7 2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            Catatan transaksi UMKM terpisah penuh
+          </li>
+          <li class="ws-feature-m">
+            <span class="ws-check-m ws-check-blue-m" aria-hidden="true"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1.5 4l2 2L7 2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            Laporan arus kas &amp; laba bersih
+          </li>
+          <li class="ws-feature-m">
+            <span class="ws-check-m ws-check-blue-m" aria-hidden="true"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1.5 4l2 2L7 2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            Kaito AI Advisor konteks bisnis
+          </li>
+          <li class="ws-feature-m">
+            <span class="ws-check-m ws-check-blue-m" aria-hidden="true"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1.5 4l2 2L7 2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            Scan nota &amp; struk bahan baku
+          </li>
+        </ul>
+      </article>
     </div>
+  </section>
+
+  <!-- ============================================================
+     PRICING (different anatomy: stacked cards, no rings)
+     ============================================================ -->
+  <section class="pricing-section-m" id="harga" aria-labelledby="pricing-title">
+    <div style="padding:0 22px">
+      <div class="landing-section-eyebrow">Harga</div>
+      <h2 id="pricing-title" class="landing-section-title">
+        Mulai gratis,<br/>upgrade saat butuh
+      </h2>
+    </div>
+
+    <div class="pricing-cards-m">
+      <!-- Free plan -->
+      <article class="pricing-card-m" aria-label="Paket Gratis — Rp 0 selamanya">
+        <div class="pricing-plan-m">Gratis</div>
+        <div class="pricing-amount-m num">Rp 0</div>
+        <div class="pricing-period-m">Selamanya · 10 kuota AI</div>
+        <hr class="pricing-divider-m" />
+        <ul class="pricing-features-m" role="list">
+          <li class="pricing-feature-m">
+            <svg class="pricing-check-m" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2.5 7l3 3 6-6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            10 penggunaan AI gratis
+          </li>
+          <li class="pricing-feature-m">
+            <svg class="pricing-check-m" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2.5 7l3 3 6-6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Personal &amp; Business Workspace
+          </li>
+          <li class="pricing-feature-m">
+            <svg class="pricing-check-m" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2.5 7l3 3 6-6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Riwayat transaksi lengkap
+          </li>
+          <li class="pricing-feature-m">
+            <svg class="pricing-check-m" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2.5 7l3 3 6-6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Laporan keuangan dasar
+          </li>
+        </ul>
+        <a href="src/pages/login.html" class="mobile-btn-secondary" style="width:100%;justify-content:center;font-size:15px;padding:14px 20px;border-radius:14px" aria-label="Mulai paket gratis">Mulai Gratis</a>
+      </article>
+
+      <!-- PRO plan — distinguished by fill, not ring -->
+      <article class="pricing-card-m pricing-card-featured-m" aria-label="Paket PRO — kuota kustom dari admin">
+        <div class="pricing-plan-m">
+          PRO
+          <span class="pricing-pro-badge">Rekomendasi</span>
+        </div>
+        <div class="pricing-amount-m num">Custom</div>
+        <div class="pricing-period-m">Kuota kustom · Verifikasi Admin</div>
+        <hr class="pricing-divider-m" />
+        <ul class="pricing-features-m" role="list">
+          <li class="pricing-feature-m">
+            <svg class="pricing-check-m" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2.5 7l3 3 6-6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Kuota AI kustom dari Admin (50–500+)
+          </li>
+          <li class="pricing-feature-m">
+            <svg class="pricing-check-m" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2.5 7l3 3 6-6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Upgrade via transfer manual
+          </li>
+          <li class="pricing-feature-m">
+            <svg class="pricing-check-m" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2.5 7l3 3 6-6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Verifikasi WhatsApp Admin
+          </li>
+          <li class="pricing-feature-m">
+            <svg class="pricing-check-m" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2.5 7l3 3 6-6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Semua fitur Gratis termasuk
+          </li>
+        </ul>
+        <a href="src/pages/upgrade.html" class="mobile-btn-primary" style="width:100%;justify-content:center;font-size:15px;padding:15px 20px" aria-label="Upgrade ke paket PRO">Upgrade ke PRO</a>
+      </article>
+    </div>
+  </section>
+
+  <!-- ============================================================
+     CTA — full-width, specific copy
+     ============================================================ -->
+  <div class="landing-cta-section-m" aria-labelledby="cta-title">
+    <h2 id="cta-title" class="landing-cta-title-m">
+      Mulai catat keuangan<br/>lebih mudah hari ini
+    </h2>
+    <p class="landing-cta-body-m">10 kuota AI gratis menanti. Tidak perlu kartu kredit, tidak perlu instalasi. Daftar dan mulai foto struk pertamamu.</p>
+    <div style="display:flex;flex-direction:column;gap:12px;align-items:center">
+      <a href="src/pages/login.html" class="landing-btn-primary" style="max-width:290px" aria-label="Mulai mengatur keuangan kamu sekarang">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+          <path d="M3.5 9h11M9.5 4.5l4.5 4.5-4.5 4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Mulai Mengatur
+      </a>
+      <a href="src/pages/dashboard.html" class="landing-btn-secondary" aria-label="Lihat demo dashboard tanpa daftar">Lihat Dashboard Demo</a>
+    </div>
+  </div>
+
+  <!-- ============================================================
+     FOOTER — minimal, only real links
+     ============================================================ -->
+  <footer class="landing-footer-m" role="contentinfo">
+    <div>
+      <a href="/" style="display:flex;align-items:center;gap:7px;text-decoration:none;margin-bottom:6px" aria-label="KaitoFin — Kembali ke halaman utama">
+        <div class="mobile-logo" style="width:26px;height:26px;font-size:11px;border-radius:8px;box-shadow:none" aria-hidden="true">K</div>
+        <span class="mobile-brand-name" style="font-size:14px">KaitoFin</span>
+      </a>
+      <p class="footer-copyright-m">© 2026 KaitoFin · Dibuat oleh Dava Rafael</p>
+    </div>
+    <nav aria-label="Tautan footer">
+      <ul class="footer-links-m">
+        <li><a href="#fitur" class="footer-link-m">Fitur</a></li>
+        <li><a href="#harga" class="footer-link-m">Harga</a></li>
+        <li><a href="src/pages/dashboard.html" class="footer-link-m">Dashboard</a></li>
+        <li><a href="src/pages/admin.html" class="footer-link-m">Admin</a></li>
+      </ul>
+    </nav>
   </footer>
 
+</div><!-- end .landing-mobile -->
 </body>
 </html>
