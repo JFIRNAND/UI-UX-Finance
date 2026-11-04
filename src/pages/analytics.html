@@ -3,13 +3,380 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover" />
-  <title>Analitik Keuangan — Budgetly</title>
-  <meta name="theme-color" content="#08140F" />
+  <title>Analitik Keuangan — KaitoFin</title>
+  <meta name="theme-color" content="#0A1410" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../styles/tokens.css" />
   <link rel="stylesheet" href="../styles/mobile.css" />
+  <style>
+    /* ── Analytics page styles ─────────────────────────── */
+    .an-period-bar {
+      display: flex;
+      gap: 5px;
+      padding: 0 20px 16px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scrollbar-width: none;
+    }
+    .an-period-bar::-webkit-scrollbar { display: none; }
+
+    .an-period-tab {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 8px;
+      padding: 7px 13px;
+      font-size: 12px;
+      font-weight: 500;
+      color: #6A8C84;
+      cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
+      font-family: inherit;
+      transition: all 150ms ease-out;
+      min-height: 36px;
+    }
+
+    .an-period-tab:hover { border-color: #1E9E7E; color: #2BBFA0; }
+
+    .an-period-tab.active {
+      background: #1E9E7E;
+      border-color: #1E9E7E;
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    .an-period-tab:focus-visible { outline: 2px solid #1E9E7E; outline-offset: 2px; }
+
+    /* Summary row */
+    .an-summary-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+      padding: 0 20px 16px;
+    }
+
+    .an-summary-card {
+      background: linear-gradient(160deg, #152420 0%, #1A2E28 100%);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 14px;
+      padding: 13px 12px;
+    }
+
+    .an-summary-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: #4A6B63;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 7px;
+    }
+
+    .an-summary-val {
+      font-family: var(--font-display);
+      font-size: 15px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+    }
+
+    .an-summary-period {
+      font-size: 10px;
+      color: #4A6B63;
+      margin-top: 3px;
+    }
+
+    /* Chart card */
+    .an-chart-card {
+      margin: 0 20px 16px;
+      background: linear-gradient(160deg, #152420 0%, #1A2E28 100%);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 18px;
+      overflow: hidden;
+    }
+
+    .an-chart-head {
+      padding: 16px 18px 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .an-chart-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #EDE9E0;
+      letter-spacing: -0.02em;
+    }
+
+    .an-chart-sub {
+      font-size: 11px;
+      color: #4A6B63;
+      margin-top: 2px;
+    }
+
+    .an-chart-legend {
+      display: flex;
+      gap: 14px;
+      padding: 10px 18px 0;
+      flex-wrap: wrap;
+    }
+
+    .an-legend-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+      margin-right: 5px;
+      vertical-align: middle;
+    }
+
+    .an-legend-item {
+      font-size: 11px;
+      color: #6A8C84;
+    }
+
+    .an-bar-area {
+      padding: 16px 18px 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .an-bars-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 6px;
+      height: 120px;
+    }
+
+    .an-bar-group {
+      display: flex;
+      gap: 3px;
+      align-items: flex-end;
+      flex: 1;
+    }
+
+    .an-bar {
+      border-radius: 3px 3px 0 0;
+      flex: 1;
+      min-height: 3px;
+      transition: height 250ms ease-out, opacity 150ms ease-out;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .an-bar { transition: none; }
+    }
+
+    .an-bar:hover { opacity: 0.8; }
+    .an-bar-income  { background: #1E9E7E; }
+    .an-bar-expense { background: rgba(241,109,118,0.6); }
+
+    .an-bar-labels {
+      display: flex;
+      justify-content: space-around;
+      padding: 4px 0 12px;
+    }
+
+    .an-bar-label {
+      font-size: 10px;
+      color: #3E5C55;
+      text-align: center;
+      flex: 1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Category breakdown */
+    .an-cat-card {
+      margin: 0 20px 16px;
+      background: linear-gradient(160deg, #152420 0%, #1A2E28 100%);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 18px;
+      overflow: hidden;
+    }
+
+    .an-cat-head {
+      padding: 14px 18px 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      font-size: 14px;
+      font-weight: 700;
+      color: #EDE9E0;
+      letter-spacing: -0.02em;
+    }
+
+    .an-cat-item {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      padding: 12px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .an-cat-item:last-child { border-bottom: none; }
+
+    .an-cat-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .an-cat-info { flex: 1; min-width: 0; }
+
+    .an-cat-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: #EDE9E0;
+      margin-bottom: 5px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .an-cat-bar-wrap {
+      height: 5px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .an-cat-bar {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 300ms ease-out;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .an-cat-bar { transition: none; }
+    }
+
+    .an-cat-right { text-align: right; flex-shrink: 0; }
+
+    .an-cat-amount {
+      font-size: 13px;
+      font-weight: 700;
+      color: #EDE9E0;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .an-cat-pct {
+      font-size: 10px;
+      color: #4A6B63;
+      margin-top: 2px;
+    }
+
+    /* Month comparison */
+    .an-month-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+      margin: 0 20px 16px;
+    }
+
+    .an-month-card {
+      border-radius: 14px;
+      padding: 12px 11px;
+      border: 1px solid rgba(255,255,255,0.07);
+    }
+
+    .an-month-label {
+      font-size: 10px;
+      font-weight: 600;
+      color: #4A6B63;
+      margin-bottom: 7px;
+    }
+
+    .an-month-income {
+      font-size: 11px;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+      color: #52E39A;
+      margin-bottom: 2px;
+    }
+
+    .an-month-expense {
+      font-size: 11px;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+      color: #F16D76;
+    }
+
+    /* Insights */
+    .an-insights-card {
+      margin: 0 20px 24px;
+      background: linear-gradient(160deg, #152420 0%, #1A2E28 100%);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 18px;
+      overflow: hidden;
+    }
+
+    .an-insights-head {
+      padding: 14px 18px 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      font-size: 14px;
+      font-weight: 700;
+      color: #EDE9E0;
+      letter-spacing: -0.02em;
+    }
+
+    .an-insight-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 12px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      font-size: 12px;
+      color: #8AADA6;
+      line-height: 1.55;
+    }
+
+    .an-insight-row:last-child { border-bottom: none; }
+
+    .an-insight-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: rgba(30,158,126,0.10);
+      color: #2BBFA0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* Demo banner */
+    .demo-banner {
+      margin: 0 20px 12px;
+      padding: 10px 14px;
+      background: rgba(255,190,85,0.08);
+      border: 1px solid rgba(255,190,85,0.2);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      color: #FFBE55;
+      font-weight: 500;
+    }
+
+    /* Section label */
+    .an-section-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: #4A6B63;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 0 20px 10px;
+    }
+  </style>
 </head>
 <body>
 <div class="mobile-app">
@@ -35,93 +402,93 @@
         </svg>
       </a>
       <h1 class="scan-page-title">Analitik Keuangan</h1>
-      <div style="margin-left:auto;font-size:11px;font-weight:500;color:var(--text-secondary)" id="current-month">Nov 2026</div>
+      <div id="header-period-label" style="font-size:11px;font-weight:600;color:#4A6B63;margin-left:auto;padding-right:4px">Nov 2026</div>
     </header>
 
-    <!-- Period Selection -->
-    <div class="period-tabs" role="tablist" aria-label="Pilih periode analitik">
-      <button role="tab" aria-selected="false" onclick="setPeriod('7days')" class="period-tab" aria-label="7 hari terakhir">7 Hari</button>
-      <button role="tab" aria-selected="true" onclick="setPeriod('1month')" class="period-tab active" aria-label="Bulan ini">Bulan Ini</button>
-      <button role="tab" aria-selected="false" onclick="setPeriod('3months')" class="period-tab" aria-label="3 bulan terakhir">3 Bulan</button>
-      <button role="tab" aria-selected="false" onclick="setPeriod('12months')" class="period-tab" aria-label="Tahun ini">Tahun Ini</button>
+    <!-- Demo banner -->
+    <div id="demo-banner" class="demo-banner" hidden>
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+        <circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.2"/>
+        <path d="M7 5v3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+        <circle cx="7" cy="9.5" r="0.6" fill="currentColor"/>
+      </svg>
+      Data demo — bukan transaksi nyata Anda
     </div>
 
-    <!-- Financial Summary -->
-    <section aria-label="Ringkasan keuangan">
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:16px 20px;margin-bottom:8px">
-        <div class="summary-card" role="region" aria-label="Total pemasukan">
-          <div class="summary-card-label">Pemasukan</div>
-          <div id="summary-income" class="summary-card-amount" style="color:var(--income-color)">+Rp 0</div>
-          <div class="summary-card-delta">Period</div>
+    <!-- Period tabs — no global event dependency -->
+    <div class="an-period-bar" role="tablist" aria-label="Pilih periode analitik">
+      <button id="tab-7days"   role="tab" aria-selected="false" class="an-period-tab" onclick="setPeriod('7days')"   aria-label="7 hari terakhir">7 Hari</button>
+      <button id="tab-1month" role="tab" aria-selected="true"  class="an-period-tab active" onclick="setPeriod('1month')"  aria-label="Bulan ini">Bulan Ini</button>
+      <button id="tab-3months" role="tab" aria-selected="false" class="an-period-tab" onclick="setPeriod('3months')" aria-label="3 bulan terakhir">3 Bulan</button>
+      <button id="tab-12months" role="tab" aria-selected="false" class="an-period-tab" onclick="setPeriod('12months')" aria-label="Tahun ini">Tahun Ini</button>
+    </div>
+
+    <!-- Summary cards -->
+    <section aria-label="Ringkasan keuangan periode">
+      <div class="an-summary-grid">
+        <div class="an-summary-card" role="region" aria-label="Total pemasukan periode">
+          <div class="an-summary-label">Masuk</div>
+          <div id="summary-income" class="an-summary-val" style="color:#52E39A">+Rp 0</div>
+          <div id="period-label" class="an-summary-period">Bulan ini</div>
         </div>
-        <div class="summary-card" role="region" aria-label="Total pengeluaran">
-          <div class="summary-card-label">Pengeluaran</div>
-          <div id="summary-expense" class="summary-card-amount" style="color:var(--expense-color)">−Rp 0</div>
-          <div class="summary-card-delta">Period</div>
+        <div class="an-summary-card" role="region" aria-label="Total pengeluaran periode">
+          <div class="an-summary-label">Keluar</div>
+          <div id="summary-expense" class="an-summary-val" style="color:#F16D76">−Rp 0</div>
+          <div class="an-summary-period">Periode ini</div>
         </div>
-        <div class="summary-card" role="region" aria-label="Saldo bersih">
-          <div class="summary-card-label">Saldo</div>
-          <div id="summary-balance" class="summary-card-amount">Rp 0</div>
-          <div class="summary-card-delta">Bersih</div>
+        <div class="an-summary-card" role="region" aria-label="Saldo bersih periode">
+          <div class="an-summary-label">Saldo</div>
+          <div id="summary-balance" class="an-summary-val" style="color:#EDE9E0">Rp 0</div>
+          <div class="an-summary-period">Bersih</div>
         </div>
       </div>
     </section>
 
-    <!-- Income vs Expenses Chart -->
-    <section style="padding:0 20px 16px">
-      <div class="chart-card">
-        <div class="chart-header">
-          <div class="chart-title">Pemasukan vs Pengeluaran</div>
-          <div class="chart-subtitle">Perbandingan per bulan</div>
-        </div>
-        <div class="chart-legend">
-          <div class="legend-item">
-            <div class="legend-dot" style="background:var(--brand-accent)"></div>
-            <span>Pemasukan</span>
-          </div>
-          <div class="legend-item">
-            <div class="legend-dot" style="background:var(--expense-color)"></div>
-            <span>Pengeluaran</span>
-          </div>
-        </div>
-        <div class="chart-body" id="bar-chart-container" role="img" aria-label="Grafik batang pemasukan vs pengeluaran">
-          <!-- Diisi oleh JavaScript -->
-        </div>
-        <div style="display:flex;gap:4px;justify-content:center;margin-top:12px" id="chart-labels">
-          <!-- Labels diisi oleh JavaScript -->
+    <!-- Income vs Expense bar chart -->
+    <div class="an-chart-card" role="region" aria-label="Grafik pemasukan vs pengeluaran">
+      <div class="an-chart-head">
+        <div>
+          <div class="an-chart-title">Pemasukan vs Pengeluaran</div>
+          <div class="an-chart-sub">Per bulan dalam periode dipilih</div>
         </div>
       </div>
-    </section>
+      <div class="an-chart-legend" aria-hidden="true">
+        <span class="an-legend-item"><span class="an-legend-dot" style="background:#1E9E7E"></span>Pemasukan</span>
+        <span class="an-legend-item"><span class="an-legend-dot" style="background:rgba(241,109,118,0.7)"></span>Pengeluaran</span>
+      </div>
+      <div class="an-bar-area">
+        <div id="bar-chart-container" class="an-bars-row" role="img" aria-label="Grafik batang pemasukan dan pengeluaran">
+          <!-- rendered by JS -->
+        </div>
+        <div id="bar-chart-labels" class="an-bar-labels" aria-hidden="true">
+          <!-- rendered by JS -->
+        </div>
+      </div>
+    </div>
 
-    <!-- Expense Categories Breakdown -->
-    <section style="padding:0 20px 16px">
-      <div class="section-header">
-        <div class="section-title">Kategori Pengeluaran</div>
+    <!-- Category breakdown -->
+    <div id="cat-section" class="an-cat-card" role="region" aria-label="Kategori pengeluaran">
+      <div class="an-cat-head">Kategori Pengeluaran</div>
+      <div id="category-breakdown">
+        <!-- rendered by JS -->
       </div>
-      <div class="chart-card" style="padding:0;overflow:hidden" id="category-breakdown">
-        <!-- Diisi oleh JavaScript -->
-      </div>
-    </section>
+    </div>
 
-    <!-- Monthly Comparison -->
-    <section style="padding:0 20px 16px">
-      <div class="section-header">
-        <div class="section-title">Perbandingan 3 Bulan</div>
+    <!-- Monthly comparison — always 3 months, independent of period -->
+    <div role="region" aria-label="Perbandingan 3 bulan terakhir">
+      <div class="an-section-label">Perbandingan 3 Bulan</div>
+      <div class="an-month-grid" id="month-comparison">
+        <!-- rendered by JS -->
       </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px" id="month-comparison" role="region" aria-label="Perbandingan 3 bulan terakhir">
-        <!-- Diisi oleh JavaScript -->
-      </div>
-    </section>
+    </div>
 
-    <!-- Financial Insights -->
-    <section style="padding:0 20px 24px">
-      <div class="section-header">
-        <div class="section-title">Wawasan Keuangan</div>
+    <!-- Insights -->
+    <div id="insights-wrap" class="an-insights-card" role="region" aria-label="Wawasan keuangan">
+      <div class="an-insights-head">Wawasan</div>
+      <div id="insights-container">
+        <!-- rendered by JS -->
       </div>
-      <div class="chart-card" style="padding:14px;display:flex;flex-direction:column;gap:10px" id="insights-container">
-        <!-- Diisi oleh JavaScript -->
-      </div>
-    </section>
+    </div>
 
   </div><!-- end .page-scroll -->
 
@@ -158,56 +525,98 @@
 </div>
 
 <script>
+'use strict';
+
+/* ── State ──────────────────────────────────────────────── */
 let currentPeriod = '1month';
 
-function formatRupiah(amount) {
-  if (!amount) return 'Rp 0';
-  const absAmount = Math.abs(amount);
-  if (absAmount >= 1000000) {
-    return 'Rp ' + (absAmount / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
-  } else if (absAmount >= 1000) {
-    return 'Rp ' + (absAmount / 1000).toFixed(0) + 'K';
-  }
-  return 'Rp ' + absAmount.toLocaleString('id-ID');
+/* ── Shared data source — always from kaito_transactions ── */
+function getAllTransactions() {
+  return JSON.parse(localStorage.getItem('kaito_transactions') || '[]');
 }
 
-function getDateRange(period) {
-  const today = new Date();
-  let start, end = new Date(today);
+/* ── Period helpers ──────────────────────────────────────── */
+const TODAY = new Date(); // live date
 
+function getDateRange(period) {
+  const end   = new Date(TODAY);
+  let   start;
   if (period === '7days') {
-    start = new Date(today);
+    start = new Date(TODAY);
     start.setDate(start.getDate() - 7);
   } else if (period === '1month') {
-    start = new Date(today.getFullYear(), today.getMonth(), 1);
+    start = new Date(TODAY.getFullYear(), TODAY.getMonth(), 1);
   } else if (period === '3months') {
-    start = new Date(today);
+    start = new Date(TODAY);
     start.setMonth(start.getMonth() - 3);
-  } else if (period === '12months') {
-    start = new Date(today.getFullYear(), 0, 1);
+  } else { // 12months
+    start = new Date(TODAY.getFullYear(), 0, 1);
   }
-
   return { start, end };
 }
 
 function getTransactionsByPeriod(period) {
   const { start, end } = getDateRange(period);
-  const txns = JSON.parse(localStorage.getItem('kaito_transactions') || '[]');
-
-  return txns.filter(t => {
-    const txnDate = new Date(t.date);
-    return txnDate >= start && txnDate <= end;
+  return getAllTransactions().filter(t => {
+    const d = new Date(t.date);
+    return d >= start && d <= end;
   });
 }
 
+/* ── Formatting ──────────────────────────────────────────── */
+const MONTH_NAMES = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+
+function formatRupiah(amount) {
+  const abs = Math.abs(amount || 0);
+  if (abs >= 1000000) return 'Rp ' + (abs / 1000000).toFixed(1).replace(/\.0$/, '') + ' Jt';
+  if (abs >= 1000)    return 'Rp ' + Math.round(abs / 1000) + ' Rb';
+  return 'Rp ' + abs.toLocaleString('id-ID');
+}
+
+function formatAmountShort(amount) {
+  const abs = Math.abs(amount || 0);
+  if (abs >= 1000000) return (abs / 1000000).toFixed(1).replace(/\.0$/, '') + ' Jt';
+  if (abs >= 1000)    return Math.round(abs / 1000) + ' Rb';
+  return abs.toLocaleString('id-ID');
+}
+
+const PERIOD_LABELS = {
+  '7days':   '7 hari terakhir',
+  '1month':  'Bulan ini',
+  '3months': '3 bulan terakhir',
+  '12months':'Tahun ini'
+};
+
+/* ── Category colors (finite set, no rainbow) ────────────── */
+const CAT_COLORS = ['#F59E0B','#F16D76','#7AB8FF','#C4AAFF','#52E39A','#FFBE55'];
+
+/* ── setPeriod — no global event ─────────────────────────── */
 function setPeriod(period) {
   currentPeriod = period;
-  
-  // Update tabs
-  document.querySelectorAll('.period-tab').forEach(tab => tab.classList.remove('active'));
-  event.target.classList.add('active');
-  
-  // Re-render all visualizations
+
+  // Update tab states
+  document.querySelectorAll('.an-period-tab').forEach(btn => {
+    btn.classList.remove('active');
+    btn.setAttribute('aria-selected', 'false');
+  });
+  const activeTab = document.getElementById('tab-' + period);
+  if (activeTab) {
+    activeTab.classList.add('active');
+    activeTab.setAttribute('aria-selected', 'true');
+  }
+
+  // Update header label
+  const headerLabel = document.getElementById('header-period-label');
+  if (period === '1month') {
+    headerLabel.textContent = MONTH_NAMES[TODAY.getMonth()] + ' ' + TODAY.getFullYear();
+  } else {
+    headerLabel.textContent = PERIOD_LABELS[period];
+  }
+
+  // Update period label in summary
+  document.getElementById('period-label').textContent = PERIOD_LABELS[period];
+
+  // Re-render all sections from the same data source
   updateSummary();
   updateBarChart();
   updateCategories();
@@ -215,185 +624,255 @@ function setPeriod(period) {
   updateInsights();
 }
 
+/* ── Summary ─────────────────────────────────────────────── */
 function updateSummary() {
-  const txns = getTransactionsByPeriod(currentPeriod);
-  const income = txns.filter(t => t.type === 'income').reduce((s, t) => s + (t.amount || 0), 0);
+  const txns   = getTransactionsByPeriod(currentPeriod);
+  const income  = txns.filter(t => t.type === 'income').reduce((s, t) => s + (t.amount || 0), 0);
   const expense = txns.filter(t => t.type === 'expense').reduce((s, t) => s + (t.amount || 0), 0);
   const balance = income - expense;
 
-  document.getElementById('summary-income').textContent = '+' + formatRupiah(income).replace('Rp ', '');
-  document.getElementById('summary-expense').textContent = '−' + formatRupiah(expense).replace('Rp ', '');
-  document.getElementById('summary-balance').textContent = formatRupiah(balance).replace('Rp ', '');
+  document.getElementById('summary-income').textContent  = '+' + formatRupiah(income);
+  document.getElementById('summary-expense').textContent = '−' + formatRupiah(expense);
+  const balEl = document.getElementById('summary-balance');
+  balEl.textContent  = (balance < 0 ? '−' : '') + formatRupiah(Math.abs(balance));
+  balEl.style.color  = balance >= 0 ? '#52E39A' : '#F16D76';
 }
 
+/* ── Bar chart ───────────────────────────────────────────── */
 function updateBarChart() {
-  const container = document.getElementById('bar-chart-container');
-  const labelsContainer = document.getElementById('chart-labels');
-  const txns = getTransactionsByPeriod(currentPeriod);
+  const container    = document.getElementById('bar-chart-container');
+  const labelsEl     = document.getElementById('bar-chart-labels');
+  const txns         = getTransactionsByPeriod(currentPeriod);
 
-  // Group by month
-  const months = {};
-  const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
-  
+  // Group by month-year
+  const monthMap = {};
   txns.forEach(t => {
-    const d = new Date(t.date);
-    const key = `${d.getFullYear()}-${d.getMonth()}`;
-    if (!months[key]) months[key] = { income: 0, expense: 0 };
-    if (t.type === 'income') months[key].income += t.amount;
-    else if (t.type === 'expense') months[key].expense += t.amount;
+    const d   = new Date(t.date);
+    const key = d.getFullYear() + '-' + d.getMonth();
+    if (!monthMap[key]) monthMap[key] = { income: 0, expense: 0, month: d.getMonth(), year: d.getFullYear() };
+    if (t.type === 'income')  monthMap[key].income  += (t.amount || 0);
+    if (t.type === 'expense') monthMap[key].expense += (t.amount || 0);
   });
 
-  const sorted = Object.keys(months).sort().slice(-6);
+  const sorted = Object.keys(monthMap).sort().slice(-6);
+
   if (sorted.length === 0) {
-    container.innerHTML = '<div style="width:100%;height:200px;display:flex;align-items:center;justify-content:center;color:var(--text-muted);font-size:12px">Tidak ada data untuk periode ini</div>';
-    labelsContainer.innerHTML = '';
+    container.innerHTML = `
+      <div style="width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:16px 0">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true" style="color:#3E5C55">
+          <path d="M6 26l5-7 5 4 6-10 5 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span style="font-size:12px;color:#4A6B63">Tidak ada data untuk periode ini</span>
+      </div>`;
+    labelsEl.innerHTML = '';
     return;
   }
 
-  const maxVal = Math.max(...sorted.flatMap(k => [months[k].income, months[k].expense]), 1);
+  const maxVal = Math.max(
+    ...sorted.map(k => Math.max(monthMap[k].income, monthMap[k].expense)),
+    1
+  );
 
   container.innerHTML = sorted.map(k => {
-    const m = months[k];
-    const incomeHeight = Math.max(5, (m.income / maxVal * 100));
-    const expenseHeight = Math.max(5, (m.expense / maxVal * 100));
-    return `<div style="display:flex;gap:4px;height:100%;align-items:flex-end">
-      <div style="flex:1;height:${incomeHeight}%;background:var(--brand-accent);border-radius:3px 3px 0 0;transition:all 200ms" title="Pemasukan"></div>
-      <div style="flex:1;height:${expenseHeight}%;background:var(--expense-color);border-radius:3px 3px 0 0;transition:all 200ms" title="Pengeluaran"></div>
+    const m = monthMap[k];
+    const ih = Math.max(4, (m.income  / maxVal * 100));
+    const eh = Math.max(4, (m.expense / maxVal * 100));
+    return `<div class="an-bar-group">
+      <div class="an-bar an-bar-income"  style="height:${ih}%" title="Pemasukan ${formatRupiah(m.income)}" aria-hidden="true"></div>
+      <div class="an-bar an-bar-expense" style="height:${eh}%" title="Pengeluaran ${formatRupiah(m.expense)}" aria-hidden="true"></div>
     </div>`;
   }).join('');
 
-  labelsContainer.innerHTML = sorted.map(k => {
-    const [year, monthIdx] = k.split('-');
-    return `<span style="font-size:10px;color:var(--text-muted);flex:1;text-align:center">${monthNames[parseInt(monthIdx)]}</span>`;
+  labelsEl.innerHTML = sorted.map(k => {
+    const m = monthMap[k];
+    return `<span class="an-bar-label">${MONTH_NAMES[m.month]}</span>`;
   }).join('');
 }
 
+/* ── Categories ──────────────────────────────────────────── */
 function updateCategories() {
   const container = document.getElementById('category-breakdown');
-  const txns = getTransactionsByPeriod(currentPeriod).filter(t => t.type === 'expense');
+  const txns      = getTransactionsByPeriod(currentPeriod).filter(t => t.type === 'expense');
 
-  const categories = {};
+  const catMap = {};
   txns.forEach(t => {
     const cat = t.category || 'Lainnya';
-    if (!categories[cat]) categories[cat] = 0;
-    categories[cat] += t.amount || 0;
+    catMap[cat] = (catMap[cat] || 0) + (t.amount || 0);
   });
 
-  const total = Object.values(categories).reduce((s, v) => s + v, 0);
+  const total  = Object.values(catMap).reduce((s, v) => s + v, 0);
+  const sorted = Object.entries(catMap).sort((a, b) => b[1] - a[1]).slice(0, 6);
+
   if (total === 0) {
-    container.innerHTML = '<div class="empty-state" style="padding:32px 16px"><div class="empty-state-icon">📊</div><div class="empty-state-title" style="font-size:14px">Tidak ada pengeluaran</div><div class="empty-state-description">Belum ada transaksi pengeluaran untuk periode ini</div></div>';
+    container.innerHTML = `
+      <div style="padding:32px 16px;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true" style="color:#3E5C55">
+          <circle cx="14" cy="14" r="10" stroke="currentColor" stroke-width="1.8"/>
+          <path d="M9 14h10M9 10h6M9 18h4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+        <div style="font-size:12px;color:#4A6B63">Belum ada pengeluaran di periode ini</div>
+        <a href="scan.html" style="font-size:12px;font-weight:600;color:#2BBFA0;text-decoration:none;padding:8px 14px;background:rgba(30,158,126,0.1);border:1px solid rgba(30,158,126,0.2);border-radius:8px">Catat Pengeluaran</a>
+      </div>`;
     return;
   }
 
-  const colors = ['#F59E0B', '#EF4444', '#60A5FA', '#A78BFA', '#F87171', '#34D399'];
-  const sorted = Object.entries(categories).sort((a, b) => b[1] - a[1]);
-  
-  let html = '';
-  sorted.forEach(([ cat, amount ], idx) => {
-    const pct = ((amount / total) * 100).toFixed(0);
-    const color = colors[idx % colors.length];
-
-    html += `
-      <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:${idx < sorted.length - 1 ? '1px solid var(--border-muted)' : 'none'}">
-        <div style="width:40px;height:40px;border-radius:10px;background:${color}20;display:flex;align-items:center;justify-content:center;color:${color};flex-shrink:0;font-weight:600">${(amount / 1000000).toFixed(0)}M</div>
-        <div style="flex:1">
-          <div style="display:flex;justify-content:space-between;margin-bottom:5px">
-            <span style="font-size:12px;font-weight:600;color:var(--text-primary)">${cat}</span>
-            <span style="font-size:12px;font-weight:700;color:var(--text-primary)">${pct}%</span>
-          </div>
-          <div style="height:5px;background:var(--border-muted);border-radius:3px;overflow:hidden">
-            <div style="height:100%;width:${pct}%;background:${color};border-radius:3px"></div>
+  container.innerHTML = sorted.map(([cat, amount], idx) => {
+    const pct   = ((amount / total) * 100).toFixed(0);
+    const color = CAT_COLORS[idx % CAT_COLORS.length];
+    return `
+      <div class="an-cat-item">
+        <div class="an-cat-icon" style="background:${color}20;color:${color}" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M3 12l3-4 2.5 2L12 5l3 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="an-cat-info">
+          <div class="an-cat-name">${escHtml(cat)}</div>
+          <div class="an-cat-bar-wrap" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100" aria-label="${escHtml(cat)} ${pct}%">
+            <div class="an-cat-bar" style="width:${pct}%;background:${color}"></div>
           </div>
         </div>
-      </div>`;
-  });
-
-  container.innerHTML = html;
-}
-
-function updateMonthComparison() {
-  const container = document.getElementById('month-comparison');
-  const txns = JSON.parse(localStorage.getItem('kaito_transactions') || '[]');
-  const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
-  const today = new Date();
-
-  const months = [];
-  for (let i = 2; i >= 0; i--) {
-    const d = new Date(today);
-    d.setMonth(d.getMonth() - i);
-    months.push({ year: d.getFullYear(), month: d.getMonth(), key: `${d.getFullYear()}-${d.getMonth()}` });
-  }
-
-  const data = {};
-  months.forEach(m => {
-    data[m.key] = { income: 0, expense: 0 };
-  });
-
-  txns.forEach(t => {
-    const d = new Date(t.date);
-    const key = `${d.getFullYear()}-${d.getMonth()}`;
-    if (data[key]) {
-      if (t.type === 'income') data[key].income += t.amount;
-      else if (t.type === 'expense') data[key].expense += t.amount;
-    }
-  });
-
-  container.innerHTML = months.map(m => {
-    const d = data[m.key];
-    const balance = d.income - d.expense;
-    return `
-      <div class="mini-stat">
-        <div class="mini-stat-label">${monthNames[m.month]}</div>
-        <div class="mini-stat-value" style="color:${balance >= 0 ? 'var(--income-color)' : 'var(--expense-color)'}">${balance >= 0 ? '+' : '−'}Rp ${Math.abs(balance / 1000000).toFixed(0)}M</div>
+        <div class="an-cat-right">
+          <div class="an-cat-amount">${formatAmountShort(amount)}</div>
+          <div class="an-cat-pct">${pct}%</div>
+        </div>
       </div>`;
   }).join('');
 }
 
+/* ── Month comparison — always last 3 calendar months ─────── */
+function updateMonthComparison() {
+  const container = document.getElementById('month-comparison');
+  const all       = getAllTransactions();
+
+  const months = [];
+  for (let i = 2; i >= 0; i--) {
+    const d = new Date(TODAY);
+    d.setMonth(d.getMonth() - i);
+    months.push({ year: d.getFullYear(), month: d.getMonth() });
+  }
+
+  const totals = {};
+  months.forEach(m => { totals[m.year + '-' + m.month] = { income: 0, expense: 0 }; });
+
+  all.forEach(t => {
+    const d   = new Date(t.date);
+    const key = d.getFullYear() + '-' + d.getMonth();
+    if (totals[key]) {
+      if (t.type === 'income')  totals[key].income  += (t.amount || 0);
+      if (t.type === 'expense') totals[key].expense += (t.amount || 0);
+    }
+  });
+
+  const isCurrent = m => m.month === TODAY.getMonth() && m.year === TODAY.getFullYear();
+
+  container.innerHTML = months.map(m => {
+    const key = m.year + '-' + m.month;
+    const d   = totals[key];
+    const cur = isCurrent(m);
+    return `
+      <div class="an-month-card" style="background:${cur ? 'linear-gradient(135deg,#1E3530 0%,#162420 100%)' : '#152420'};border-color:${cur ? 'rgba(30,158,126,0.3)' : 'rgba(255,255,255,0.07)'}">
+        <div class="an-month-label" style="color:${cur ? '#2BBFA0' : '#4A6B63'}">${MONTH_NAMES[m.month]}${cur ? ' ·' : ''}</div>
+        <div class="an-month-income">+${formatAmountShort(d.income)}</div>
+        <div class="an-month-expense">−${formatAmountShort(d.expense)}</div>
+      </div>`;
+  }).join('');
+}
+
+/* ── Insights ────────────────────────────────────────────── */
 function updateInsights() {
   const container = document.getElementById('insights-container');
-  const txns = getTransactionsByPeriod(currentPeriod);
-  const income = txns.filter(t => t.type === 'income').reduce((s, t) => s + (t.amount || 0), 0);
-  const expense = txns.filter(t => t.type === 'expense').reduce((s, t) => s + (t.amount || 0), 0);
-  const balance = income - expense;
+  const txns      = getTransactionsByPeriod(currentPeriod);
+  const income    = txns.filter(t => t.type === 'income').reduce((s, t) => s + (t.amount || 0), 0);
+  const expense   = txns.filter(t => t.type === 'expense').reduce((s, t) => s + (t.amount || 0), 0);
+  const balance   = income - expense;
 
   const insights = [];
 
-  if (expense > 0) {
-    const categories = {};
-    txns.filter(t => t.type === 'expense').forEach(t => {
-      categories[t.category] = (categories[t.category] || 0) + t.amount;
+  if (txns.length === 0) {
+    insights.push({
+      icon: `<path d="M7 3v5l3 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+             <circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.2"/>`,
+      text: `Belum ada transaksi di periode ini. <a href="scan.html" style="color:#2BBFA0;font-weight:600;text-decoration:none">Catat sekarang</a> untuk mulai melihat analitik.`
     });
-    const topCategory = Object.entries(categories).sort((a, b) => b[1] - a[1])[0];
-    if (topCategory) {
-      const pct = ((topCategory[1] / expense) * 100).toFixed(0);
-      insights.push(`Pengeluaran terbesar adalah <strong>${topCategory[0]}</strong> dengan <strong>${pct}%</strong> dari total`);
+  } else {
+    if (expense > 0) {
+      const catMap = {};
+      txns.filter(t => t.type === 'expense').forEach(t => {
+        catMap[t.category] = (catMap[t.category] || 0) + (t.amount || 0);
+      });
+      const top = Object.entries(catMap).sort((a, b) => b[1] - a[1])[0];
+      if (top) {
+        const pct = ((top[1] / expense) * 100).toFixed(0);
+        insights.push({
+          icon: `<path d="M2 10l4-5 3 2.5 5-6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>`,
+          text: `Pengeluaran terbesar: <strong style="color:#EDE9E0">${escHtml(top[0])}</strong> — <strong style="color:#F16D76">${pct}%</strong> dari total`
+        });
+      }
+    }
+
+    if (income > 0 && expense > 0) {
+      const rate = ((balance / income) * 100).toFixed(0);
+      const rateNum = parseFloat(rate);
+      const rateNote = rateNum > 30 ? 'Sangat baik' : rateNum > 15 ? 'Cukup baik' : 'Perlu ditingkatkan';
+      const rateColor = rateNum > 30 ? '#52E39A' : rateNum > 15 ? '#FFBE55' : '#F16D76';
+      insights.push({
+        icon: `<circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.2"/>
+               <path d="M7 4v3l2 2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>`,
+        text: `Saving rate: <strong style="color:${rateColor}">${rate}%</strong> — ${rateNote}`
+      });
+    }
+
+    if (balance > 0) {
+      insights.push({
+        icon: `<path d="M2 10l3-3.5 3 2.5 4-5 2 1.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>`,
+        text: `Tabungan periode ini: <strong style="color:#52E39A">${formatRupiah(balance)}</strong>`
+      });
+    } else if (balance < 0) {
+      insights.push({
+        icon: `<path d="M2 6l3 3.5 3-2.5 4 5 2-1.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>`,
+        text: `Pengeluaran melebihi pemasukan: <strong style="color:#F16D76">${formatRupiah(Math.abs(balance))}</strong>`
+      });
+    }
+
+    if (txns.filter(t => t.type === 'investment').length > 0) {
+      const invest = txns.filter(t => t.type === 'investment').reduce((s, t) => s + (t.amount || 0), 0);
+      insights.push({
+        icon: `<path d="M2 10l4-5 3 3 4-7" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>`,
+        text: `Investasi tercatat: <strong style="color:#7AB8FF">${formatRupiah(invest)}</strong>`
+      });
     }
   }
 
-  if (income > 0 && expense > 0) {
-    const savingsRate = ((balance / income) * 100).toFixed(0);
-    insights.push(`Saving rate bulan ini adalah <strong>${savingsRate}%</strong> − ${savingsRate > 30 ? '👍 Sangat baik' : savingsRate > 15 ? '👌 Cukup baik' : '⚠️ Perlu ditingkatkan'}`);
-  }
-
-  if (txns.length === 0) {
-    insights.push('Belum ada transaksi untuk periode ini');
-  }
-
-  if (balance > 0) {
-    insights.push(`Anda berhasil menabung <strong>${formatRupiah(balance).replace('Rp ', '')}</strong> di periode ini 🎉`);
-  } else if (balance < 0) {
-    insights.push(`Pengeluaran melebihi pemasukan sebesar <strong>${formatRupiah(Math.abs(balance)).replace('Rp ', '')}</strong>`);
-  }
-
-  container.innerHTML = insights.map(insight => 
-    `<div style="display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--border-muted);font-size:12px;color:var(--text-secondary)">
-      <span style="margin-top:2px">💡</span>
-      <span style="line-height:1.5">${insight}</span>
-    </div>`
-  ).join('');
+  container.innerHTML = insights.map(ins => `
+    <div class="an-insight-row">
+      <div class="an-insight-icon" aria-hidden="true">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">${ins.icon}</svg>
+      </div>
+      <span>${ins.text}</span>
+    </div>`).join('');
 }
 
-window.addEventListener('load', () => {
+/* ── HTML escape ─────────────────────────────────────────── */
+function escHtml(str) {
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+/* ── Demo detection ──────────────────────────────────────── */
+function checkDemoMode() {
+  if (localStorage.getItem('kaito_demo_mode') === 'true') {
+    document.getElementById('demo-banner').hidden = false;
+  }
+}
+
+/* ── Init ────────────────────────────────────────────────── */
+window.addEventListener('load', function() {
+  checkDemoMode();
+  // Set initial header label
+  document.getElementById('header-period-label').textContent =
+    MONTH_NAMES[TODAY.getMonth()] + ' ' + TODAY.getFullYear();
+  document.getElementById('period-label').textContent = PERIOD_LABELS[currentPeriod];
+
   updateSummary();
   updateBarChart();
   updateCategories();
@@ -403,255 +882,3 @@ window.addEventListener('load', () => {
 </script>
 </body>
 </html>
-    <div class="mobile-section-header">
-      <div class="mobile-section-title">Perbandingan Bulanan</div>
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:0 20px 24px" role="region" aria-label="Perbandingan 3 bulan terakhir" id="month-comparison">
-      <!-- Diisi oleh JavaScript -->
-    </div>
-
-  </div><!-- end .page-scroll -->
-
-  <!-- Bottom Nav -->
-  <nav class="bottom-nav" role="navigation" aria-label="Navigasi utama aplikasi">
-    <a href="dashboard.html" class="bottom-nav-item" aria-label="Dashboard">
-      <div class="bottom-nav-icon" aria-hidden="true">
-        <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.5" fill="none"/><rect x="12" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.5" fill="none"/><rect x="3" y="12" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.5" fill="none"/><rect x="12" y="12" width="7" height="7" rx="1.5" fill="currentColor" opacity="0.8"/></svg>
-      </div>
-      <span class="bottom-nav-label">Beranda</span>
-    </a>
-    <a href="analytics.html" class="bottom-nav-item bottom-nav-item-active" aria-current="page" aria-label="Analitik">
-      <div class="bottom-nav-icon" aria-hidden="true">
-        <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M4 16l4.5-5.5 4 3 5-8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-      <span class="bottom-nav-label">Analitik</span>
-    </a>
-    <a href="scan.html" class="bottom-nav-fab" aria-label="Tambah transaksi">
-      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true"><path d="M11 5v12M5 11h12" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
-    </a>
-    <a href="#" class="bottom-nav-item" aria-label="Transaksi">
-      <div class="bottom-nav-icon" aria-hidden="true">
-        <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M4 7h14M4 11h10M4 15h7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-      </div>
-      <span class="bottom-nav-label">Transaksi</span>
-    </a>
-    <a href="upgrade.html" class="bottom-nav-item" aria-label="Akun">
-      <div class="bottom-nav-icon" aria-hidden="true">
-        <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="8" r="3.5" stroke="currentColor" stroke-width="1.5"/><path d="M4 19c0-3.9 3.1-7 7-7s7 3.1 7 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-      </div>
-      <span class="bottom-nav-label">Akun</span>
-    </a>
-  </nav>
-</div>
-</body>
-</html>
-
-<script>
-let currentPeriod = '1month';
-
-function formatRupiah(amount) {
-  if (!amount) return '0 Rp';
-  const absAmount = Math.abs(amount);
-  if (absAmount >= 1000000) {
-    return (absAmount / 1000000).toFixed(1).replace(/\.0$/, '') + ' Jt';
-  } else if (absAmount >= 1000) {
-    return (absAmount / 1000).toFixed(0) + ' Rb';
-  }
-  return absAmount.toLocaleString('id-ID');
-}
-
-function getDateRange(period) {
-  const today = new Date(2026, 10, 3); // Nov 3, 2026
-  let start, end = new Date(today);
-
-  if (period === '7days') {
-    start = new Date(today);
-    start.setDate(start.getDate() - 7);
-  } else if (period === '1month') {
-    start = new Date(today.getFullYear(), today.getMonth(), 1);
-  } else if (period === '3months') {
-    start = new Date(today);
-    start.setMonth(start.getMonth() - 3);
-  } else if (period === '12months') {
-    start = new Date(today.getFullYear(), 0, 1);
-  }
-
-  return { start, end };
-}
-
-function getTransactionsByPeriod(period) {
-  const { start, end } = getDateRange(period);
-  const txns = JSON.parse(localStorage.getItem('kaito_transactions') || '[]');
-
-  return txns.filter(t => {
-    const txnDate = new Date(t.date);
-    return txnDate >= start && txnDate <= end;
-  });
-}
-
-function updateSummary() {
-  const txns = getTransactionsByPeriod(currentPeriod);
-  const income = txns.filter(t => t.type === 'income').reduce((s, t) => s + (t.amount || 0), 0);
-  const expense = txns.filter(t => t.type === 'expense').reduce((s, t) => s + (t.amount || 0), 0);
-  const balance = income - expense;
-
-  document.getElementById('summary-income').textContent = '+' + formatRupiah(income);
-  document.getElementById('summary-expense').textContent = '−' + formatRupiah(expense);
-  document.getElementById('summary-balance').textContent = formatRupiah(balance);
-}
-
-function updateBarChart() {
-  const container = document.getElementById('bar-chart-container');
-  const labelsContainer = document.getElementById('chart-labels');
-  const txns = getTransactionsByPeriod(currentPeriod);
-
-  // Group by month
-  const months = {};
-  const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
-  
-  txns.forEach(t => {
-    const d = new Date(t.date);
-    const key = `${d.getFullYear()}-${d.getMonth()}`;
-    if (!months[key]) months[key] = { income: 0, expense: 0 };
-    if (t.type === 'income') months[key].income += t.amount;
-    else if (t.type === 'expense') months[key].expense += t.amount;
-  });
-
-  const sorted = Object.keys(months).sort().slice(-6);
-  const maxVal = Math.max(...sorted.flatMap(k => [months[k].income, months[k].expense]), 1);
-
-  container.innerHTML = sorted.map(k => {
-    const m = months[k];
-    const incomeHeight = (m.income / maxVal * 100) || 5;
-    const expenseHeight = (m.expense / maxVal * 100) || 5;
-    return `<div class="mini-bar-group">
-      <div class="mini-bar mini-bar-income" style="height:${incomeHeight}%"></div>
-      <div class="mini-bar mini-bar-expense" style="height:${expenseHeight}%"></div>
-    </div>`;
-  }).join('');
-
-  labelsContainer.innerHTML = sorted.map(k => {
-    const [year, monthIdx] = k.split('-');
-    return `<span class="mini-chart-label">${monthNames[parseInt(monthIdx)]}</span>`;
-  }).join('');
-}
-
-function updateCategories() {
-  const container = document.getElementById('category-breakdown');
-  const txns = getTransactionsByPeriod(currentPeriod).filter(t => t.type === 'expense');
-
-  const categories = {};
-  txns.forEach(t => {
-    const cat = t.category || 'Lainnya';
-    if (!categories[cat]) categories[cat] = 0;
-    categories[cat] += t.amount || 0;
-  });
-
-  const total = Object.values(categories).reduce((s, v) => s + v, 0);
-  if (total === 0) {
-    container.innerHTML = '<div style="padding:16px;text-align:center;color:#8AADA6;font-size:12px">Tidak ada transaksi pengeluaran</div>';
-    return;
-  }
-
-  const colors = ['#F59E0B', '#EF4444', '#60A5FA', '#A78BFA', '#F87171'];
-  let html = '';
-
-  Object.entries(categories).forEach(([ cat, amount ], idx) => {
-    const pct = ((amount / total) * 100).toFixed(0);
-    const color = colors[idx % colors.length];
-    const iconSvg = idx === 0 ? '<path d="M2 7h10M2 4h10M2 10h6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>' :
-                    idx === 1 ? '<rect x="2" y="3" width="10" height="8" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M5 3V2M9 3V2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>' :
-                    '<path d="M2 10l3-3.5 3 2.5 4-5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>';
-
-    html += `
-      <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid rgba(240,237,231,0.04)">
-        <div style="width:32px;height:32px;border-radius:9px;background:rgba(${parseInt(color.slice(1,3),16)},${parseInt(color.slice(3,5),16)},${parseInt(color.slice(5,7),16)},0.1);display:flex;align-items:center;justify-content:center;color:${color};flex-shrink:0">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">${iconSvg}</svg>
-        </div>
-        <div style="flex:1">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
-            <span style="font-size:12px;font-weight:500;color:#C8D8D4">${cat}</span>
-            <span style="font-size:12px;font-weight:700;color:#F0EDE7;font-variant-numeric:tabular-nums">Rp ${(amount / 1000).toFixed(0)}k</span>
-          </div>
-          <div style="height:4px;background:rgba(240,237,231,0.07);border-radius:100px;overflow:hidden" role="progressbar" aria-valuenow="${pct}" aria-valuemin="0" aria-valuemax="100" aria-label="${cat} ${pct}%">
-            <div style="height:100%;width:${pct}%;background:${color};border-radius:100px"></div>
-          </div>
-          <div style="font-size:10px;color:#4E6B65;margin-top:3px">${pct}% dari total pengeluaran</div>
-        </div>
-      </div>`;
-  });
-
-  container.innerHTML = html;
-}
-
-function updateMonthComparison() {
-  const container = document.getElementById('month-comparison');
-  const txns = JSON.parse(localStorage.getItem('kaito_transactions') || '[]');
-  const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
-  const today = new Date(2026, 10, 3);
-
-  const months = [];
-  for (let i = 2; i >= 0; i--) {
-    const d = new Date(today);
-    d.setMonth(d.getMonth() - i);
-    months.push({ year: d.getFullYear(), month: d.getMonth(), key: `${d.getFullYear()}-${d.getMonth()}` });
-  }
-
-  const data = {};
-  months.forEach(m => {
-    data[m.key] = { income: 0, expense: 0 };
-  });
-
-  txns.forEach(t => {
-    const d = new Date(t.date);
-    const key = `${d.getFullYear()}-${d.getMonth()}`;
-    if (data[key]) {
-      if (t.type === 'income') data[key].income += t.amount || 0;
-      else if (t.type === 'expense') data[key].expense += t.amount || 0;
-    }
-  });
-
-  const isCurrentMonth = (m) => m.month === today.getMonth() && m.year === today.getFullYear();
-
-  container.innerHTML = months.map(m => {
-    const d = data[m.key];
-    const isCurrent = isCurrentMonth(m);
-    return `
-      <div style="background:${isCurrent ? 'linear-gradient(135deg,#1E3530 0%,#162420 100%)' : '#162420'};border:1px solid ${isCurrent ? 'rgba(30,158,126,0.3)' : 'rgba(240,237,231,0.07)'};border-radius:14px;padding:12px">
-        <div style="font-size:9px;color:${isCurrent ? '#2BBFA0' : '#8AADA6'};margin-bottom:6px;font-weight:${isCurrent ? '600' : '500'}">${monthNames[m.month]}${isCurrent ? ' ●' : ''}</div>
-        <div style="font-size:12px;font-weight:600;color:#4ADE80;font-variant-numeric:tabular-nums;margin-bottom:2px">+${formatRupiah(d.income)}</div>
-        <div style="font-size:11px;font-weight:500;color:#F87171;font-variant-numeric:tabular-nums">−${formatRupiah(d.expense)}</div>
-      </div>`;
-  }).join('');
-}
-
-function setPeriod(period) {
-  currentPeriod = period;
-  document.querySelectorAll('[role="tab"]').forEach(btn => {
-    btn.style.fontWeight = '';
-    btn.style.color = '';
-    btn.style.background = '';
-    btn.style.border = '';
-    btn.setAttribute('aria-selected', 'false');
-  });
-
-  const active = document.querySelector(`#period-${period}`);
-  if (active) {
-    active.style.fontWeight = '600';
-    active.style.color = '#fff';
-    active.style.background = 'var(--brand-accent)';
-    active.style.border = '1px solid transparent';
-    active.setAttribute('aria-selected', 'true');
-  }
-
-  updateSummary();
-  updateBarChart();
-  updateCategories();
-  updateMonthComparison();
-}
-
-// Initialize on load
-window.addEventListener('load', () => {
-  setPeriod('1month');
-});
-</script>
