@@ -114,7 +114,7 @@ keuangan pribadi dan bisnis).
 
 ### Brand Wordmark
 - Use the supplied `assets/kaitofin-wordmark.png` on the landing page, login, dashboards, and admin header.
-- Keep the pale logo background intact so the navy and teal wordmark stays legible on dark app surfaces.
+- Keep the supplied dark background so the white and teal wordmark stays legible on app surfaces.
 
 ### Typography System (Bricolage Grotesque + IBM Plex Sans)
 ```
