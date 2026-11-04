@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover" />
+  <title>Profil & Akun — KaitoFin</title>
+  <meta name="theme-color" content="#0A1410" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../styles/tokens.css" />
+  <link rel="stylesheet" href="../styles/mobile.css" />
+</head>
+<body>
+<div class="mobile-app">
+  <div class="page-scroll">
+
+    <!-- Status bar -->
+    <div class="status-bar" aria-hidden="true">
+      <span class="status-time">09:41</span>
+      <div class="status-icons">
+        <svg width="20" height="10" viewBox="0 0 20 10" fill="none" aria-hidden="true">
+          <rect x="1" y="1.5" width="15" height="7" rx="1.5" stroke="currentColor" stroke-width="1.2"/>
+          <rect x="2.5" y="3" width="10" height="4" rx="0.8" fill="currentColor"/>
+          <path d="M17 3.5v3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Header -->
+    <header class="scan-mobile-header" role="banner">
+      <div style="flex:1"></div>
+      <h1 class="scan-page-title">Profil & Akun</h1>
+      <div style="width:40px"></div>
+    </header>
+
+    <!-- Profile Header -->
+    <div style="margin:24px 20px 20px;display:flex;flex-direction:column;align-items:center;gap:14px" role="region" aria-label="Profil pengguna">
+      <div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#1E9E7E,#0D7A6B);display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:700;color:#fff;border:3px solid rgba(30,158,126,0.2)">
+        DR
+      </div>
+      <div style="text-align:center">
+        <div style="font-size:18px;font-weight:700;color:#F0EDE7;font-family:var(--font-display)">Dava Rafael</div>
+        <div style="font-size:12px;color:#8AADA6;margin-top:4px">dava@kaitofinance.id</div>
+        <div style="font-size:11px;color:#2BBFA0;background:rgba(30,158,126,0.1);border:1px solid rgba(30,158,126,0.2);border-radius:6px;padding:4px 10px;margin-top:8px;display:inline-block">Personal &amp; Business</div>
+      </div>
+    </div>
+
+    <!-- Account Menu -->
+    <section aria-label="Menu akun" style="margin-bottom:24px">
+      <div class="mobile-section-header" style="padding:0 20px 12px">
+        <div class="mobile-section-title">Pengaturan Akun</div>
+      </div>
+
+      <div style="margin:0 20px;background:#162420;border:1px solid rgba(240,237,231,0.07);border-radius:16px;overflow:hidden">
+        <!-- Personal Info -->
+        <button onclick="alert('Fitur edit profile akan dibuka')" style="width:100%;padding:14px;border:none;background:transparent;text-align:left;cursor:pointer;border-bottom:1px solid rgba(240,237,231,0.04);display:flex;align-items:center;justify-content:space-between;transition:background 0.2s" onmouseover="this.style.background='rgba(240,237,231,0.03)'" onmouseout="this.style.background='transparent'" role="menuitem">
+          <div style="display:flex;align-items:center;gap:12px;flex:1">
+            <div style="width:40px;height:40px;border-radius:10px;background:rgba(30,158,126,0.1);display:flex;align-items:center;justify-content:center;color:#2BBFA0;flex-shrink:0">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="4.5" r="2.5" stroke="currentColor" stroke-width="1.3"/><path d="M3 15c0-2.2 2.2-4 5-4s5 1.8 5 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+            </div>
+            <div>
+              <div style="font-size:13px;font-weight:500;color:#F0EDE7">Data Profil</div>
+              <div style="font-size:10px;color:#8AADA6;margin-top:2px">Nama, email, nomor telepon</div>
+            </div>
+          </div>
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" style="color:#8AADA6">
+            <path d="M5 3l4 4-4 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+
+        <!-- Notification Settings -->
+        <button onclick="alert('Fitur notifikasi akan dibuka')" style="width:100%;padding:14px;border:none;background:transparent;text-align:left;cursor:pointer;border-bottom:1px solid rgba(240,237,231,0.04);display:flex;align-items:center;justify-content:space-between;transition:background 0.2s" onmouseover="this.style.background='rgba(240,237,231,0.03)'" onmouseout="this.style.background='transparent'" role="menuitem">
+          <div style="display:flex;align-items:center;gap:12px;flex:1">
+            <div style="width:40px;height:40px;border-radius:10px;background:rgba(122,184,255,0.1);display:flex;align-items:center;justify-content:center;color:#7AB8FF;flex-shrink:0">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2a5 5 0 0 1 5 5c0 3 1 3.5 1 3.5H2s1-.5 1-3.5a5 5 0 0 1 5-5z" stroke="currentColor" stroke-width="1.2"/><path d="M6 13a2 2 0 0 0 4 0" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+            </div>
+            <div>
+              <div style="font-size:13px;font-weight:500;color:#F0EDE7">Notifikasi</div>
+              <div style="font-size:10px;color:#8AADA6;margin-top:2px">Transaksi, reminders, promo</div>
+            </div>
+          </div>
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" style="color:#8AADA6">
+            <path d="M5 3l4 4-4 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+
+        <!-- Workspace Settings -->
+        <button onclick="alert('Fitur workspace akan dibuka')" style="width:100%;padding:14px;border:none;background:transparent;text-align:left;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:background 0.2s" onmouseover="this.style.background='rgba(240,237,231,0.03)'" onmouseout="this.style.background='transparent'" role="menuitem">
+          <div style="display:flex;align-items:center;gap:12px;flex:1">
+            <div style="width:40px;height:40px;border-radius:10px;background:rgba(245,158,11,0.1);display:flex;align-items:center;justify-content:center;color:#FBBF24;flex-shrink:0">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="1" y="2" width="14" height="12" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M5 2v12M11 2v12" stroke="currentColor" stroke-width="1.3"/></svg>
+            </div>
+            <div>
+              <div style="font-size:13px;font-weight:500;color:#F0EDE7">Workspace</div>
+              <div style="font-size:10px;color:#8AADA6;margin-top:2px">Personal dan Business settings</div>
+            </div>
+          </div>
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" style="color:#8AADA6">
+            <path d="M5 3l4 4-4 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- Budgetly Pro Membership -->
+    <section aria-label="Upgrade Budgetly Pro" style="margin-bottom:24px">
+      <div style="margin:0 20px">
+        <div class="pro-card" onclick="window.location.href='upgrade.html'">
+          <div class="pro-badge">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M7 1.5l2 6h6.5L10.5 10l2 6.5L7 12.5l-4.5 3 2-6.5L1 7.5h6.5L7 1.5z" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round"/></svg>
+            Unlock Premium
+          </div>
+          <div class="pro-title">Budgetly Pro</div>
+          <div class="pro-description">Kelola keuangan dengan fitur premium lengkap untuk maksimalkan saving Anda.</div>
+          <ul class="pro-features-list">
+            <li class="pro-feature">
+              <div class="pro-feature-check">✓</div>
+              <span>Unlimited AI Processing</span>
+            </li>
+            <li class="pro-feature">
+              <div class="pro-feature-check">✓</div>
+              <span>Multiple Bank Connections</span>
+            </li>
+            <li class="pro-feature">
+              <div class="pro-feature-check">✓</div>
+              <span>Advanced Analytics & Reports</span>
+            </li>
+            <li class="pro-feature">
+              <div class="pro-feature-check">✓</div>
+              <span>Smart Financial Insights</span>
+            </li>
+            <li class="pro-feature">
+              <div class="pro-feature-check">✓</div>
+              <span>Priority Support</span>
+            </li>
+          </ul>
+          <button class="pro-button">Upgrade Now</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- App Info -->
+    <section aria-label="Informasi aplikasi" style="margin-bottom:24px">
+      <div class="mobile-section-header" style="padding:0 20px 12px">
+        <div class="mobile-section-title">Tentang Aplikasi</div>
+      </div>
+
+      <div style="margin:0 20px;background:#162420;border:1px solid rgba(240,237,231,0.07);border-radius:16px;overflow:hidden">
+        <div style="padding:14px;border-bottom:1px solid rgba(240,237,231,0.04);display:flex;justify-content:space-between;align-items:center">
+          <div style="font-size:12px;color:#C8D8D4">Versi Aplikasi</div>
+          <div style="font-size:12px;font-weight:600;color:#8AADA6">2.0.0</div>
+        </div>
+        <div style="padding:14px;border-bottom:1px solid rgba(240,237,231,0.04);display:flex;justify-content:space-between;align-items:center">
+          <div style="font-size:12px;color:#C8D8D4">Terakhir Diupdate</div>
+          <div style="font-size:12px;font-weight:600;color:#8AADA6">3 Nov 2026</div>
+        </div>
+        <div style="padding:14px;display:flex;justify-content:space-between;align-items:center">
+          <div style="font-size:12px;color:#C8D8D4">Data Tersimpan</div>
+          <div style="font-size:12px;font-weight:600;color:#8AADA6" id="data-count">0 transaksi</div>
+        </div>
+      </div>
+
+      <!-- Help Links -->
+      <div style="margin:16px 20px 0;display:flex;flex-direction:column;gap:8px">
+        <a href="#" style="font-size:12px;font-weight:500;color:#2BBFA0;padding:10px;text-align:center;background:rgba(30,158,126,0.1);border:1px solid rgba(30,158,126,0.2);border-radius:10px;text-decoration:none">Pusat Bantuan</a>
+        <a href="#" style="font-size:12px;font-weight:500;color:#8AADA6;padding:10px;text-align:center;background:rgba(240,237,231,0.04);border:1px solid rgba(240,237,231,0.08);border-radius:10px;text-decoration:none">Kebijakan Privasi</a>
+      </div>
+    </section>
+
+    <!-- Logout -->
+    <section aria-label="Keluar" style="margin-bottom:24px">
+      <button onclick="logout()" style="width:calc(100% - 40px);margin:0 20px;padding:14px 20px;background:rgba(255,123,123,0.1);border:1px solid rgba(255,123,123,0.2);border-radius:12px;cursor:pointer;font-size:13px;font-weight:600;color:#FF7B7B;font-family:inherit" aria-label="Keluar dari aplikasi">
+        Keluar dari Aplikasi
+      </button>
+    </section>
+
+  </div><!-- end .page-scroll -->
+
+  <!-- Bottom Nav -->
+  <nav class="bottom-nav" role="navigation" aria-label="Navigasi utama aplikasi">
+    <a href="dashboard.html" class="bottom-nav-item" aria-label="Dashboard">
+      <div class="bottom-nav-icon" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.5" fill="none"/><rect x="12" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.5" fill="none"/><rect x="3" y="12" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.5" fill="none"/><rect x="12" y="12" width="7" height="7" rx="1.5" fill="currentColor" opacity="0.8"/></svg>
+      </div>
+      <span class="bottom-nav-label">Beranda</span>
+    </a>
+    <a href="analytics.html" class="bottom-nav-item" aria-label="Analitik">
+      <div class="bottom-nav-icon" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M4 16l4.5-5.5 4 3 5-8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <span class="bottom-nav-label">Analitik</span>
+    </a>
+    <a href="scan.html" class="bottom-nav-fab" aria-label="Tambah transaksi">
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true"><path d="M11 5v12M5 11h12" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+    </a>
+    <a href="transactions.html" class="bottom-nav-item" aria-label="Transaksi">
+      <div class="bottom-nav-icon" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M4 7h14M4 11h10M4 15h7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </div>
+      <span class="bottom-nav-label">Transaksi</span>
+    </a>
+    <a href="account.html" class="bottom-nav-item bottom-nav-item-active" aria-current="page" aria-label="Akun">
+      <div class="bottom-nav-icon" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="8" r="3.5" stroke="currentColor" stroke-width="1.5"/><path d="M4 19c0-3.9 3.1-7 7-7s7 3.1 7 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </div>
+      <span class="bottom-nav-label">Akun</span>
+    </a>
+  </nav>
+</div>
+
+<script>
+function updateDataCount() {
+  const txns = JSON.parse(localStorage.getItem('kaito_transactions') || '[]');
+  document.getElementById('data-count').textContent = txns.length + ' transaksi';
+}
+
+function logout() {
+  if (confirm('Apakah Anda yakin ingin keluar? Data Anda akan tetap tersimpan.')) {
+    window.location.href = 'login.html';
+  }
+}
+
+window.addEventListener('load', updateDataCount);
+</script>
+</body>
+</html>

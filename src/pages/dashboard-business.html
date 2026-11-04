@@ -411,55 +411,7 @@
       </button>
     </div>
 
-    <div class="mobile-txn-list" role="list" aria-label="Daftar transaksi bisnis">
-      <!-- PT Solusi Digital -->
-      <div class="mobile-txn-item" role="listitem">
-        <div class="mobile-txn-icon txn-icon-income" aria-hidden="true">
-          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-            <path d="M9 3v12M3 9l6-6 6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </div>
-        <div class="mobile-txn-info">
-          <div class="mobile-txn-name">
-            <span style="font-weight:600">PT Solusi Digital</span>
-          </div>
-          <div class="mobile-txn-meta">
-            <span class="mobile-txn-badge badge-ai-small">AI</span>
-            <span class="mobile-txn-badge" style="background:rgba(59,130,246,0.1);color:#60A5FA;font-size:9px;font-weight:600;padding:1px 5px;border-radius:3px">Penjualan</span>
-            <span class="mobile-txn-badge badge-umkm-small">UMKM</span>
-            <span class="mobile-txn-date">12 Okt 2026</span>
-          </div>
-          <div style="font-size:10px;color:#4E6B65;margin-top:2px">Projek Desain UI/UX Landing Page Klien</div>
-        </div>
-        <div>
-          <div class="mobile-txn-amount mobile-txn-amount-income">+Rp 2.400.000</div>
-          <div class="mobile-txn-amount-label">Pemasukan</div>
-        </div>
-      </div>
-
-      <!-- Niagahoster -->
-      <div class="mobile-txn-item" role="listitem">
-        <div class="mobile-txn-icon txn-icon-expense" aria-hidden="true">
-          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-            <path d="M9 3v12M3 9l6-6 6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" transform="rotate(180 9 9)"/>
-          </svg>
-        </div>
-        <div class="mobile-txn-info">
-          <div class="mobile-txn-name">
-            <span style="font-weight:600">Niagahoster</span>
-          </div>
-          <div class="mobile-txn-meta">
-            <span class="mobile-txn-badge" style="background:rgba(248,113,113,0.08);color:#F87171;font-size:9px;font-weight:600;padding:1px 5px;border-radius:3px">Operasional</span>
-            <span class="mobile-txn-badge badge-umkm-small">UMKM</span>
-            <span class="mobile-txn-date">12 Okt 2026</span>
-          </div>
-          <div style="font-size:10px;color:#4E6B65;margin-top:2px">Langganan Domain &amp; Cloud Hosting Klien</div>
-        </div>
-        <div>
-          <div class="mobile-txn-amount mobile-txn-amount-expense">−Rp 320.000</div>
-          <div class="mobile-txn-amount-label">Pengeluaran</div>
-        </div>
-      </div>
+    <div class="mobile-txn-list" role="list" aria-label="Daftar transaksi bisnis" id="txn-list">
     </div>
 
     <!-- Data isolation warning -->
@@ -530,3 +482,58 @@
 </div><!-- end .mobile-app -->
 </body>
 </html>
+
+<script>
+function loadBusinessTransactions() {
+  const txns = JSON.parse(localStorage.getItem('kaito_transactions') || '[]')
+    .filter(t => t.workspace === 'business')
+    .sort((a, b) => new Date(b.date) - new Date(a.date))
+    .slice(0, 10);
+
+  const container = document.getElementById('txn-list');
+  if (txns.length === 0) {
+    container.innerHTML = '<div style="padding:20px;text-align:center;color:#8AADA6;font-size:12px">Belum ada transaksi bisnis. Mulai dengan scan nota atau input omset.</div>';
+    return;
+  }
+
+  const typeIcons = {
+    income: '<path d="M9 3v12M3 9l6-6 6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>',
+    expense: '<path d="M9 3v12M3 9l6-6 6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" transform="rotate(180 9 9)"/>',
+  };
+
+  const typeClasses = {
+    income: { icon: 'txn-icon-income', amount: 'mobile-txn-amount-income', label: 'Pemasukan', color: '#4ADE80' },
+    expense: { icon: 'txn-icon-expense', amount: 'mobile-txn-amount-expense', label: 'Pengeluaran', color: '#F87171' }
+  };
+
+  container.innerHTML = txns.map(t => {
+    const tc = typeClasses[t.type] || typeClasses.expense;
+    const sign = t.type === 'expense' ? '−' : '+';
+    const d = new Date(t.date);
+    const dateStr = `${d.getDate()} ${['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'][d.getMonth()]} ${d.getFullYear()}`;
+    
+    return `
+      <div class="mobile-txn-item" role="listitem">
+        <div class="mobile-txn-icon ${tc.icon}" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">${typeIcons[t.type]}</svg>
+        </div>
+        <div class="mobile-txn-info">
+          <div class="mobile-txn-name"><span style="font-weight:600">${t.description}</span></div>
+          <div class="mobile-txn-meta">
+            ${t.extracted ? '<span class="mobile-txn-badge badge-ai-small">AI</span>' : ''}
+            <span class="mobile-txn-badge" style="background:rgba(${t.type==='income'?74:248},${t.type==='income'?222:113},${t.type==='income'?128:113},0.08);color:${tc.color};font-size:9px;font-weight:600;padding:1px 5px;border-radius:3px">${t.category}</span>
+            <span class="mobile-txn-badge badge-umkm-small">UMKM</span>
+            <span class="mobile-txn-date">${dateStr}</span>
+          </div>
+          ${t.notes ? `<div style="font-size:10px;color:#4E6B65;margin-top:2px">${t.notes}</div>` : ''}
+        </div>
+        <div>
+          <div class="mobile-txn-amount mobile-txn-amount-${t.type}" style="color:${tc.color}">${sign}Rp ${(t.amount / 1000).toFixed(0)}k</div>
+          <div class="mobile-txn-amount-label">${tc.label}</div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+window.addEventListener('load', loadBusinessTransactions);
+</script>

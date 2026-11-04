@@ -456,74 +456,8 @@
       </div>
 
       <!-- Transaction list -->
-      <div class="mobile-txn-list" role="list" aria-label="Daftar transaksi terbaru">
+      <div class="mobile-txn-list" role="list" aria-label="Daftar transaksi terbaru" id="txn-list">
 
-        <!-- Bibit Reksadana — Investment -->
-        <article class="mobile-txn-item" role="listitem">
-          <div class="mobile-txn-icon txn-icon-invest" aria-hidden="true">
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-              <path d="M3 14l4.5-5.5 4.5 3.5 4.5-8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
-          <div class="mobile-txn-info">
-            <div class="mobile-txn-name">Bibit Reksadana</div>
-            <div class="mobile-txn-meta">
-              <span class="mobile-txn-badge badge-cat-small">Portofolio</span>
-              <span class="mobile-txn-badge badge-ws-small">Personal</span>
-              <span class="mobile-txn-date">10 Okt 2026</span>
-            </div>
-            <div style="font-size:11px;color:#2E4C45;margin-top:3px">DCA Reksadana Pasar Uang Bibit</div>
-          </div>
-          <div>
-            <div class="mobile-txn-amount mobile-txn-amount-invest num">+Rp 200.000</div>
-            <div class="mobile-txn-amount-label">Investasi</div>
-          </div>
-        </article>
-
-        <!-- MyTelkomsel — Expense -->
-        <article class="mobile-txn-item" role="listitem">
-          <div class="mobile-txn-icon txn-icon-expense" aria-hidden="true">
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-              <path d="M10 4v12M4 10l6 6 6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
-          <div class="mobile-txn-info">
-            <div class="mobile-txn-name">MyTelkomsel</div>
-            <div class="mobile-txn-meta">
-              <span class="mobile-txn-badge badge-ai-small">AI</span>
-              <span class="mobile-txn-badge badge-cat-small">Tagihan</span>
-              <span class="mobile-txn-badge badge-ws-small">Personal</span>
-              <span class="mobile-txn-date">9 Okt 2026</span>
-            </div>
-            <div style="font-size:11px;color:#2E4C45;margin-top:3px">Paket Internet Bulanan 50GB</div>
-          </div>
-          <div>
-            <div class="mobile-txn-amount mobile-txn-amount-expense num">−Rp 95.000</div>
-            <div class="mobile-txn-amount-label">Pengeluaran</div>
-          </div>
-        </article>
-
-        <!-- Universitas Kampus — Income -->
-        <article class="mobile-txn-item" role="listitem">
-          <div class="mobile-txn-icon txn-icon-income" aria-hidden="true">
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-              <path d="M10 16V4M4 10l6-6 6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
-          <div class="mobile-txn-info">
-            <div class="mobile-txn-name">Universitas Kampus</div>
-            <div class="mobile-txn-meta">
-              <span class="mobile-txn-badge badge-cat-small">Gaji / Uang Saku</span>
-              <span class="mobile-txn-badge badge-ws-small">Personal</span>
-              <span class="mobile-txn-date">8 Okt 2026</span>
-            </div>
-            <div style="font-size:11px;color:#2E4C45;margin-top:3px">Gaji Asisten Lab &amp; Beasiswa Bulanan</div>
-          </div>
-          <div>
-            <div class="mobile-txn-amount mobile-txn-amount-income num">+Rp 1.500.000</div>
-            <div class="mobile-txn-amount-label">Pemasukan</div>
-          </div>
-        </article>
       </div>
     </section>
 
@@ -566,7 +500,7 @@
       </svg>
     </a>
 
-    <a href="#transactions" class="bottom-nav-item" aria-label="Riwayat transaksi">
+    <a href="transactions.html" class="bottom-nav-item" aria-label="Riwayat transaksi">
       <div class="bottom-nav-icon" aria-hidden="true">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
           <path d="M4 7h16M4 12h11M4 17h8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
@@ -587,5 +521,62 @@
   </nav>
 
 </div><!-- end .mobile-app -->
+
+<script>
+function loadPersonalTransactions() {
+  const txns = JSON.parse(localStorage.getItem('kaito_transactions') || '[]')
+    .filter(t => t.workspace === 'personal')
+    .sort((a, b) => new Date(b.date) - new Date(a.date))
+    .slice(0, 10);
+
+  const container = document.getElementById('txn-list');
+  if (txns.length === 0) {
+    container.innerHTML = '<div style="padding:20px;text-align:center;color:#8AADA6;font-size:12px">Belum ada transaksi. Mulai dengan scan struk atau input manual.</div>';
+    return;
+  }
+
+  const typeIcons = {
+    income: '<path d="M10 16V4M4 10l6-6 6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>',
+    expense: '<path d="M10 4v12M4 10l6 6 6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>',
+    investment: '<path d="M3 14l4.5-5.5 4.5 3.5 4.5-8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>'
+  };
+
+  const typeClasses = {
+    income: { icon: 'txn-icon-income', amount: 'mobile-txn-amount-income', label: 'Pemasukan' },
+    expense: { icon: 'txn-icon-expense', amount: 'mobile-txn-amount-expense', label: 'Pengeluaran' },
+    investment: { icon: 'txn-icon-invest', amount: 'mobile-txn-amount-invest', label: 'Investasi' }
+  };
+
+  container.innerHTML = txns.map(t => {
+    const tc = typeClasses[t.type] || typeClasses.expense;
+    const sign = t.type === 'expense' ? '−' : '+';
+    const d = new Date(t.date);
+    const dateStr = `${d.getDate()} ${['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'][d.getMonth()]} ${d.getFullYear()}`;
+    
+    return `
+      <article class="mobile-txn-item" role="listitem">
+        <div class="mobile-txn-icon ${tc.icon}" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">${typeIcons[t.type]}</svg>
+        </div>
+        <div class="mobile-txn-info">
+          <div class="mobile-txn-name">${t.description}</div>
+          <div class="mobile-txn-meta">
+            ${t.extracted ? '<span class="mobile-txn-badge badge-ai-small">AI</span>' : ''}
+            <span class="mobile-txn-badge badge-cat-small">${t.category}</span>
+            <span class="mobile-txn-badge badge-ws-small">Personal</span>
+            <span class="mobile-txn-date">${dateStr}</span>
+          </div>
+          ${t.notes ? `<div style="font-size:11px;color:#2E4C45;margin-top:3px">${t.notes}</div>` : ''}
+        </div>
+        <div>
+          <div class="mobile-txn-amount ${tc.amount} num">${sign}Rp ${(t.amount / 1000).toFixed(0)}k</div>
+          <div class="mobile-txn-amount-label">${tc.label}</div>
+        </div>
+      </article>`;
+  }).join('');
+}
+
+window.addEventListener('load', loadPersonalTransactions);
+</script>
 </body>
 </html>

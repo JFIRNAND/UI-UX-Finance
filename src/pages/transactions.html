@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover" />
+  <title>Riwayat Transaksi — KaitoFin</title>
+  <meta name="theme-color" content="#0A1410" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../styles/tokens.css" />
+  <link rel="stylesheet" href="../styles/mobile.css" />
+</head>
+<body>
+<div class="mobile-app">
+  <div class="page-scroll">
+
+    <!-- Status bar -->
+    <div class="status-bar" aria-hidden="true">
+      <span class="status-time">09:41</span>
+      <div class="status-icons">
+        <svg width="20" height="10" viewBox="0 0 20 10" fill="none" aria-hidden="true">
+          <rect x="1" y="1.5" width="15" height="7" rx="1.5" stroke="currentColor" stroke-width="1.2"/>
+          <rect x="2.5" y="3" width="10" height="4" rx="0.8" fill="currentColor"/>
+          <path d="M17 3.5v3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Header -->
+    <header class="scan-mobile-header" role="banner">
+      <a href="dashboard.html" class="scan-back-btn" aria-label="Kembali ke dashboard">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M10 4l-4 4 4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+      <h1 class="scan-page-title">Riwayat Transaksi</h1>
+      <button onclick="exportCSV()" style="font-size:11px;font-weight:600;color:#2BBFA0;background:transparent;border:none;cursor:pointer;padding:8px;min-height:40px" aria-label="Ekspor transaksi sebagai CSV">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" style="display:inline;margin-right:4px">
+          <path d="M7 1v9M3 8l4 4 4-4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </header>
+
+    <!-- Financial Summary Cards -->
+    <section aria-label="Ringkasan keuangan transaksi">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:16px 20px;margin-bottom:8px">
+        <div class="summary-card" role="region" aria-label="Total pemasukan">
+          <div class="summary-card-label">Pemasukan</div>
+          <div id="summary-income" class="summary-card-amount" style="color:var(--income-color)">+Rp 0</div>
+          <div class="summary-card-delta">Bulan ini</div>
+        </div>
+        <div class="summary-card" role="region" aria-label="Total pengeluaran">
+          <div class="summary-card-label">Pengeluaran</div>
+          <div id="summary-expense" class="summary-card-amount" style="color:var(--expense-color)">−Rp 0</div>
+          <div class="summary-card-delta">Bulan ini</div>
+        </div>
+        <div class="summary-card" role="region" aria-label="Saldo bersih">
+          <div class="summary-card-label">Saldo</div>
+          <div id="summary-balance" class="summary-card-amount">Rp 0</div>
+          <div class="summary-card-delta">Bersih</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Type Filter -->
+    <div class="filter-group" role="toolbar" aria-label="Filter jenis transaksi">
+      <button onclick="filterType('all')" id="filter-all" class="filter-pill active" aria-pressed="true">Semua</button>
+      <button onclick="filterType('income')" id="filter-income" class="filter-pill" aria-pressed="false">Pemasukan</button>
+      <button onclick="filterType('expense')" id="filter-expense" class="filter-pill" aria-pressed="false">Pengeluaran</button>
+      <button onclick="filterType('investment')" id="filter-investment" class="filter-pill" aria-pressed="false">Investasi</button>
+    </div>
+
+    <!-- Workspace Filter -->
+    <div class="filter-group" role="toolbar" aria-label="Filter workspace">
+      <button onclick="filterWorkspace('all')" id="ws-all" class="filter-pill active" aria-pressed="true">Semua WS</button>
+      <button onclick="filterWorkspace('personal')" id="ws-personal" class="filter-pill" aria-pressed="false">Personal</button>
+      <button onclick="filterWorkspace('business')" id="ws-business" class="filter-pill" aria-pressed="false">Bisnis</button>
+    </div>
+
+    <!-- Recent Activity / Transaction List -->
+    <section style="padding:0 20px 20px" aria-label="Aktivitas terbaru transaksi">
+      <div id="txn-container" role="list">
+        <!-- Diisi oleh JavaScript -->
+      </div>
+    </section>
+
+  </div><!-- end .page-scroll -->
+
+  <!-- Bottom Nav -->
+  <nav class="bottom-nav" role="navigation" aria-label="Navigasi utama aplikasi">
+    <a href="dashboard.html" class="bottom-nav-item" aria-label="Dashboard">
+      <div class="bottom-nav-icon" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.5" fill="none"/><rect x="12" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.5" fill="none"/><rect x="3" y="12" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.5" fill="none"/><rect x="12" y="12" width="7" height="7" rx="1.5" fill="currentColor" opacity="0.8"/></svg>
+      </div>
+      <span class="bottom-nav-label">Beranda</span>
+    </a>
+    <a href="analytics.html" class="bottom-nav-item" aria-label="Analitik">
+      <div class="bottom-nav-icon" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M4 16l4.5-5.5 4 3 5-8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <span class="bottom-nav-label">Analitik</span>
+    </a>
+    <a href="scan.html" class="bottom-nav-fab" aria-label="Tambah transaksi">
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true"><path d="M11 5v12M5 11h12" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>
+    </a>
+    <a href="transactions.html" class="bottom-nav-item bottom-nav-item-active" aria-current="page" aria-label="Transaksi">
+      <div class="bottom-nav-icon" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M4 7h14M4 11h10M4 15h7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </div>
+      <span class="bottom-nav-label">Transaksi</span>
+    </a>
+    <a href="account.html" class="bottom-nav-item" aria-label="Akun">
+      <div class="bottom-nav-icon" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="8" r="3.5" stroke="currentColor" stroke-width="1.5"/><path d="M4 19c0-3.9 3.1-7 7-7s7 3.1 7 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </div>
+      <span class="bottom-nav-label">Akun</span>
+    </a>
+  </nav>
+</div>
+
+<script>
+let currentTypeFilter = 'all';
+let currentWorkspaceFilter = 'all';
+
+const categoryIcons = {
+  'Gaji / Uang Saku': '💼',
+  'Freelance / Project': '💻',
+  'Investasi': '📈',
+  'Makanan & Minuman': '🍔',
+  'Transportasi': '🚗',
+  'Belanja': '🛍️',
+  'Hiburan': '🎬',
+  'Utilitas': '💡',
+  'Kesehatan': '🏥',
+  'Pendidikan': '📚'
+};
+
+function getCategoryIcon(category) {
+  return categoryIcons[category] || (category.includes('Makan') || category.includes('Makanan') || category.includes('Restoran') ? '🍽️' : 
+         category.includes('Transport') || category.includes('Kendaraan') ? '🚗' :
+         category.includes('Shop') || category.includes('Belanja') ? '🛍️' :
+         category.includes('Work') || category.includes('Gaji') ? '💼' :
+         category.includes('Invest') ? '📈' : '💸');
+}
+
+function filterType(type) {
+  currentTypeFilter = type;
+  document.querySelectorAll('.filter-pill').forEach((btn, idx) => {
+    if (idx < 4) {
+      btn.classList.remove('active');
+      btn.setAttribute('aria-pressed', 'false');
+    }
+  });
+  
+  const btn = document.getElementById('filter-' + type);
+  btn.classList.add('active');
+  btn.setAttribute('aria-pressed', 'true');
+  
+  renderTransactions();
+}
+
+function filterWorkspace(ws) {
+  currentWorkspaceFilter = ws;
+  document.querySelectorAll('.filter-pill').forEach((btn, idx) => {
+    if (idx >= 4) {
+      btn.classList.remove('active');
+      btn.setAttribute('aria-pressed', 'false');
+    }
+  });
+  
+  const btn = document.getElementById('ws-' + ws);
+  btn.classList.add('active');
+  btn.setAttribute('aria-pressed', 'true');
+  
+  renderTransactions();
+}
+
+function renderTransactions() {
+  let txns = JSON.parse(localStorage.getItem('kaito_transactions') || '[]');
+  
+  // Apply filters
+  if (currentTypeFilter !== 'all') {
+    txns = txns.filter(t => t.type === currentTypeFilter);
+  }
+  
+  if (currentWorkspaceFilter !== 'all') {
+    txns = txns.filter(t => t.workspace === currentWorkspaceFilter);
+  }
+  
+  txns.sort((a, b) => new Date(b.date) - new Date(a.date));
+  
+  // Calculate summary
+  const income = txns.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
+  const expense = txns.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
+  const balance = income - expense;
+  
+  // Update summary cards
+  document.getElementById('summary-income').textContent = '+Rp ' + (income / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
+  document.getElementById('summary-expense').textContent = '−Rp ' + (expense / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
+  document.getElementById('summary-balance').textContent = 'Rp ' + (balance / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
+  
+  const container = document.getElementById('txn-container');
+  
+  if (txns.length === 0) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-state-icon">📭</div>
+        <div class="empty-state-title">Tidak ada transaksi</div>
+        <div class="empty-state-description">Mulai dengan menambahkan transaksi baru untuk melacak keuangan Anda.</div>
+        <a href="scan.html" class="empty-state-button">Tambah Transaksi</a>
+      </div>`;
+    return;
+  }
+
+  // Group by date
+  const grouped = {};
+  const today = new Date();
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1);
+  
+  txns.forEach(t => {
+    const txDate = new Date(t.date);
+    let groupKey;
+    
+    if (txDate.toDateString() === today.toDateString()) {
+      groupKey = 'TODAY';
+    } else if (txDate.toDateString() === yesterday.toDateString()) {
+      groupKey = 'YESTERDAY';
+    } else {
+      groupKey = txDate.toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' });
+    }
+    
+    if (!grouped[groupKey]) grouped[groupKey] = [];
+    grouped[groupKey].push(t);
+  });
+  
+  let html = '';
+  const groupOrder = ['TODAY', 'YESTERDAY'];
+  const otherGroups = Object.keys(grouped).filter(g => !groupOrder.includes(g)).sort((a, b) => {
+    const dateA = new Date(grouped[a][0].date);
+    const dateB = new Date(grouped[b][0].date);
+    return dateB - dateA;
+  });
+  const allGroups = [...groupOrder.filter(g => grouped[g]), ...otherGroups];
+  
+  allGroups.forEach(groupKey => {
+    if (!grouped[groupKey]) return;
+    
+    html += `<div class="date-group-header">${groupKey}</div>`;
+    
+    grouped[groupKey].forEach(t => {
+      const isIncome = t.type === 'income';
+      const sign = isIncome ? '+' : '−';
+      const amountClass = isIncome ? 'income' : 'expense';
+      const icon = getCategoryIcon(t.category);
+      const time = new Date(t.date).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+      
+      html += `
+        <div class="transaction-row" role="listitem">
+          <div class="transaction-icon ${amountClass}">${icon}</div>
+          <div class="transaction-details">
+            <div class="transaction-name">${t.description}</div>
+            <div class="transaction-category">${t.category}</div>
+            <div class="transaction-time">${time}</div>
+          </div>
+          <div class="transaction-amount ${amountClass}">${sign}Rp ${(t.amount / 1000).toFixed(0)}k</div>
+        </div>`;
+    });
+  });
+  
+  container.innerHTML = html;
+}
+
+function exportCSV() {
+  let txns = JSON.parse(localStorage.getItem('kaito_transactions') || '[]');
+  if (txns.length === 0) {
+    alert('Belum ada transaksi untuk diekspor');
+    return;
+  }
+
+  let csv = 'Tanggal,Deskripsi,Tipe,Jumlah (Rp),Kategori,Workspace,Catatan\n';
+  txns.forEach(t => {
+    csv += `${t.date},"${t.description}","${t.type}",${t.amount},"${t.category}","${t.workspace}","${t.notes || ''}"\n`;
+  });
+
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = `kaitofinance-transaksi-${new Date().toISOString().split('T')[0]}.csv`;
+  link.click();
+}
+
+window.addEventListener('load', renderTransactions);
+</script>
+</body>
+</html>
