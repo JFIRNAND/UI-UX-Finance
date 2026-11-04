@@ -201,30 +201,11 @@
       <div id="state-processing" style="display:none">
         <div class="processing-state" role="status" aria-live="polite" aria-label="AI sedang memproses struk kamu">
           <div class="processing-ring-mobile" aria-hidden="true"></div>
-          <div style="font-family:var(--font-display);font-size:18px;font-weight:700;color:#F0EDE7;margin-bottom:6px;letter-spacing:-0.02em">AI sedang membaca struk...</div>
-          <p style="font-size:12px;color:#8AADA6;max-width:28ch;line-height:1.6;margin-bottom:20px">Gemini AI menganalisis gambar dan mengekstrak informasi transaksi.</p>
+          <div style="font-family:var(--font-display);font-size:18px;font-weight:700;color:#F0EDE7;margin-bottom:6px;letter-spacing:-0.02em">Memproses struk...</div>
+          <p style="font-size:12px;color:#8AADA6;max-width:28ch;line-height:1.6;margin-bottom:20px">Ini hanya butuh beberapa detik. Setelah selesai, kamu bisa koreksi hasilnya.</p>
 
-          <div class="processing-steps-mobile" aria-label="Langkah pemrosesan">
-            <div class="proc-step-mobile">
-              <div class="proc-dot-mobile proc-dot-done" aria-hidden="true"></div>
-              <span style="font-size:13px;color:#C8D8D4;font-weight:500">Gambar diterima</span>
-            </div>
-            <div class="proc-step-mobile">
-              <div class="proc-dot-mobile proc-dot-done" aria-hidden="true"></div>
-              <span style="font-size:13px;color:#C8D8D4;font-weight:500">OCR membaca teks</span>
-            </div>
-            <div class="proc-step-mobile">
-              <div class="proc-dot-mobile proc-dot-active" aria-hidden="true"></div>
-              <span style="font-size:13px;color:#2BBFA0;font-weight:500">Gemini mengidentifikasi data...</span>
-            </div>
-            <div class="proc-step-mobile">
-              <div class="proc-dot-mobile proc-dot-wait" aria-hidden="true"></div>
-              <span style="font-size:13px;color:#4E6B65">Menyiapkan form konfirmasi</span>
-            </div>
-          </div>
-
-          <button onclick="showScanState('extraction')" class="mobile-btn-secondary" style="margin-top:32px;padding:12px 24px">
-            Simulasi: Lihat Hasil →
+          <button onclick="showScanState('extraction')" class="mobile-btn-secondary" style="margin-top:32px;padding:12px 24px" aria-label="Lanjut ke form ekstraksi data">
+            Lanjut →
           </button>
         </div>
       </div>
@@ -238,29 +219,13 @@
             <path d="M5.5 8l2 2 3.5-3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
           <div>
-            <strong>AI berhasil mengekstrak data dari struk.</strong> Periksa kembali informasi di bawah dan koreksi jika ada yang kurang tepat sebelum konfirmasi.
-          </div>
-        </div>
-
-        <!-- Receipt preview (collapsible) -->
-        <div class="receipt-preview-m" style="margin-top:16px">
-          <div class="receipt-preview-header-m">
-            <span class="receipt-preview-title-m">Struk Asli</span>
-            <div style="display:flex;align-items:center;gap:8px">
-              <span style="font-size:10px;font-weight:600;color:#2BBFA0;background:rgba(30,158,126,0.12);border-radius:4px;padding:2px 6px">AI Scan</span>
-              <span style="font-size:11px;font-weight:700;color:#4ADE80;background:rgba(74,222,128,0.1);border-radius:4px;padding:2px 6px">97% yakin</span>
-            </div>
-          </div>
-          <div class="receipt-mock-m">
-            <div class="receipt-mock-header-m">INDOMARET · Jl. Sudirman No. 42</div>
-            <div class="receipt-mock-total-m"><span>TOTAL</span><span>Rp 43.500</span></div>
-            <div style="margin-top:4px;font-size:10px;color:#4E6B65">02/11/2026 · 14:23</div>
+            <strong>Data berhasil diekstrak (97% yakin).</strong> Periksa dan edit sebelum simpan.
           </div>
         </div>
 
         <!-- Edit form -->
         <div class="ai-extract-form" style="margin-top:16px">
-          <!-- Transaction type -->
+          <!-- Transaction type (USER CHOICE, no AI indicator) -->
           <div class="ai-form-group">
             <label class="ai-form-label">Tipe Transaksi</label>
             <div class="ai-type-toggle" role="group" aria-label="Pilih tipe transaksi">
@@ -273,90 +238,77 @@
             </div>
           </div>
 
-          <!-- Amount -->
+          <!-- Amount (AI extracted) -->
           <div class="ai-form-group">
-            <label for="nominal" class="ai-form-label">Nominal</label>
+            <label for="nominal" class="ai-form-label">Nominal <span class="ai-indicator-small">AI</span></label>
             <input
               type="text"
               id="nominal"
               class="ai-form-input ai-form-input-amount"
               value="Rp 43.500"
+              required
               aria-label="Nominal transaksi"
             />
-            <span class="ai-extracted-tag" aria-label="Diekstrak dari struk oleh AI">
-              <svg width="8" height="8" viewBox="0 0 8 8" fill="currentColor" aria-hidden="true"><circle cx="4" cy="4" r="3"/></svg>
-              Diekstrak AI
-            </span>
           </div>
 
-          <!-- Description -->
+          <!-- Description (AI extracted) -->
           <div class="ai-form-group">
-            <label for="deskripsi" class="ai-form-label">Deskripsi / Nama Toko</label>
+            <label for="deskripsi" class="ai-form-label">Toko <span class="ai-indicator-small">AI</span></label>
             <input
               type="text"
               id="deskripsi"
               class="ai-form-input"
               value="Indomaret Jl. Sudirman"
-              aria-label="Deskripsi atau nama toko"
+              required
+              aria-label="Nama toko"
             />
-            <span class="ai-extracted-tag">
-              <svg width="8" height="8" viewBox="0 0 8 8" fill="currentColor" aria-hidden="true"><circle cx="4" cy="4" r="3"/></svg>
-              Diekstrak AI
-            </span>
           </div>
 
-          <!-- Date -->
+          <!-- Date (AI extracted) -->
           <div class="ai-form-group">
-            <label for="tanggal" class="ai-form-label">Tanggal</label>
+            <label for="tanggal" class="ai-form-label">Tanggal <span class="ai-indicator-small">AI</span></label>
             <input
               type="date"
               id="tanggal"
               class="ai-form-input"
               value="2026-11-02"
+              required
               aria-label="Tanggal transaksi"
             />
-            <span class="ai-extracted-tag">
-              <svg width="8" height="8" viewBox="0 0 8 8" fill="currentColor" aria-hidden="true"><circle cx="4" cy="4" r="3"/></svg>
-              Diekstrak AI
-            </span>
           </div>
 
-          <!-- Category -->
+          <!-- Category (AI extracted) -->
           <div class="ai-form-group">
-            <label for="kategori" class="ai-form-label">Kategori</label>
-            <select id="kategori" class="ai-form-select" aria-label="Kategori transaksi">
-              <option value="belanja" selected>🛒 Belanja</option>
-              <option value="makan">🍽️ Makan &amp; Minum</option>
-              <option value="transport">🚌 Transportasi</option>
-              <option value="kos">🏠 Kos / Tempat Tinggal</option>
-              <option value="hiburan">🎮 Hiburan</option>
-              <option value="pendidikan">📚 Pendidikan</option>
-              <option value="kesehatan">💊 Kesehatan</option>
-              <option value="lainnya">📋 Lainnya</option>
+            <label for="kategori" class="ai-form-label">Kategori <span class="ai-indicator-small">AI</span></label>
+            <select id="kategori" class="ai-form-select" required aria-label="Kategori transaksi">
+              <option value="belanja" selected>Belanja</option>
+              <option value="makan">Makan & Minum</option>
+              <option value="transport">Transportasi</option>
+              <option value="kos">Kos / Tempat Tinggal</option>
+              <option value="hiburan">Hiburan</option>
+              <option value="pendidikan">Pendidikan</option>
+              <option value="kesehatan">Kesehatan</option>
+              <option value="lainnya">Lainnya</option>
             </select>
-            <span class="ai-extracted-tag">
-              <svg width="8" height="8" viewBox="0 0 8 8" fill="currentColor" aria-hidden="true"><circle cx="4" cy="4" r="3"/></svg>
-              Diekstrak AI
-            </span>
           </div>
 
-          <!-- Workspace -->
+          <!-- Workspace (USER CHOICE, no AI) -->
           <div class="ai-form-group">
-            <label for="workspace" class="ai-form-label">Workspace</label>
-            <select id="workspace" class="ai-form-select" aria-label="Pilih workspace">
+            <label for="workspace" class="ai-form-label">Simpan ke</label>
+            <select id="workspace" class="ai-form-select" required aria-label="Pilih workspace">
               <option value="personal" selected>Personal</option>
-              <option value="bisnis">Bisnis (UMKM)</option>
+              <option value="business">Bisnis (UMKM)</option>
             </select>
           </div>
 
-          <!-- Notes (optional) -->
+          <!-- Notes (USER INPUT, no AI) -->
           <div class="ai-form-group">
             <label for="catatan" class="ai-form-label">Catatan (Opsional)</label>
             <input
               type="text"
               id="catatan"
               class="ai-form-input"
-              placeholder="Tambahkan catatan..."
+              placeholder="Tambahkan detail tambahan..."
               aria-label="Catatan tambahan"
             />
           </div>
@@ -364,14 +316,14 @@
 
         <!-- Action bar -->
         <div class="mobile-action-bar">
-          <button onclick="showScanState('success')" class="mobile-btn-primary" style="flex:1">
+          <button onclick="submitTransaction()" class="mobile-btn-primary" style="flex:1" type="button" aria-label="Simpan transaksi">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
               <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.3"/>
               <path d="M5.5 8l2 2 3.5-3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
-            Konfirmasi &amp; Simpan
+            Simpan Transaksi
           </button>
-          <button onclick="showScanState('upload')" class="mobile-btn-secondary" aria-label="Batalkan dan kembali ke upload">Batal</button>
+          <button onclick="showScanState('upload')" class="mobile-btn-secondary" type="button" aria-label="Batalkan dan kembali ke upload">Batal</button>
         </div>
       </div>
 
@@ -588,9 +540,194 @@ function fillNlpExample(text) {
   document.getElementById('nlp-input').focus();
 }
 
+// ============================================================
+// ACTUAL TRANSACTION SUBMISSION (NEW FUNCTIONALITY)
+// ============================================================
+function submitTransaction() {
+  // Get form data
+  const type = document.querySelector('[data-type][class*="active"]')?.dataset.type || 
+               (document.querySelector('.ai-type-btn-expense-active') ? 'expense' : 'income');
+  const nominal = document.getElementById('nominal').value;
+  const merchant = document.getElementById('deskripsi').value;
+  const date = document.getElementById('tanggal').value;
+  const category = document.getElementById('kategori').value;
+  const workspace = document.getElementById('workspace').value;
+  const notes = document.getElementById('catatan').value;
+
+  // Validate
+  if (!nominal || !merchant) {
+    alert('Nominal dan Toko tidak boleh kosong');
+    return;
+  }
+
+  // Parse amount (remove Rp and commas)
+  const amount = parseInt(nominal.replace(/\D/g, ''), 10);
+  if (!amount || amount <= 0) {
+    alert('Nominal harus lebih dari 0');
+    return;
+  }
+
+  // Create transaction object
+  const transaction = {
+    id: Date.now().toString(),
+    type: type,
+    amount: amount,
+    merchant: merchant,
+    date: date,
+    category: category,
+    workspace: workspace,
+    notes: notes,
+    createdAt: new Date().toISOString(),
+    aiExtracted: true // Flag that this was from scan
+  };
+
+  // Save to localStorage
+  let transactions = JSON.parse(localStorage.getItem('kaito_transactions') || '[]');
+  transactions.push(transaction);
+  localStorage.setItem('kaito_transactions', JSON.stringify(transactions));
+
+  // Update quota
+  let quota = parseInt(localStorage.getItem('kaito_quota') || '10', 10);
+  if (quota > 0) {
+    quota--;
+    localStorage.setItem('kaito_quota', quota.toString());
+  }
+
+  // Show success and reset
+  showScanState('success');
+  document.getElementById('nominal').value = '';
+  document.getElementById('deskripsi').value = '';
+  document.getElementById('catatan').value = '';
+  
+  // Reload dashboard after 2 seconds
+  setTimeout(() => {
+    window.location.href = 'dashboard.html';
+  }, 2000);
+}
+
 // Handle #nlp anchor from other pages
 if (window.location.hash === '#nlp') {
   switchScanMode('nlp');
+}
+
+// Load transactions on page load for dashboard
+document.addEventListener('DOMContentLoaded', function() {
+  loadTransactions();
+  updateQuotaBadge();
+});
+
+// ============================================================
+// LOAD AND DISPLAY TRANSACTIONS (FOR DASHBOARD)
+// ============================================================
+function loadTransactions() {
+  const list = document.querySelector('.mobile-txn-list');
+  if (!list) return; // Not on dashboard
+
+  const transactions = JSON.parse(localStorage.getItem('kaito_transactions') || '[]');
+
+  if (!transactions.length) {
+    list.innerHTML = `
+      <div style="text-align:center;padding:40px 20px;color:#8AADA6">
+        <p style="font-size:14px;margin-bottom:8px">Belum ada transaksi</p>
+        <a href="scan.html" style="color:#2BBFA0;text-decoration:none;font-weight:600">Tambah transaksi pertama →</a>
+      </div>
+    `;
+    return;
+  }
+
+  // Sort by date (newest first), take last 10
+  const sorted = transactions
+    .sort((a, b) => new Date(b.date) - new Date(a.date))
+    .slice(0, 10);
+
+  list.innerHTML = sorted.map(txn => `
+    <article class="mobile-txn-item" data-txn-type="${txn.type}" role="listitem">
+      <div class="mobile-txn-icon txn-icon-${txn.type}" aria-hidden="true">
+        ${getTypeIcon(txn.type)}
+      </div>
+      <div class="mobile-txn-info">
+        <div class="mobile-txn-name">${escapeHtml(txn.merchant)}</div>
+        <div class="mobile-txn-meta">
+          <span class="mobile-txn-badge badge-cat-small">${txn.category}</span>
+          <span class="mobile-txn-date">${formatDate(txn.date)}</span>
+        </div>
+      </div>
+      <div class="mobile-txn-amount mobile-txn-amount-${txn.type} num">
+        ${txn.type === 'income' ? '+' : '−'}Rp ${formatCurrency(txn.amount)}
+      </div>
+    </article>
+  `).join('');
+}
+
+function getTypeIcon(type) {
+  if (type === 'income') {
+    return `<svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+      <path d="M10 16V4M4 10l6-6 6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>`;
+  } else if (type === 'expense') {
+    return `<svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+      <path d="M10 4v12M4 10l6 6 6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>`;
+  }
+  return '';
+}
+
+function formatDate(dateStr) {
+  const date = new Date(dateStr + 'T00:00:00');
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Ags', 'Sep', 'Okt', 'Nov', 'Des'];
+  return `${date.getDate()} ${months[date.getMonth()]}`;
+}
+
+function formatCurrency(num) {
+  return num.toLocaleString('id-ID');
+}
+
+function escapeHtml(text) {
+  const map = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#039;'
+  };
+  return text.replace(/[&<>"']/g, m => map[m]);
+}
+
+// ============================================================
+// UPDATE QUOTA DISPLAY
+// ============================================================
+function updateQuotaBadge() {
+  const quota = parseInt(localStorage.getItem('kaito_quota') || '10', 10);
+  const badge = document.querySelector('[class*="quota-badge"]');
+  if (badge) {
+    badge.textContent = `${quota}/10`;
+    if (quota <= 2) {
+      badge.style.color = '#FFBE55';
+      badge.style.backgroundColor = 'rgba(255, 190, 85, 0.12)';
+    }
+  }
+}
+
+// ============================================================
+// FILTER TRANSACTIONS
+// ============================================================
+function filterTransactions(type) {
+  // Update filter UI
+  document.querySelectorAll('[data-filter]').forEach(btn => {
+    btn.classList.remove('txn-filter-btn-active');
+    btn.setAttribute('aria-pressed', 'false');
+  });
+  document.querySelector(`[data-filter="${type}"]`).classList.add('txn-filter-btn-active');
+  document.querySelector(`[data-filter="${type}"]`).setAttribute('aria-pressed', 'true');
+  
+  // Filter transactions
+  document.querySelectorAll('[data-txn-type]').forEach(txn => {
+    if (type === 'all' || txn.dataset.txnType === type) {
+      txn.style.display = '';
+    } else {
+      txn.style.display = 'none';
+    }
+  });
 }
 </script>
 </body>
