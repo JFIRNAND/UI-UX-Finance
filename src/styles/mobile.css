@@ -131,32 +131,16 @@
   gap: 10px;
 }
 
-/* Logo mark — geometric, distinctive (not letter-in-box slop) */
-.mobile-logo {
-  width: 36px;
-  height: 36px;
-  background: linear-gradient(145deg, #1E9E7E 0%, #0D7A6B 100%);
-  border-radius: 11px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  font-weight: 800;
-  font-size: 15px;
-  font-family: var(--font-display);
-  letter-spacing: -0.05em;
-  box-shadow: 0 4px 12px rgba(30,158,126,0.35);
+.kaitofin-wordmark {
+  display: block;
+  height: auto;
+  border-radius: 3px;
   flex-shrink: 0;
 }
 
-.mobile-brand-name {
-  font-family: var(--font-display);
-  font-size: 18px;
-  font-weight: 700;
-  color: #EDE9E0;
-  letter-spacing: -0.03em;
-  line-height: 1;
-}
+.kaitofin-wordmark-nav { width: 122px; }
+.kaitofin-wordmark-header { width: 96px; }
+.kaitofin-wordmark-footer { width: 100px; }
 
 .mobile-header-actions {
   display: flex;
@@ -2044,6 +2028,11 @@
 .landing-cta-btn:hover { box-shadow: 0 4px 14px rgba(30,158,126,0.4); }
 .landing-cta-btn:focus-visible { outline: 2px solid #2BBFA0; }
 
+@media (max-width: 360px) {
+  .landing-nav-links { display: none; }
+  .kaitofin-wordmark-nav { width: 112px; }
+}
+
 /* Hero section */
 .landing-hero {
   padding: 52px 24px 36px;
@@ -2791,31 +2780,12 @@
   background: radial-gradient(circle, rgba(30,158,126,0.14) 0%, transparent 60%);
 }
 
-.login-logo-m {
-  width: 68px;
-  height: 68px;
-  background: linear-gradient(145deg, #1E9E7E 0%, #0D7A6B 100%);
-  border-radius: 22px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  font-family: var(--font-display);
-  font-size: 28px;
-  font-weight: 800;
-  letter-spacing: -0.05em;
+.login-wordmark {
+  display: block;
+  width: min(230px, 100%);
+  height: auto;
   margin: 0 auto 18px;
-  box-shadow: 0 12px 32px rgba(30,158,126,0.40);
-  position: relative;
-  z-index: 1;
-}
-
-.login-brand-m {
-  font-family: var(--font-display);
-  font-size: 24px;
-  font-weight: 800;
-  color: #EDE9E0;
-  letter-spacing: -0.04em;
+  border-radius: 4px;
   position: relative;
   z-index: 1;
 }

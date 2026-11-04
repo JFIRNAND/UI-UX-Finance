@@ -112,6 +112,10 @@ keuangan pribadi dan bisnis).
 --pro:              #C4AAFF   PRO features
 ```
 
+### Brand Wordmark
+- Use the supplied `assets/kaitofin-wordmark.png` on the landing page, login, dashboards, and admin header.
+- Keep the pale logo background intact so the navy and teal wordmark stays legible on dark app surfaces.
+
 ### Typography System (Bricolage Grotesque + IBM Plex Sans)
 ```
 Display/Heading:  Bricolage Grotesque — expressive, editorial, warm authority
