@@ -27,16 +27,12 @@
       width: 54px;
       height: 54px;
       border-radius: 50%;
-      background: linear-gradient(135deg, #1E9E7E 0%, #0D7A6B 100%);
+      background: transparent;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-family: var(--font-display);
-      font-size: 20px;
-      font-weight: 700;
-      color: #fff;
-      letter-spacing: -0.02em;
       flex-shrink: 0;
+      overflow: hidden;
       border: 2px solid rgba(30,158,126,0.3);
     }
 
@@ -355,7 +351,13 @@
 
     <!-- ① Identity card: avatar left, info center -->
     <div class="acct-identity-card" role="region" aria-label="Identitas pengguna">
-      <div class="acct-avatar" id="user-avatar" aria-hidden="true">DR</div>
+      <div class="acct-avatar" id="user-avatar" role="img" aria-label="Foto profil">
+        <svg viewBox="0 0 54 54" width="54" height="54" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" style="display:block;width:100%;height:100%;border-radius:50%">
+          <rect width="54" height="54" rx="50" fill="#1E3A30"/>
+          <circle cx="27" cy="20" r="10" fill="#8AADA6"/>
+          <path d="M3 52c0-13.3 10.7-24 24-24s24 10.7 24 24" fill="#8AADA6"/>
+        </svg>
+      </div>
       <div class="acct-identity-info">
         <div class="acct-identity-name" id="user-name">Dava Rafael</div>
         <div class="acct-identity-email" id="user-email">dava@kaitofinance.id</div>
@@ -635,12 +637,8 @@ function loadProfile() {
   document.getElementById('user-name').textContent  = name;
   document.getElementById('user-email').textContent = email;
 
-  // Initials from first two words of name
-  const parts    = name.trim().split(/\s+/);
-  const initials = parts.length > 1
-    ? parts[0][0].toUpperCase() + parts[1][0].toUpperCase()
-    : parts[0].slice(0, 2).toUpperCase();
-  document.getElementById('user-avatar').textContent = initials;
+  // Avatar: keep the SVG anonymous avatar (no initials override)
+  // document.getElementById('user-avatar') is an SVG — do not replace with text
 
   // Joined date — only shown if available
   if (user.joinedDate) {
